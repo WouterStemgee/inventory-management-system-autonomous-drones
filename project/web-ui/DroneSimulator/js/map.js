@@ -1,74 +1,68 @@
 import {Drone} from './drone.js';
 import {Grid} from './grid.js';
 
-const tile_size = 20;
+const tileSize = 20;
 
 export class Map {
   constructor(canvas) {
     this.width = canvas.width;
     this.height = canvas.height;
     this.canvas = canvas;
-    this.flyloop = undefined;
+    this.simulation = undefined;
     this.reset();
-  }
-
-  toggle_flight(){
-    if (this.flyloop){
-      clearInterval(this.flyloop);
-      this.flyloop = undefined;
-    }
-    else{
-      this.start();
-    }
   }
 
   keyhandler(e){
     if (e.keyCode === 37){
-      this.drone.dx  = -tile_size;
+      this.drone.dx  = -tileSize;
       this.drone.dy = 0;
+      this.drone.move();
     }
     else if (e.keyCode === 38){
-      this.drone.dy = -tile_size;
+      this.drone.dy = -tileSize;
       this.drone.dx = 0;
+      this.drone.move();
     }
     else if (e.keyCode === 39){
-      this.drone.dx = tile_size;
+      this.drone.dx = tileSize;
       this.drone.dy = 0;
+      this.drone.move();
     }
     else if (e.keyCode === 40){
-      this.drone.dy = tile_size;
+      this.drone.dy = tileSize;
       this.drone.dx = 0;
+      this.drone.move();
     }
-    else if (e.keyCode === 80){
-      this.toggle_flight();
-    }
-    this.drone.move();
   }
 
   getMousePos(e) {
     let rect = this.canvas.getBoundingClientRect();
     return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
+      x: (e.clientX - rect.left) / (rect.right - rect.left) * this.canvas.width,
+      y: (e.clientY - rect.top) / (rect.bottom - rect.top) * this.canvas.height
     };
   }
 
   clickhandler(e) {
     let pos = this.getMousePos(e);
-    alert(pos.x + ' ' + pos.y);
+    if (pos.x >= 0 && pos.y >= 0 && pos.x <= this.canvas.width && pos.y <= this.canvas.height) {
+      let gridX = Math.floor(pos.x / tileSize);
+      let gridY = Math.floor(pos.y / tileSize);
+      console.log('[Mouse Click] X: ' + gridX + ', Y: ' + gridY);
+      this.grid.tiles[gridX][gridY].color = '#699868';
+    }
   }
 
-  reset(){
-    this.drone = new Drone(tile_size/2, tile_size/2, tile_size*2, tile_size*2);
+  reset() {
+    this.drone = new Drone(tileSize/2, tileSize/2, tileSize*2, tileSize*2);
     this.objects = [];
   }
 
-  start(){
-    this.grid = new Grid(25, tile_size);
+  start() {
+    this.grid = new Grid(25, tileSize);
     let ctx = this.canvas.getContext('2d');
-    ctx.font = '30px Arial';
 
-    this.flyloop = setInterval(() => {
+    this.simulation = setInterval(() => {
       this.grid.draw(ctx);
       this.drone.draw(ctx);
 
