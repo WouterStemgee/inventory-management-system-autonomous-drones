@@ -8,7 +8,7 @@ export class Map {
     this.width = canvas.width;
     this.height = canvas.height;
     this.canvas = canvas;
-    this.simulation = undefined;
+    this.waypoints = [];
     this.reset();
   }
 
@@ -48,9 +48,22 @@ export class Map {
     if (pos.x >= 0 && pos.y >= 0 && pos.x <= this.canvas.width && pos.y <= this.canvas.height) {
       let gridX = Math.floor(pos.x / tileSize);
       let gridY = Math.floor(pos.y / tileSize);
-      console.log('[Mouse Click] X: ' + gridX + ', Y: ' + gridY);
-      this.grid.tiles[gridX][gridY].color = '#699868';
+      console.log('[X: ' + gridX + ', Y: ' + gridY + ']');
+      this.addWaypoint(gridX, gridY);
     }
+  }
+
+  addWaypoint(gridX, gridY) {
+    this.grid.tiles[gridX][gridY].color = '#699868';
+    let waypoint = {x: gridX, y: gridY};
+    if (!this.waypoints.some(function(o){return o[waypoint.x] === waypoint.y;})) {
+      this.waypoints.push(waypoint);
+    }
+    this.printWaypoints();
+  }
+
+  printWaypoints() {
+    console.log(this.waypoints);
   }
 
   reset() {
@@ -66,17 +79,6 @@ export class Map {
       this.grid.draw(ctx);
       this.drone.draw(ctx);
 
-      for(let o of this.objects){
-        o.draw(ctx);
-      }
-
-      for(let o of this.objects) {
-        let intersects = this.drone.intersects(o);
-        if (intersects) {
-
-        }
-        o.tick(this);
-      }
       if (this.drone.x < 0 ||
         this.drone.x > this.width - this.drone.width ||
         this.drone.y < 0 ||

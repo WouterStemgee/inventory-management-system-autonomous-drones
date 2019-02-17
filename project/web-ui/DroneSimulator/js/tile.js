@@ -1,21 +1,17 @@
 import {Drawable} from './drawable.js';
 
 export class Tile extends Drawable {
-  constructor(x, y, tile_size) {
-    super(x, y, tile_size, tile_size);
-    this.tile_size = tile_size;
+  constructor(x, y, tileSize) {
+    super(x, y, tileSize, tileSize);
+    this.tileSize = tileSize;
     this.color = '#686868';
-    this.calculateGridCoordinate(x, y);
-  }
-
-  calculateGridCoordinate(x, y) {
-    this.gridX = Math.floor(x / this.tile_size);
-    this.gridY = Math.floor(y / this.tile_size);
+    this.gridX = Math.floor(x / this.tileSize);
+    this.gridY = Math.floor(y / this.tileSize);
   }
 
   draw(ctx) {
     ctx.fillStyle = this.color;
-    ctx.fillRect(this.x * this.tile_size , this.y * this.tile_size, this.tile_size , this.tile_size);
-    ctx.strokeRect(this.x * this.tile_size , this.y * this.tile_size, this.tile_size , this.tile_size);
+    ctx.fillRect(this.x * this.tileSize , this.y * this.tileSize, this.tileSize , this.tileSize);
+    ctx.strokeRect(this.x * this.tileSize , this.y * this.tileSize, this.tileSize , this.tileSize);
   }
 }

@@ -1,22 +1,24 @@
 import {Tile} from './tile.js';
 
 export class Grid {
-  constructor(grid_size, tile_size) {
-    this.grid_size = grid_size;
-    this.tile_size = tile_size;
-    this.tiles = [...Array(grid_size)].map(()=>Array(grid_size));
-    for (let x = 0; x < this.grid_size; x++){
-      for(let y = 0; y < this.grid_size; y++){
-        this.tiles[x][y] = new Tile(x, y, this.tile_size);
+  constructor(gridSize, tileSize) {
+    this.gridSize = gridSize;
+    this.tileSize = tileSize;
+    this.tiles = [...Array(gridSize)].map(()=>Array(gridSize));
+    for (let x = 0; x < this.gridSize; x++){
+      for(let y = 0; y < this.gridSize; y++){
+        this.tiles[x][y] = new Tile(x, y, this.tileSize);
       }
     }
   }
 
   draw(context) {
-    for (let x = 0; x < this.grid_size; x++){
-      for(let y = 0; y < this.grid_size; y++){
+    for (let x = 0; x < this.gridSize; x++){
+      for(let y = 0; y < this.gridSize; y++){
         this.tiles[x][y].draw(context);
       }
     }
   }
+
+
 }
