@@ -5,7 +5,7 @@ export class Drone extends Drawable {
     super(x, y, width, height);
     this.dx = 0;
     this.dy = 0;
-    this.imagefile = 'img/drone.png';
+    this.imagefile = 'assets/images/simulator/drone.png';
     this.image_loaded = false;
     this.img = new Image();
     this.img.onload = () => {

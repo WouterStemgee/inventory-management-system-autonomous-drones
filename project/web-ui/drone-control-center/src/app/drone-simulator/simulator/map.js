@@ -9,6 +9,8 @@ export class Map {
     this.height = canvas.height;
     this.canvas = canvas;
     this.waypoints = [];
+
+    this.gridSize = { width: this.canvas.width / tileSize, height: this.canvas.height / tileSize};
     this.reset();
   }
 
@@ -72,7 +74,7 @@ export class Map {
   }
 
   start() {
-    this.grid = new Grid(25, tileSize);
+    this.grid = new Grid(this.gridSize, tileSize);
     let ctx = this.canvas.getContext('2d');
 
     this.simulation = setInterval(() => {
