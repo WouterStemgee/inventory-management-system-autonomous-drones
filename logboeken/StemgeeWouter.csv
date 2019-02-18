@@ -8,3 +8,4 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 15/02/19,14:00,15:30,Extern,Sequentie diagram voor vlucht creatie en uitvoering gemaakt,1,
 15/02/19,20:00,21:30,Extern,Wiki pagina aangevuld met informatie van eerste gesprek klant - sprint backlog opgemaakt voor Sprint 1,,
 16/02/19,13:30,15:00,Extern,MQTT research - Prototype van drone simulator: grid klikbaar gemaakt voor waypoint selectie,15,
+18/02/19,13:30,18:30,Extern,Research MEAN - Angular applicatie gemaakt en de drone simulator als component toegevoegd,15,
