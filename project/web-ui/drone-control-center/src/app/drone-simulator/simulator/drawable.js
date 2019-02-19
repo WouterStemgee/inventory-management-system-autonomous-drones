@@ -1,21 +1,20 @@
 export class Drawable {
-  constructor(x, y, width, height) {
+  constructor(x, y, tileSize) {
     this.x = x;
     this.y = y;
-    this.width = width;
-    this.height = height;
+    this.tileSize = tileSize;
   }
 
   draw(context) {
-    throw new Error('Not implemented here!');
+    throw new Error('Abstract method not implemented here.');
   }
 
   intersects(other) {
     return !(
-      this.x + this.width <= other.x ||
-      this.y + this.height <= other.y ||
-      this.x >= other.x + other.width ||
-      this.y >= other.y + other.height
+      this.x + 1 <= other.x ||
+      this.y + 1 <= other.y ||
+      this.x >= other.x + 1 ||
+      this.y >= other.y + 1
     );
   }
 }

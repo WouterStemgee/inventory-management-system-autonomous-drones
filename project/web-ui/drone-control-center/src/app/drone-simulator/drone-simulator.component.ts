@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Map } from './simulator/map.js';
+
+import { DroneSimulatorService } from './drone-simulator.service';
 
 @Component({
   selector: 'app-drone-simulator',
@@ -8,20 +9,9 @@ import { Map } from './simulator/map.js';
 })
 export class DroneSimulatorComponent implements OnInit {
 
-  constructor() { }
+  constructor(private simulator: DroneSimulatorService) { }
 
   ngOnInit() {
-      const canvas = document.getElementById('canvas');
-      const map = new Map(canvas);
-
-      window.addEventListener('keydown', (event) => {
-        map.keyhandler(event);
-      });
-
-      window.addEventListener('mousedown', (event) => {
-        map.clickhandler(event);
-      });
-
-      map.start();
+    this.simulator.load();
   }
 }

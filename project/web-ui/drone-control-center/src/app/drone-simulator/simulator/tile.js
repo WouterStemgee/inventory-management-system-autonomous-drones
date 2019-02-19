@@ -1,17 +1,14 @@
-import {Drawable} from './drawable.js';
+import { Drawable } from './drawable.js';
 
 export class Tile extends Drawable {
-  constructor(x, y, tileSize) {
-    super(x, y, tileSize, tileSize);
-    this.tileSize = tileSize;
-    this.color = '#686868';
-    this.gridX = Math.floor(x / this.tileSize);
-    this.gridY = Math.floor(y / this.tileSize);
+  constructor(x, y, tileSize, color = '#686868') {
+    super(x, y, tileSize);
+    this.color = color;
   }
 
-  draw(ctx) {
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.x * this.tileSize , this.y * this.tileSize, this.tileSize , this.tileSize);
-    ctx.strokeRect(this.x * this.tileSize , this.y * this.tileSize, this.tileSize , this.tileSize);
+  draw(context) {
+    context.fillStyle = this.color;
+    context.fillRect(this.x * this.tileSize , this.y * this.tileSize, this.tileSize , this.tileSize);
+    context.strokeRect(this.x * this.tileSize , this.y * this.tileSize, this.tileSize , this.tileSize);
   }
 }

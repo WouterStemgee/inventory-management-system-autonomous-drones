@@ -1,93 +1,47 @@
-import {Drone} from './drone.js';
-import {Grid} from './grid.js';
-
-const tileSize = 20;
+import { Grid } from './grid.js';
+import { FlightPath } from "./flightpath.js";
+import {InventoryItem} from "./inventory-item.js";
+import {Obstacle} from "./obstacle.js";
 
 export class Map {
-  constructor(canvas) {
-    this.width = canvas.width;
-    this.height = canvas.height;
-    this.canvas = canvas;
-    this.waypoints = [];
+  //mapAPI = 'https://localhost:port/api/map/';
 
-    this.gridSize = { width: this.canvas.width / tileSize, height: this.canvas.height / tileSize};
-    this.reset();
+  constructor(gridSize, tileSize) {
+    this.gridSize = gridSize;
+    this.tileSize = tileSize;
+    this.grid = new Grid(gridSize, tileSize);
+    this.obstacles = [];
+    this.inventoryItems = [];
+    this.flightpath = new FlightPath(tileSize);
+    this.optimalFlightPath = undefined;
+    this.loadMap('');
   }
 
-  keyhandler(e){
-    if (e.keyCode === 37){
-      this.drone.dx  = -tileSize;
-      this.drone.dy = 0;
-      this.drone.move();
-    }
-    else if (e.keyCode === 38){
-      this.drone.dy = -tileSize;
-      this.drone.dx = 0;
-      this.drone.move();
-    }
-    else if (e.keyCode === 39){
-      this.drone.dx = tileSize;
-      this.drone.dy = 0;
-      this.drone.move();
-    }
-    else if (e.keyCode === 40){
-      this.drone.dy = tileSize;
-      this.drone.dx = 0;
-      this.drone.move();
-    }
+  loadMap(url) {
+    // TODO: Load Map JSON-file from the back-end with obstacles and inventory items
+    this.addInventoryItems();
+    this.addObstacles();
   }
 
-  getMousePos(e) {
-    let rect = this.canvas.getBoundingClientRect();
-    return {
-      x: (e.clientX - rect.left) / (rect.right - rect.left) * this.canvas.width,
-      y: (e.clientY - rect.top) / (rect.bottom - rect.top) * this.canvas.height
-    };
+  saveMap(url) {
+    // TODO: Save Map JSON-file to the back-end with obstacles and inventory items
   }
 
-  clickhandler(e) {
-    let pos = this.getMousePos(e);
-    if (pos.x >= 0 && pos.y >= 0 && pos.x <= this.canvas.width && pos.y <= this.canvas.height) {
-      let gridX = Math.floor(pos.x / tileSize);
-      let gridY = Math.floor(pos.y / tileSize);
-      console.log('[X: ' + gridX + ', Y: ' + gridY + ']');
-      this.addWaypoint(gridX, gridY);
-    }
+  addInventoryItems() {
+    this.inventoryItems.push(new InventoryItem(10,10,this.tileSize));
+    this.inventoryItems.push(new InventoryItem(5,2,this.tileSize));
+    this.inventoryItems.push(new InventoryItem(12,8,this.tileSize));
+    this.inventoryItems.push(new InventoryItem(14,18,this.tileSize));
   }
 
-  addWaypoint(gridX, gridY) {
-    this.grid.tiles[gridX][gridY].color = '#699868';
-    let waypoint = {x: gridX, y: gridY};
-    if (!this.waypoints.some(function(o){return o[waypoint.x] === waypoint.y;})) {
-      this.waypoints.push(waypoint);
-    }
-    this.printWaypoints();
+  addObstacles() {
+    this.obstacles.push(new Obstacle(15,15,this.tileSize));
   }
 
-  printWaypoints() {
-    console.log(this.waypoints);
-  }
-
-  reset() {
-    this.drone = new Drone(tileSize/2, tileSize/2, tileSize*2, tileSize*2);
-    this.objects = [];
-  }
-
-  start() {
-    this.grid = new Grid(this.gridSize, tileSize);
-    let ctx = this.canvas.getContext('2d');
-
-    this.simulation = setInterval(() => {
-      this.grid.draw(ctx);
-      this.drone.draw(ctx);
-
-      if (this.drone.x < 0 ||
-        this.drone.x > this.width - this.drone.width ||
-        this.drone.y < 0 ||
-        this.drone.y > this.height  - this.drone.height){
-        this.reset();
-      }
-
-    }, 50);
+  draw(context) {
+    this.grid.draw(context);
+    this.inventoryItems.forEach((i) => i.draw(context));
+    this.obstacles.forEach((o) => o.draw(context));
+    this.flightpath.draw(context);
   }
 }
