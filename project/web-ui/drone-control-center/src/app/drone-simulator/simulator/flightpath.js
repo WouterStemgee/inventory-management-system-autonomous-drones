@@ -8,8 +8,9 @@ export class FlightPath {
   
   addWaypoint(x, y) {
     let waypoint = new Waypoint(x, y, this.tileSize);
-    if (!this.waypoints.some(function(o){return o[waypoint.x] === waypoint.y;})) {
+    if (!this.waypoints.some(function(w){return w[waypoint.x] === waypoint.y;})) {
       this.waypoints.push(waypoint);
+      console.log('Waypoint added: [X: ' + x + ', Y: ' + y + ']');
     }
     this.printWaypoints();
   }

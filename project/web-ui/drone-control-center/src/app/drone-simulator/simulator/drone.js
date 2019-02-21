@@ -57,6 +57,13 @@ export class Drone extends DrawableImage {
     }
   }
 
+  moveTo(x, y) {
+    if (x > 0 && y > 0 && y < this.gridSize.height - 1 && x < this.gridSize.width - 1) {
+      this.x = x;
+      this.y = y;
+    }
+  }
+
   flyDiff() {
     this.x += this.dx;
     this.y += this.dy;

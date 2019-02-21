@@ -1,12 +1,13 @@
 import { Grid } from './grid.js';
 import { FlightPath } from "./flightpath.js";
-import {InventoryItem} from "./inventory-item.js";
-import {Obstacle} from "./obstacle.js";
+import { InventoryItem } from "./inventory-item.js";
+import { Obstacle } from "./obstacle.js";
 
 export class Map {
   //mapAPI = 'https://localhost:port/api/map/';
 
   constructor(gridSize, tileSize) {
+    this.name = '';
     this.gridSize = gridSize;
     this.tileSize = tileSize;
     this.grid = new Grid(gridSize, tileSize);
@@ -19,6 +20,7 @@ export class Map {
 
   loadMap(url) {
     // TODO: Load Map JSON-file from the back-end with obstacles and inventory items
+    this.name = 'Test Map 1';
     this.addInventoryItems();
     this.addObstacles();
   }
@@ -40,8 +42,9 @@ export class Map {
 
   draw(context) {
     this.grid.draw(context);
-    this.inventoryItems.forEach((i) => i.draw(context));
-    this.obstacles.forEach((o) => o.draw(context));
     this.flightpath.draw(context);
+    this.obstacles.forEach((o) => o.draw(context));
+    this.inventoryItems.forEach((i) => i.draw(context));
+
   }
 }

@@ -8,7 +8,6 @@ import { Drone } from './simulator/drone.js';
 export class DroneSimulatorService {
   tileSize = 20;
 
-  gridSize;
   canvas;
   map;
   drone;
@@ -36,7 +35,6 @@ export class DroneSimulatorService {
     if (pos.x >= 0 && pos.y >= 0 && pos.x <= this.canvas.width && pos.y <= this.canvas.height) {
       const x = Math.floor(pos.x / this.tileSize);
       const y = Math.floor(pos.y / this.tileSize);
-      console.log('[X: ' + x + ', Y: ' + y + ']');
       this.map.flightpath.addWaypoint(x, y);
     }
   }
@@ -55,12 +53,12 @@ export class DroneSimulatorService {
   }
 
   load() {
-    this.canvas = document.getElementById('canvas');
+    this.canvas = document.getElementById('simulator');
 
     if (!this.loaded) {
-      this.gridSize = { width: this.canvas.width / this.tileSize, height: this.canvas.height / this.tileSize};
-      this.map = new Map(this.gridSize, this.tileSize);
-      this.drone = new Drone(1, 1, this.tileSize, this.gridSize);
+      const gridSize = { width: this.canvas.width / this.tileSize, height: this.canvas.height / this.tileSize};
+      this.map = new Map(gridSize, this.tileSize);
+      this.drone = new Drone(1, 1, this.tileSize, gridSize);
       window.addEventListener('keydown', (event) => {
         this.keyhandler(event);
       });
@@ -74,7 +72,6 @@ export class DroneSimulatorService {
 
   start() {
     const context = this.canvas.getContext('2d');
-
     this.simulationRunner = setInterval(() => {
       this.map.draw(context);
       this.drone.draw(context);
