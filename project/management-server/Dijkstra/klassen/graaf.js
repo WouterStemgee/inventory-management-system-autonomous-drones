@@ -38,7 +38,10 @@ class Graaf {
             afstand = {},
             huidige,
             vorigeKnoop = {},
-            pad = [];
+            pad = [],
+            knoop1,
+            knoop2,
+            totaleAfstand;
 
         //markeer alle nodes als onbezocht en creeer een lijst van de onbezochte knopen. (1)
         this.knopen.forEach(function (knoop) {
@@ -57,22 +60,21 @@ class Graaf {
             huidige = Object.keys(onbezochteKnopenLijst).reduce(function (bezocht, knoop) {
                 return afstand[bezocht] > afstand[knoop] ? knoop : bezocht;
             }, Object.keys(onbezochteKnopenLijst)[0]); //de knoop met de kleinste afstand wordt als eerste geselecteerd
-
             //bekijk alle knopen die een verbinding bevatten met de geselecteerde knoop
             this.verbindingen.filter(function(verbinding){
-                let knoop1 = verbinding[0],
-                    knoop2 = verbinding[1];
+                knoop1 = verbinding[0];
+                knoop2 = verbinding[1];
                 return knoop1 === huidige || knoop2 === huidige;
             }).forEach(function(verbinding){
                 //controle of we van knoop1 -> knoop2 gaan of andersom
                 if (verbinding[0] === huidige){// 1 -> 2
-                    var knoop1 = verbinding[0],
-                        knoop2 = verbinding[1];
+                    knoop1 = verbinding[0];
+                    knoop2 = verbinding[1];
                 } else {
                     knoop2 = verbinding[0];
                     knoop1 = verbinding[1];
                 }
-                let totaleAfstand = afstand[huidige] + verbinding[2];
+                totaleAfstand = afstand[huidige] + verbinding[2];
                 //indien we een korter pad hebben gevonden naar deze knoop update de afstand
                 if (afstand[knoop2] > totaleAfstand){
                     afstand[knoop2] = totaleAfstand;
@@ -88,11 +90,48 @@ class Graaf {
         }
 
         //creeeren van het gevraagde pad
+        totaleAfstand = afstand[eind];
         while (eind){
             pad.unshift(eind);
             eind = vorigeKnoop[eind];
         }
+        pad.unshift(totaleAfstand);
+        console.log(pad);
+        return pad;
+    }
 
+    zoekKortstePadWaypoints(start, waypoints){
+        if (waypoints.constructor === Array){
+            this.waypoints = waypoints;
+        } else {
+            throw 'Geen correcte array van waypoints'
+        }
+        let pad = [];
+        pad.push(start); //eerste knoop toevoegen
+        let graaf = this;
+        let totaleAfstand = 0;
+        while (Object.keys(waypoints).length > 0) {
+            let gekozenEindknoop;
+            let afstandVanafVorigeKnoop = Infinity;
+            let gekozenpad;
+            this.waypoints.forEach(function (eind) {
+                let testpad = graaf.zoekKortstePad(start, eind);
+                let afstand = testpad[0];
+                if (afstand < afstandVanafVorigeKnoop) { // een kleinere afstand gevonden tot 1 van de waypoints dus deze eerst bezoeken
+                    gekozenEindknoop = eind;
+                    afstandVanafVorigeKnoop = afstand;
+                    testpad.shift(); // eerste elemant bevat de afstand tot de waypoint wat hier onbelangrijk is
+                    testpad.shift(); // tweede element bevat het startelement dat overeenkomt met het vorige eindelement en moet hier dus verwijderd worden
+                    gekozenpad = testpad;
+                }
+            });
+            pad = pad.concat(gekozenpad);
+            console.log(gekozenEindknoop.toString() + 'de knoop met afstand ' + afstandVanafVorigeKnoop);
+            totaleAfstand += afstandVanafVorigeKnoop;
+            start = gekozenEindknoop;
+            delete this.waypoints[this.waypoints.indexOf(gekozenEindknoop)];
+        }
+        pad.unshift(totaleAfstand);
         return pad;
     }
 };
