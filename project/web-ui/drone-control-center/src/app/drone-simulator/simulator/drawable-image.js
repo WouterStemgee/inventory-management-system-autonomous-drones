@@ -18,7 +18,6 @@ export class DrawableImage extends Drawable {
     } else {
       this.img.onload = () => {
         this.image_loaded = true;
-        context.drawImage(this.img, this.x * this.tileSize, this.y * this.tileSize);
       };
       this.img.src = this.imagefile;
     }

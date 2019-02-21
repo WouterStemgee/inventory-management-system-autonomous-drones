@@ -1,0 +1,18 @@
+GET: /api/maps/
+alle maps weergeven
+
+GET: /api/maps/{id}
+backend -> frontend: map configuratie (obstakels, inventoryitems)
+
+PUT: /api/maps/{id}
+backend <- frontend: map configuratie (obstakels, inventoryitems)
+
+PUT: /api/waypoints
+
+GET: /api/flightpath
+
+POST: /api/commands/{id}
+
+GET: /api/drone/location
+GET: /api/drone/battery
+GET: /api/drone/...

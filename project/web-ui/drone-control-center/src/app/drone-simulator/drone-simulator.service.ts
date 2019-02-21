@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Map } from './simulator/map.js';
 import { Drone } from './simulator/drone.js';
+import { HttpService } from '../http.service';
+import { DataService } from '../data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DroneSimulatorService {
   tileSize = 20;
+  selectedMap = 0;
 
   canvas;
   map;
@@ -14,7 +17,9 @@ export class DroneSimulatorService {
   simulationRunner;
   loaded;
 
-  constructor() {
+  maps;
+
+  constructor(private data: DataService, http: HttpService) {
     this.loaded = false;
   }
 
@@ -35,7 +40,7 @@ export class DroneSimulatorService {
     if (pos.x >= 0 && pos.y >= 0 && pos.x <= this.canvas.width && pos.y <= this.canvas.height) {
       const x = Math.floor(pos.x / this.tileSize);
       const y = Math.floor(pos.y / this.tileSize);
-      this.map.flightpath.addWaypoint(x, y);
+      this.map.toggleWaypoint(x, y);
     }
   }
 
@@ -49,7 +54,8 @@ export class DroneSimulatorService {
 
   reset() {
     this.drone.reset();
-    this.map.flightpath.waypoints = [];
+    this.map.reset();
+    this.map.loadMap(this.maps[this.selectedMap]);
   }
 
   load() {
@@ -57,15 +63,28 @@ export class DroneSimulatorService {
 
     if (!this.loaded) {
       const gridSize = { width: this.canvas.width / this.tileSize, height: this.canvas.height / this.tileSize};
+
       this.map = new Map(gridSize, this.tileSize);
+      this.maps = [];
+      this.data.getAllMaps()
+        .then(result => {
+          console.log('All maps: ', result);
+          this.maps = result;
+          this.map.loadMap(this.maps[this.selectedMap]);
+          this.loaded = true;
+        })
+        .catch( error => {
+          console.log('Error loading maps: ', error);
+        });
+
       this.drone = new Drone(1, 1, this.tileSize, gridSize);
+
       window.addEventListener('keydown', (event) => {
         this.keyhandler(event);
       });
       window.addEventListener('mousedown', (event) => {
         this.clickhandler(event);
       });
-      this.loaded = true;
     }
     this.start();
   }
@@ -76,5 +95,16 @@ export class DroneSimulatorService {
       this.map.draw(context);
       this.drone.draw(context);
     }, 50);
+  }
+
+  selectMap(id) {
+    this.selectedMap = id;
+    this.reset();
+  }
+
+  calculateOptimalFlightPath() {
+    const coords = this.map.flightpath.saveFlightPath();
+    console.log('Sending waypoints to back-end:', coords);
+    // POST waypoints to back-end API
   }
 }
