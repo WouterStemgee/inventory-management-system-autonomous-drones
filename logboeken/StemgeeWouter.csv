@@ -10,5 +10,5 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 16/02/19,13:30,15:00,Extern,MQTT research - Prototype van drone simulator: grid klikbaar gemaakt voor waypoint selectie,15,
 18/02/19,13:30,18:30,Extern,Research MEAN - Angular applicatie gemaakt en de drone simulator als component toegevoegd,15,
 19/02/19,08:15,12:30,Campus,UML klassendiagram van drone simulator gemaakt - besproken hoe de containers onderling gaan intrageren,15,
-19/02/19,13:30,18:30,Extern,Drone simulator uitbreidbaar en onderhoudbaar gemaakt + geimplementeerd als service voor databinding mogelijkheden,15,
-19/02/19,13:30,17:00,Campus,Drone simulator: kaarten kunnen dynamisch geselecteerd en ingeladen worden - geselecteerde waypoints kunnen geexporteerd worden,15,
+21/02/19,13:30,18:30,Extern,Drone simulator uitbreidbaar en onderhoudbaar gemaakt + geimplementeerd als service voor databinding mogelijkheden,15,
+21/02/19,13:30,17:00,Campus,Drone simulator: kaarten kunnen dynamisch geselecteerd en ingeladen worden - geselecteerde waypoints kunnen geexporteerd worden,15,
