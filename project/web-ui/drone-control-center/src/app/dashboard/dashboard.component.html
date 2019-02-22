@@ -19,4 +19,28 @@
       <p class="card-text"><small class="text-muted">Last updated 1 second ago</small></p>
     </div>
   </div>
+  <div class="card bg-light mb-3" style="max-width: 540px;">
+    <div class="card-header"></div>
+    <div class="card-body">
+      <h5 class="card-title">Map Editing</h5>
+      <p class="card-text">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-codepen"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon><line x1="12" y1="22" x2="12" y2="15.5"></line><polyline points="22 8.5 12 15.5 2 8.5"></polyline><polyline points="2 15.5 12 8.5 22 15.5"></polyline><line x1="12" y1="2" x2="12" y2="8.5"></line></svg>
+        Selected object: {{simulator.selectedDrawable}}
+      </p>
+
+      <div class="btn-toolbar mb-2 mb-md-2">
+        <div class="btn-group mr-2">
+          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.selectDrawable('waypoint')">
+            Waypoints
+          </button>
+          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.selectDrawable('obstacle')">
+            Obstacles
+          </button>
+          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.selectDrawable('inventoryItem')">
+            Inventory Items
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

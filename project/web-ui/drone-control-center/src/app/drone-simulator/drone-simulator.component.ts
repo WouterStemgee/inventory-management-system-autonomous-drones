@@ -9,7 +9,7 @@ import { DroneSimulatorService } from './drone-simulator.service';
 })
 export class DroneSimulatorComponent implements OnInit {
 
-  constructor(private simulator: DroneSimulatorService) { }
+  constructor(public simulator: DroneSimulatorService) { }
 
   ngOnInit() {
     this.simulator.load();

@@ -10,6 +10,7 @@ import { DataService } from '../data.service';
 export class DroneSimulatorService {
   tileSize = 20;
   selectedMap = 0;
+  selectedDrawable = 'inventoryItem';
 
   canvas;
   map;
@@ -40,7 +41,13 @@ export class DroneSimulatorService {
     if (pos.x >= 0 && pos.y >= 0 && pos.x <= this.canvas.width && pos.y <= this.canvas.height) {
       const x = Math.floor(pos.x / this.tileSize);
       const y = Math.floor(pos.y / this.tileSize);
-      this.map.toggleWaypoint(x, y);
+      if (this.selectedDrawable === 'waypoint') {
+        this.map.toggleWaypoint(x, y);
+      } else if (this.selectedDrawable === 'obstacle') {
+        this.map.toggleObstacle(x, y);
+      } else if (this.selectedDrawable === 'inventoryItem') {
+        this.map.toggleInventoryItem(x, y);
+      }
     }
   }
 
@@ -100,6 +107,20 @@ export class DroneSimulatorService {
   selectMap(id) {
     this.selectedMap = id;
     this.reset();
+  }
+
+  selectDrawable(drawable) {
+    switch (drawable) {
+      case 'waypoint':
+        this.selectedDrawable = 'waypoint';
+        break;
+      case 'obstacle':
+        this.selectedDrawable = 'obstacle';
+        break;
+      case 'inventoryItem':
+        this.selectedDrawable = 'inventoryItem';
+        break;
+    }
   }
 
   calculateOptimalFlightPath() {
