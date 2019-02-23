@@ -12,7 +12,7 @@ export class DroneSimulatorComponent implements OnInit {
 
   alerts = [];
 
-  constructor(public simulator: DroneSimulatorService) {
+  constructor(private simulator: DroneSimulatorService) {
     let i = 0;
     simulator.alertEvent.subscribe(
       (alertMessage) => {
@@ -35,5 +35,8 @@ export class DroneSimulatorComponent implements OnInit {
 
   ngOnInit() {
     this.simulator.load();
+    if (this.simulator.loaded) {
+      this.simulator.render();
+    }
   }
 }

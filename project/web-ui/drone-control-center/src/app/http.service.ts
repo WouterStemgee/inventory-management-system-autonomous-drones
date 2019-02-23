@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../environments/environment';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,8 @@ export class HttpService {
 
   maps;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   getAllMaps() {
     return new Promise<any[]>((resolve, reject) => {
@@ -24,6 +25,7 @@ export class HttpService {
       }
     });
   }
+
   getMap(id) {
     return new Promise((resolve, reject) => {
       if (this.maps.length === 0) {

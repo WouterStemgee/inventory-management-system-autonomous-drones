@@ -13,7 +13,7 @@ export class Map {
     this.grid = new Grid(gridSize, tileSize);
     this.obstacles = [];
     this.inventoryItems = [];
-    this.flightpath = new FlightPath(tileSize);
+    this.flightpath = new FlightPath(tileSize,{x:1, y:1},{x:1, y:1});
     this.optimalFlightPath = undefined;
     this.imageLoader = imageLoader;
   }
@@ -36,8 +36,17 @@ export class Map {
     });
   }
 
-  saveMap() {
-    // TODO: Save Map JSON-file to the back-end with obstacles and inventory items
+  exportMap() {
+    console.log('Exporting map...');
+    let map = {
+      "id" : 0,
+      "name" : "Exported Map",
+      "obstacles" : [],
+      "inventoryItems" : []
+    };
+    this.obstacles.forEach((o) => map.obstacles.push({x:o.x, y:o.y}));
+    this.inventoryItems.forEach((i) => map.inventoryItems.push({x:i.x, y:i.y}));
+    console.log(JSON.stringify(map));
   }
 
   addInventoryItem(x, y) {

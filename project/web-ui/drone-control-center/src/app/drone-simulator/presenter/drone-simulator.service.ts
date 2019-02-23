@@ -21,46 +21,55 @@ export class DroneSimulatorService {
   imageLoader;
 
   maps;
+  mouseX;
+  mouseY;
 
-  @Output() alertEvent =  new EventEmitter<string>();
+  private http: HttpService;
+  @Output() alertEvent = new EventEmitter<string>();
   constructor(private data: DataService, http: HttpService) {
     this.imageLoader = new ImageLoader();
     this.loaded = false;
+    this.simulationRunner = undefined;
+    this.http = http;
   }
 
   keyhandler(e) {
-    return new Promise((resolve, reject) => {
-      if (this.simulationRunner) {
-        if (e.keyCode === 37) {
-          this.drone.move('west');
-        } else if (e.keyCode === 38) {
-          this.drone.move('south');
-        } else if (e.keyCode === 39) {
-          this.drone.move('east');
-        } else if (e.keyCode === 40) {
-          this.drone.move('north');
-        }
-        resolve();
+    if (this.simulationRunner) {
+      if (e.keyCode === 37) {
+        this.drone.move('west');
+      } else if (e.keyCode === 38) {
+        this.drone.move('south');
+      } else if (e.keyCode === 39) {
+        this.drone.move('east');
+      } else if (e.keyCode === 40) {
+        this.drone.move('north');
       }
-    });
+    }
+    this.render();
   }
 
   clickhandler(e) {
-    return new Promise((resolve, reject) => {
-      const pos = this.mousePos(e);
-      if (pos.x >= 0 && pos.y >= 0 && pos.x <= this.canvas.width && pos.y <= this.canvas.height) {
-        const x = Math.floor(pos.x / this.tileSize);
-        const y = Math.floor(pos.y / this.tileSize);
-        if (this.selectedDrawable === 'waypoint') {
-          this.map.toggleWaypoint(x, y);
-        } else if (this.selectedDrawable === 'obstacle') {
-          this.map.toggleObstacle(x, y);
-        } else if (this.selectedDrawable === 'inventoryItem') {
-          this.map.toggleInventoryItem(x, y);
-        }
+    const pos = this.mousePos(e);
+    if (pos.x >= 0 && pos.y >= 0 && pos.x <= this.canvas.width && pos.y <= this.canvas.height) {
+      const x = Math.floor(pos.x / this.tileSize);
+      const y = Math.floor(pos.y / this.tileSize);
+      if (this.selectedDrawable === 'waypoint') {
+        this.map.toggleWaypoint(x, y);
+      } else if (this.selectedDrawable === 'obstacle') {
+        this.map.toggleObstacle(x, y);
+      } else if (this.selectedDrawable === 'inventoryItem') {
+        this.map.toggleInventoryItem(x, y);
       }
-      resolve();
-    });
+    }
+    this.render();
+  }
+
+  mousehandler(e) {
+    const pos = this.mousePos(e);
+    if (pos.x >= 0 && pos.y >= 0 && pos.x <= this.canvas.width && pos.y <= this.canvas.height) {
+      this.mouseX = Math.floor(pos.x / this.tileSize);
+      this.mouseY = Math.floor(pos.y / this.tileSize);
+    }
   }
 
   mousePos(e) {
@@ -75,7 +84,7 @@ export class DroneSimulatorService {
     if (this.simulationRunner) {
       window.clearInterval(this.simulationRunner);
       this.simulationRunner = undefined;
-      console.log('Simulation stopped.');
+      this.alertEvent.emit('Simulation stopped.');
     }
     this.drone.reset();
     this.map.reset();
@@ -95,10 +104,13 @@ export class DroneSimulatorService {
             this.maps = result;
             this.map.loadMap(this.maps[this.selectedMap]).then(() => {
               window.addEventListener('keydown', (event) => {
-                this.keyhandler(event).then(() => this.render());
+                this.keyhandler(event);
               });
               window.addEventListener('mousedown', (event) => {
-                this.clickhandler(event).then(() => this.render());
+                this.clickhandler(event);
+              });
+              window.addEventListener('mousemove', (event) => {
+                this.mousehandler(event);
               });
               this.loaded = true;
               this.render();
@@ -108,29 +120,34 @@ export class DroneSimulatorService {
             console.log('Error loading maps: ', error);
           });
       });
-
     }
   }
 
   start() {
-    if (this.map.optimalFlightPath) {
+    if (this.map.optimalFlightPath && this.simulationRunner === undefined) {
       this.alertEvent.emit('Starting simulation...');
       const context = this.canvas.getContext('2d');
+
+      let currentWaypoint = 0;
       this.simulationRunner = setInterval(() => {
-        this.renderDrone();
-      }, 50);
+        if (currentWaypoint < this.map.optimalFlightPath.length) {
+          this.drone.moveTo(this.map.optimalFlightPath[currentWaypoint].x, this.map.optimalFlightPath[currentWaypoint].y);
+          this.render();
+          currentWaypoint++;
+        } else {
+          window.clearInterval(this.simulationRunner);
+          this.simulationRunner = undefined;
+          this.alertEvent.emit('Simulation finished.');
+        }
+      }, 500);
     } else {
-      this.alertEvent.emit('No flightpath found.');
+      this.alertEvent.emit('No optimal flightpath calculated.');
     }
   }
 
   render() {
     const context = this.canvas.getContext('2d');
     this.map.draw(context);
-  }
-
-  renderDrone() {
-    const context = this.canvas.getContext('2d');
     this.drone.draw(context);
   }
 
@@ -146,6 +163,12 @@ export class DroneSimulatorService {
   calculateOptimalFlightPath() {
     const coords = this.map.flightpath.saveFlightPath();
     console.log('Sending waypoints to back-end:', coords);
-    // POST waypoints to back-end API
+    // TODO: Communicate with back-end
+    this.map.optimalFlightPath = coords;
+    this.alertEvent.emit('Optimal flightplath successfully calculated.');
+  }
+
+  exportMap() {
+    this.map.exportMap();
   }
 }

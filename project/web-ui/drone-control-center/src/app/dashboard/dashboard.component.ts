@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { SharedService } from '../shared.service';
+import {Component, OnInit} from '@angular/core';
+import {SharedService} from '../shared.service';
 import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
 
 @Component({

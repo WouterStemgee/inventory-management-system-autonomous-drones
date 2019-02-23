@@ -8,6 +8,10 @@ export class Drone extends DrawableImage {
     this.dy = 0;
   }
 
+  draw(context) {
+    context.drawImage(this.loadedImage, this.x * this.tileSize - (this.tileSize / 2), this.y * this.tileSize - (this.tileSize / 2), this.tileSize * 2, this.tileSize * 2);
+  }
+
   fly(flightpath) {
     // TODO
   }

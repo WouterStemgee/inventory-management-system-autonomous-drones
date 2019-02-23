@@ -1,10 +1,13 @@
 import {Waypoint} from './waypoint.js';
 
 export class FlightPath {
-  constructor(tileSize) {
+  constructor(tileSize, takeoff, landing) {
     this.tileSize = tileSize;
     this.waypoints = [];
+    this.takeoff = takeoff;
+    this.landing = landing;
   }
+
 
   addWaypoint(x, y) {
     let waypoint = new Waypoint(x, y, this.tileSize);
@@ -27,7 +30,9 @@ export class FlightPath {
 
   saveFlightPath() {
     let waypointCoords = [];
+    waypointCoords.push(this.takeoff);
     this.waypoints.forEach(waypoint => waypointCoords.push({x: waypoint.x, y: waypoint.y}));
+    waypointCoords.push(this.landing);
     return waypointCoords;
   }
 
