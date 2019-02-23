@@ -8,15 +8,17 @@ export class FlightPath {
   
   addWaypoint(x, y) {
     let waypoint = new Waypoint(x, y, this.tileSize);
-    if (!this.waypoints.some(function(w){return w[waypoint.x] === waypoint.y;})) {
-      this.waypoints.push(waypoint);
-      console.log('Waypoint added: [X: ' + x + ', Y: ' + y + ']');
-    }
-    this.printWaypoints();
+    this.waypoints.push(waypoint);
+    console.log('Waypoint added: [X: ' + x + ', Y: ' + y + ']');
   }
   
-  removeWayPoint(x, y) {
-    // TODO
+  removeWaypoint(x, y) {
+    for(let i = this.waypoints.length - 1; i >= 0; i--) {
+      if(this.waypoints[i].x === x && this.waypoints[i].y === y) {
+        this.waypoints.splice(i, 1);
+      }
+    }
+    console.log('Waypoint removed: [X: ' + x + ', Y: ' + y + ']');
   }
 
   printWaypoints() {
@@ -24,10 +26,12 @@ export class FlightPath {
   }
 
   saveFlightPath() {
-    // TODO
+    let waypointCoords = [];
+    this.waypoints.forEach(waypoint => waypointCoords.push({x : waypoint.x, y : waypoint.y}));
+    return waypointCoords;
   }
 
-  loadFlightPath() {
+  loadFlightPath(flightpath) {
     // TODO
   }
   
