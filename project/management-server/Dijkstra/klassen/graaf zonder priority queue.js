@@ -1,5 +1,5 @@
-const PriorityQueue = require('./priorityQueue');
-class Graaf {
+const PriorityKnoop = require('./priorityKnoop');
+class Slow {
     constructor() {
         this.knopen = [];
         this.verbindingen = [];
@@ -57,30 +57,28 @@ class Graaf {
     //kortste pad zoeken nummer komen overeen met uitleg wikipedia Dijkstra's algorithm 2.Algoritm
     zoekKortstePad(begin, eind) {
         let bezocht = {},
+            onbezochteKnopenLijst = {},
             afstand = {},
             huidige,
             vorigeKnoop = {},
             pad = [],
             knoop1,
             knoop2,
-            totaleAfstand,
-            huidigePKnoop;
-        let pQueue = new PriorityQueue();
+            totaleAfstand;
 
         //markeer alle nodes als onbezocht en creeer een lijst van de onbezochte knopen. (1)
         this.knopen.forEach(function (knoop) {
+            onbezochteKnopenLijst[knoop] = true;
             bezocht[knoop] = null;
-            if (knoop == begin){
-                afstand[knoop] = 0;
-            } else {
-                afstand[knoop] = Infinity; //zet de afstand van de de beginknoop op 0 en van alle andere knopen op oneindig. (2)
-            }
-            pQueue.voegKnoopToeMetPrioriteit(knoop, afstand[knoop]);
+            afstand[knoop] = Infinity; //zet de afstand van de de beginknoop op 0 en van alle andere knopen op oneindig. (2)
         });
+        afstand[begin] = 0; //beginknoop 0 (2)
 
         //selecteer de knoop met de kleinste afstand als de huidige knoop, bekijk alle knopen met wie deze verbonden is en kijk wat het kortste pad is naar deze knoop (3)
-        while (!pQueue.isLeeg()) {
-            huidige = pQueue.geefEersteKnoop().knoop;//de knoop met de kleinste afstand wordt als eerste geselecteerd, meest prioriteit
+        while (Object.keys(onbezochteKnopenLijst).length > 0) {
+            huidige = Object.keys(onbezochteKnopenLijst).reduce(function (bezocht, knoop) {
+                return afstand[bezocht] > afstand[knoop] ? knoop : bezocht;
+            }, Object.keys(onbezochteKnopenLijst)[0]); //de knoop met de kleinste afstand wordt als eerste geselecteerd
             //bekijk alle knopen die een verbinding bevatten met de geselecteerde knoop
             this.verbindingen.filter(function(verbinding){
                 knoop1 = verbinding[0];
@@ -101,11 +99,11 @@ class Graaf {
                     afstand[knoop2] = totaleAfstand;
                     bezocht[knoop2] = huidige;
                     vorigeKnoop[knoop2] = knoop1;
-                    pQueue.verminderPrioriteit(knoop2, totaleAfstand);
                 }
             });
+
             //verwijder bezochte knoop (4)
-            pQueue.verwijderPKnoop();
+            delete  onbezochteKnopenLijst[huidige];
 
             //indien we de eindknoop bereikt hebben stopt het hier (5) anders wordt de lus vanaf stap 3 herhaald (6)
         }
@@ -117,6 +115,7 @@ class Graaf {
             eind = vorigeKnoop[eind];
         }
         pad.unshift(totaleAfstand);
+        //console.log(pad);
         return pad;
     }
 
@@ -147,6 +146,7 @@ class Graaf {
                 }
             });
             pad.push(gekozenpad);
+            //console.log(gekozenEindknoop.toString() + 'de knoop met afstand ' + afstandVanafVorigeKnoop);
             totaleAfstand += afstandVanafVorigeKnoop;
             start = gekozenEindknoop;
             this.waypoints.splice(this.waypoints.indexOf(gekozenEindknoop),1);
@@ -157,4 +157,4 @@ class Graaf {
         return pad;
     }
 };
-module.exports = Graaf;
+module.exports = Slow;

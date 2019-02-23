@@ -1,38 +1,50 @@
-const Graaf = require('./graaf.js');
-const GraafImproved = require('./graafVoorMeerderePunten');
+const Graaf = require('./graaf');
+const Slow = require('./graaf zonder priority queue');
 let graaf = new Graaf();
-graaf.voegKnopenToe(['1','2','3','4']);
-graaf.voegVerbindingenToe([
-    ['1','2',4],
-    ['1','3',7],
-    ['2','3',1],
-    ['1','4',1]
-]);
-graaf.voegKnopenToe(['5','6','7']);
-graaf.voegVerbindingenToe([
-    ['1','5',20],
-    ['2','5',3],
-    ['4','5',9]
-]);
-
-let graafI = new GraafImproved(graaf, ['2','4','5']);
-console.log(graafI.berekenKortstePad('1'));
-console.log('--------------------------------------------------------via graafImproved-----------------------------------------------------------------');
-
-let graaf2 = new Graaf();
+let slow = new Slow();
 for (i = 0; i < 10; i++){
     for (j = 0; j < 10; j++){
-        graaf2.voegKnopenToe([i+'X'+j+'Y']);
+        graaf.voegKnopenToe([i+'X'+j+'Y']);
+        slow.voegKnopenToe([i+'X'+j+'Y']);
     }
 }
 for (i = 0; i < 9; i++) {
     for (j = 0; j < 9; j++) {
-        graaf2.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+j+'Y',1]]);
-        graaf2.voegVerbindingenToe([[i+'X'+j+'Y',i+'X'+(j.valueOf()+1)+'Y',1]]);
-        graaf2.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+(j.valueOf()+1)+'Y',1]]);
+        graaf.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+j+'Y',1]]);
+        graaf.voegVerbindingenToe([[i+'X'+j+'Y',i+'X'+(j.valueOf()+1)+'Y',1]]);
+        graaf.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+(j.valueOf()+1)+'Y',1]]);
+        slow.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+j+'Y',1]]);
+        slow.voegVerbindingenToe([[i+'X'+j+'Y',i+'X'+(j.valueOf()+1)+'Y',1]]);
+        slow.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+(j.valueOf()+1)+'Y',1]]);
     }
 }
-let graaf2I = new GraafImproved(graaf2, ['5X5Y','5X7Y','7X7Y']);
-console.log(graaf2I.berekenKortstePad('0X0Y'));
-console.log('---------------------------------------------------via gewone graaf--------------------------------------------------------------------------');
-console.log(graaf2.zoekKortstePadWaypoints('0X0Y', ['5X5Y','5X7Y','7X7Y']));
+console.log(graaf.zoekKortstePadWaypoints('0X0Y', ['5X5Y','5X7Y','7X7Y']));
+console.log(slow.zoekKortstePadWaypoints('0X0Y', ['5X5Y','5X7Y','7X7Y']));
+console.log('---------------------------------------------------verwijderen van knopen uit de gewone graaf--------------------------------------------------------------------------');
+graaf.verwijderKnopen(['3X3Y','3X2Y','3X4Y']);
+slow.verwijderKnopen(['3X3Y','3X2Y','3X4Y']);
+console.log(graaf.zoekKortstePadWaypoints('0X0Y', ['5X5Y','5X7Y','7X7Y']));
+console.log(slow.zoekKortstePadWaypoints('0X0Y', ['5X5Y','5X7Y','7X7Y']));
+console.log('---------------------------------------------------timing bij grote graaf--------------------------------------------------------------------------');
+graaf.reset();
+slow.reset();
+for (i = 0; i < 100; i++){
+    for (j = 0; j < 10; j++){
+        graaf.voegKnopenToe([i+'X'+j+'Y']);
+        slow.voegKnopenToe([i+'X'+j+'Y']);
+    }
+}
+for (i = 0; i < 99; i++) {
+    for (j = 0; j < 9; j++) {
+        graaf.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+j+'Y',1]]);
+        graaf.voegVerbindingenToe([[i+'X'+j+'Y',i+'X'+(j.valueOf()+1)+'Y',1]]);
+        graaf.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+(j.valueOf()+1)+'Y',1]]);
+        slow.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+j+'Y',1]]);
+        slow.voegVerbindingenToe([[i+'X'+j+'Y',i+'X'+(j.valueOf()+1)+'Y',1]]);
+        slow.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+(j.valueOf()+1)+'Y',1]]);
+    }
+}
+graaf.verwijderKnopen(['80X8Y','81X8Y']);
+slow.verwijderKnopen(['80X8Y','81X8Y']);
+console.log(graaf.zoekKortstePadWaypoints('0X0Y', ['1X1Y','17X9Y','12X4Y','54X3Y','98X9Y']));
+console.log(slow.zoekKortstePadWaypoints('0X0Y', ['1X1Y','17X9Y','12X4Y','54X3Y','98X9Y']));
