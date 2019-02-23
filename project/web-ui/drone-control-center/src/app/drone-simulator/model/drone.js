@@ -1,22 +1,11 @@
 import { DrawableImage } from './drawable-image.js';
 
 export class Drone extends DrawableImage {
-  constructor(x, y, tileSize, gridSize) {
-    super(x, y, tileSize, 'assets/images/simulator/drone.png');
+  constructor(x, y, tileSize, gridSize, imageLoader) {
+    super(x, y, tileSize, imageLoader.loadedImages['drone']);
     this.gridSize = gridSize;
     this.dx = 0;
     this.dy = 0;
-  }
-
-  draw(context) {
-    if (this.image_loaded) {
-        context.drawImage(this.img, this.x * this.tileSize - (this.tileSize / 2), this.y * this.tileSize - (this.tileSize / 2), this.tileSize *2, this.tileSize*2);
-    } else {
-      this.img.onload = () => {
-        this.image_loaded = true;
-      };
-      this.img.src = this.imagefile;
-    }
   }
 
   fly(flightpath) {

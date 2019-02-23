@@ -7,7 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { DroneSimulatorComponent } from './drone-simulator/drone-simulator.component';
+import { DroneSimulatorComponent } from './drone-simulator/view/drone-simulator.component';
 import { FlightPlannerComponent } from './flight-planner/flight-planner.component';
 import { MapEditorComponent } from './map-editor/map-editor.component';
 import { InventoryComponent } from './inventory/inventory.component';

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import {DroneSimulatorComponent} from './drone-simulator/drone-simulator.component';
+import {DroneSimulatorComponent} from './drone-simulator/view/drone-simulator.component';
 import {FlightPlannerComponent} from './flight-planner/flight-planner.component';
 import {InventoryComponent} from './inventory/inventory.component';
 import {MapEditorComponent} from './map-editor/map-editor.component';

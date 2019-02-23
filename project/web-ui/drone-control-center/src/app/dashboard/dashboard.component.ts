@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedService } from '../shared.service';
-import {DroneSimulatorService} from '../drone-simulator/drone-simulator.service';
+import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
 
 @Component({
   selector: 'app-dashboard',

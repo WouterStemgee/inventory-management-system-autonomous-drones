@@ -1,4 +1,4 @@
-import { Tile } from './tile.js';
+import {Tile} from './tile.js';
 
 export class Obstacle extends Tile {
   constructor(x, y, tileSize) {
