@@ -3,6 +3,8 @@ const dbmodule = require('../db-module/dbmodule');
 
 const router = express.Router();
 
+//hier wordt overal gewerkt met json, die van de client of van de database komt
+
 router.route('')
     .get((req, res, next) => {
         dbmodule.getAllMaps().then((result) =>{
@@ -10,16 +12,12 @@ router.route('')
         });
     })
     .post((req, res, next) => {
-        if(!dbmodule.validateMap(req.body)){
-            res.status(400).send("Bad request");
-            return;
-        }
         dbmodule.postMap(req.body)
             .then((result) =>{
                 res.send(result);
             })
             .catch((error) => {
-                res.status(400).send("Bad request");
+                res.status(400).send(error);
             })
     });
 
@@ -31,21 +29,16 @@ router.route('/:id')
             .then((result) => {
                 res.send(result);
             }).catch((error) =>{
-                res.status(404).send("Map id not found");
-                console.log(error);
+                res.status(404).send(error);
             });
     })
     .put((req, res, next) => {
-        if(!dbmodule.validateMap(req.body)){
-            res.status(400).send("Bad request");
-            return;
-        }
         dbmodule.updateMap(req.params.id, req.body)
             .then((result) =>{
                 res.send(result); //normaal hetzelfde als req.body
             })
             .catch((error) =>{
-                res.status(404).send("Unable to update the map");
+                res.status(400).send(error);
             });
 
     })
@@ -55,7 +48,7 @@ router.route('/:id')
             .then((result) => {
                 res.send(result);
             }).catch((error) =>{
-                res.status(404).send("Map id not found");
+                res.status(404).send(error);
                 console.log(error);
         });
     });
