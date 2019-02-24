@@ -1,7 +1,7 @@
 const express = require('express');
 const Joi = require('joi'); //validatie package
 
-
+let mapsCache = [];
 let mapsJSON = `[
     {
         "id" : 0,
@@ -51,31 +51,52 @@ let mapsJSON = `[
 
 
 let getAllMaps = () =>{
-    return Promise.resolve(mapsJSON);
+    return Promise.resolve(getCache());
 };
 
 let getMap = (id) =>{
-
+    let maps = getCache();
+    let res = maps.find(x => x.id === parseInt(id));
+    if(res)
+        return Promise.resolve(res);
+    else return Promise.reject("Map id niet gevonden in db");
 };
 
-let updateMap = (id, mapJSON) => {
+let updateMap = (id, map) => {
+    if(!validateMap(map))
+        return Promise.reject("Bad request");
 
+    let mapId = getCache().findIndex(map => {return map.id === parseInt(id);});
+    if(!mapId || mapId < 0)
+        return Promise.reject("Map niet gevonden in db");
+
+    mapsCache[mapId] = map;
+    return Promise.resolve(map);
 };
 
-let postMap = (mapJSON) => {
+let postMap = (map) => {
+    if(!validateMap(map))
+        return Promise.reject("Bad request");
 
+    getCache().push(map);
+    return Promise.resolve(map);
 };
 
 let deleteMap = (id) => {
-
+    let mapId = getCache().findIndex(map => {return map.id === parseInt(id);});
+    if(mapId < 0)
+        return Promise.reject("Map not found");
+    let map = getCache().splice(id, 1)[0];
+    return Promise.resolve(map);
 };
 
 
 
 
-let fillCache = () => {
-    //maak connectie met de db en haal de date op, dit is wrs een promise
-    //return promise ((resolve, reject) => { ... ; mapCache = result; resolve(mapCache)})
+let getCache = () => {
+    if(!mapsCache.length)
+        mapsCache = JSON.parse(mapsJSON);
+    return mapsCache;
 }
 
 
