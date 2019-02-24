@@ -10,3 +10,4 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 20/02/2019,8:15,10:15,Campus, De redenaar - Hoe presenteren,,
 21/02/2019,13:30,17:45,Campus, Met groep samen werken - zelf: opgezocht over express,,
 23/02/2019,12:00,17:00,Thuis, Express leren en begin centrale server schrijven - map.js en db-module beginnen schrijven - configuratie express wijzigen,,
+24/02/2019,12:00,16:00,Thuis, de maps router en de db module refractoren - db module uitgebreid - db module mockup gemaakt - testen maps router via postman: werkt,,
