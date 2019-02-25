@@ -9,6 +9,21 @@ class Graaf {
         console.log(this.knopen + 'zijn de knopen');
         console.log(this.verbindingen + 'zijn de verbindingen');
     }
+	
+	maakGrid(sizeX, sizeY){
+		for (i = 0; i < sizeX; i++){
+			for (j = 0; j < sizeY; j++){
+			this.voegKnopenToe([i+'X'+j+'Y']);
+			}
+		}
+		for (i = 0; i < sizeX-1; i++) {
+			for (j = 0; j < sizeY-1; j++) {
+				this.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+j+'Y',1]]);
+				this.voegVerbindingenToe([[i+'X'+j+'Y',i+'X'+(j.valueOf()+1)+'Y',1]]);
+				this.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+(j.valueOf()+1)+'Y',1]]);
+			}
+		}
+	}
 
     //toevoegen van knopen op de graaf adhv een array.
     voegKnopenToe(knopen) {
