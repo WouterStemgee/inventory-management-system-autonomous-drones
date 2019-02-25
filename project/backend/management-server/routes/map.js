@@ -1,5 +1,5 @@
 const express = require('express');
-const dbmodule = require('../db-module/dbmodule-mockup'); // vervangen door ../db-module/dbmodule-mockup voor te testen
+const dbmodule = require('../database/dbmodule-mockup'); // vervangen door ../database/dbmodule-mockup voor te testen
 
 const router = express.Router();
 

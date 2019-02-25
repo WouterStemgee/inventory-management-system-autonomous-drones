@@ -14,8 +14,8 @@ export class HttpService {
 
   getAllMaps() {
     return new Promise<any[]>((resolve, reject) => {
-      if (this.maps.length === 0) {
-        this.http.get(environment.baseAPIUrl + '/api/maps').subscribe(
+      if (this.maps === undefined) {
+        this.http.get(environment.baseAPIUrl + 'api/maps').subscribe(
           res => {
             this.maps = res;
             resolve(this.maps);
@@ -28,8 +28,8 @@ export class HttpService {
 
   getMap(id) {
     return new Promise((resolve, reject) => {
-      if (this.maps.length === 0) {
-        this.http.get(environment.baseAPIUrl + '/api/maps/' + id).subscribe(
+      if (this.maps.length === undefined) {
+        this.http.get(environment.baseAPIUrl + 'api/maps/' + id).subscribe(
           res => {
             this.maps = res;
             resolve(res);

@@ -99,7 +99,7 @@ export class DroneSimulatorService {
       this.imageLoader.loadImages().then(() => {
         this.map = new Map(gridSize, this.tileSize, this.imageLoader);
         this.drone = new Drone(1, 1, this.tileSize, gridSize, this.imageLoader);
-        this.data.getAllMaps()
+        this.http.getAllMaps()
           .then(result => {
             this.maps = result;
             this.map.loadMap(this.maps[this.selectedMap]).then(() => {
