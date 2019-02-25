@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 
 import {DroneSimulatorService} from '../presenter/drone-simulator.service';
-import {NgbAlert} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-drone-simulator',

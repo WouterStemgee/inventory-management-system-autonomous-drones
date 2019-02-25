@@ -7,36 +7,24 @@ import {environment} from '../environments/environment';
 })
 export class HttpService {
 
-  maps;
-
   constructor(private http: HttpClient) {
   }
 
   getAllMaps() {
-    return new Promise<any[]>((resolve, reject) => {
-      if (this.maps === undefined) {
-        this.http.get(environment.baseAPIUrl + 'api/maps').subscribe(
-          res => {
-            this.maps = res;
-            resolve(this.maps);
-          });
-      } else {
-        resolve(this.maps);
-      }
+    return new Promise((resolve, reject) => {
+      this.http.get(environment.baseAPIUrl + 'api/maps').subscribe(
+        res => {
+          resolve(res);
+        });
     });
   }
 
   getMap(id) {
     return new Promise((resolve, reject) => {
-      if (this.maps.length === undefined) {
-        this.http.get(environment.baseAPIUrl + 'api/maps/' + id).subscribe(
-          res => {
-            this.maps = res;
-            resolve(res);
-          });
-      } else {
-        resolve(this.maps[id]);
-      }
+      this.http.get(environment.baseAPIUrl + 'api/maps/' + id).subscribe(
+        res => {
+          resolve(res);
+        });
     });
   }
 }
