@@ -15,3 +15,4 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 22/02/19,18:30,21:00,Extern,Drone simulator: flyweight pattern toegepast op de drawable objecten - project naar een MVP pattern geconverteerd,15,
 23/02/19,13:30,16:30,Extern,Drone simulator: drone kan tijdens simulatie de waypoints van het optimale pad afvliegen - mappen exporteerbaar gemaakt,15,
 25/02/19,13:30,16:30,Extern,Frontend aangepast zodat deze maps vanaf de express API inleest,15,
+26/02/19,08:15,12:30,Campus,Flightpaths doorsturen naar backend API voor optimaal pad berekening,15,
