@@ -1,6 +1,6 @@
 let zoekPad = (id, body) => {
-    console.log(body);
-    return Promise.resolve("Dijkstra ontving deze shit");
+    // Calculate optimal flightpath in dijkstra module
+    return Promise.resolve(body);
 }
 
 module.exports.zoekPad = zoekPad;

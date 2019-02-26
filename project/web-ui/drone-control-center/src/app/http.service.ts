@@ -27,4 +27,13 @@ export class HttpService {
         });
     });
   }
+
+  fetchOptimalFlightpath(flightpath) {
+    return new Promise((resolve, reject) => {
+      this.http.post(environment.baseAPIUrl + 'api/flightpath/', flightpath).subscribe(
+        res => {
+          resolve(res);
+        });
+    });
+  }
 }

@@ -26,6 +26,7 @@ export class DroneSimulatorService {
 
   private http: HttpService;
   @Output() alertEvent = new EventEmitter<string>();
+
   constructor(private data: DataService, http: HttpService) {
     this.imageLoader = new ImageLoader();
     this.loaded = false;
@@ -163,7 +164,9 @@ export class DroneSimulatorService {
   calculateOptimalFlightPath() {
     const flightpath = this.map.flightpath.saveFlightPath();
     console.log('Sending waypoints to back-end:', flightpath);
-    // TODO: Communicate with back-end
+    this.http.fetchOptimalFlightpath(flightpath).then((optimal) => {
+      console.log(optimal);
+    });
     this.map.optimalFlightPath = flightpath.waypoints;
     this.alertEvent.emit('Optimal flightplath successfully calculated.');
   }

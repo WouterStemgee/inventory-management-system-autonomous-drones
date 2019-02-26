@@ -31,8 +31,8 @@ export class Map {
     return new Promise((resolve, reject) => {
       this.reset();
       this.id = map.id;
-      this.flightpath = new FlightPath(this.tileSize,this.id,{x:1, y:1},{x:1, y:1});
       this.name = map.name;
+      this.flightpath = new FlightPath(this.tileSize, this.id, {x: 1, y: 1}, {x: 1, y: 1});
       map.obstacles.forEach(o => this.addObstacle(o.x, o.y));
       map.inventoryItems.forEach(i => this.addInventoryItem(i.x, i.y));
       resolve();
@@ -42,15 +42,15 @@ export class Map {
   exportMap() {
     console.log('Exporting map...');
     let map = {
-      id : 0,
+      id: this.id,
       sizeX: this.gridSize.width,
       sizeY: this.gridSize.height,
-      name : "Exported Map",
-      obstacles : [],
-      inventoryItems : []
+      name: this.name,
+      obstacles: [],
+      inventoryItems: []
     };
-    this.obstacles.forEach((o) => map.obstacles.push({x:o.x, y:o.y}));
-    this.inventoryItems.forEach((i) => map.inventoryItems.push({x:i.x, y:i.y}));
+    this.obstacles.forEach((o) => map.obstacles.push({x: o.x, y: o.y}));
+    this.inventoryItems.forEach((i) => map.inventoryItems.push({x: i.x, y: i.y}));
     console.log(JSON.stringify(map));
   }
 

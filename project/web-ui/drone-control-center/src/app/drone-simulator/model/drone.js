@@ -1,4 +1,4 @@
-import { DrawableImage } from './drawable-image.js';
+import {DrawableImage} from './drawable-image.js';
 
 export class Drone extends DrawableImage {
   constructor(x, y, tileSize, gridSize, imageLoader) {
@@ -16,7 +16,7 @@ export class Drone extends DrawableImage {
     // TODO
   }
 
-  move(direction){
+  move(direction) {
     switch (direction) {
       case 'north':
         if (this.y < this.gridSize.height - 1) {
@@ -41,7 +41,7 @@ export class Drone extends DrawableImage {
         break;
       case 'west':
         if (this.x > 0) {
-          this.dx  = -1;
+          this.dx = -1;
           this.dy = 0;
           this.flyDiff();
         }

@@ -7,7 +7,7 @@ const cors = require('cors');
 
 const mapRouter = require('./routes/map');
 const droneRouter = require('./routes/drone');
-const waypointRouter = require('./routes/waypoint');
+const waypointRouter = require('./routes/flightpath');
 
 const app = express();
 
@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/maps', mapRouter);
 app.use('/api/drone', droneRouter);
-app.use('/api/waypoints', waypointRouter);
+app.use('/api/flightpath', waypointRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

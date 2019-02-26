@@ -30,8 +30,8 @@ export class FlightPath {
 
   saveFlightPath() {
     let flightpath = {
-      mapId : 0,
-      waypoints : []
+      mapId: 0,
+      waypoints: []
     };
     flightpath.mapId = this.mapId;
     flightpath.waypoints.push(this.takeoff);
