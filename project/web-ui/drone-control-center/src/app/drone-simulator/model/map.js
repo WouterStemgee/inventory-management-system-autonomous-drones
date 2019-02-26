@@ -13,7 +13,7 @@ export class Map {
     this.grid = new Grid(gridSize, tileSize);
     this.obstacles = [];
     this.inventoryItems = [];
-    this.flightpath = new FlightPath(tileSize,this.id,{x:1, y:1},{x:1, y:1});
+    this.flightpath = undefined;
     this.optimalFlightPath = undefined;
     this.imageLoader = imageLoader;
   }
@@ -23,7 +23,7 @@ export class Map {
     this.id = 0;
     this.obstacles = [];
     this.inventoryItems = [];
-    this.flightpath.waypoints = [];
+    this.flightpath = undefined;
     this.optimalFlightPath = undefined;
   }
 
@@ -31,6 +31,7 @@ export class Map {
     return new Promise((resolve, reject) => {
       this.reset();
       this.id = map.id;
+      this.flightpath = new FlightPath(this.tileSize,this.id,{x:1, y:1},{x:1, y:1});
       this.name = map.name;
       map.obstacles.forEach(o => this.addObstacle(o.x, o.y));
       map.inventoryItems.forEach(i => this.addInventoryItem(i.x, i.y));

@@ -33,7 +33,7 @@ export class FlightPath {
       mapId : 0,
       waypoints : []
     };
-    flightpath.waypoints.mapId = this.mapId;
+    flightpath.mapId = this.mapId;
     flightpath.waypoints.push(this.takeoff);
     this.waypoints.forEach(waypoint => flightpath.waypoints.push({x: waypoint.x, y: waypoint.y}));
     flightpath.waypoints.push(this.landing);
