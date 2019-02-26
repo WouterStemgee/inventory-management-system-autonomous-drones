@@ -1,6 +1,7 @@
 const express = require('express');
-const dijkstra = require('xxx');
+const dijkstra = require('../dijkstra/dijkstra-mockup');
 const mqttclient = require('../MQTT/mqttclient');
+
 const router = express.Router();
 
 router.route(':id')
@@ -12,7 +13,7 @@ router.route(':id')
         dijkstra.zoekPad(body.id, body.waypoints)
             .then(result => {
                 res.send(result);
-                mqttclient.send(result);
+                //mqttclient.send(result);
             })
             .catch(error => {
                 res.status(400).send(error)
