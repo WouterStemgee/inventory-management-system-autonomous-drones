@@ -1,6 +1,8 @@
 [
   {
     "id": 0,
+    "sizeX": 40,
+    "sizeY": 30,
     "name": "Warehouse Map",
     "obstacles": [
       {
@@ -1621,6 +1623,8 @@
   },
   {
     "id": 1,
+    "sizeX": 40,
+    "sizeY": 30,
     "name": "Dijkstra Tester",
     "obstacles": [
       {

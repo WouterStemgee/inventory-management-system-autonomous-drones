@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/maps', mapRouter);
 app.use('/api/drone', droneRouter);
-app.use(' api/waypoints', waypointRouter);
+app.use('/api/waypoints', waypointRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

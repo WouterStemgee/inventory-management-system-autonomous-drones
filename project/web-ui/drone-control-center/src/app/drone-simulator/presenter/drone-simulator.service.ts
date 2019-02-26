@@ -161,10 +161,10 @@ export class DroneSimulatorService {
   }
 
   calculateOptimalFlightPath() {
-    const coords = this.map.flightpath.saveFlightPath();
-    console.log('Sending waypoints to back-end:', coords);
+    const flightpath = this.map.flightpath.saveFlightPath();
+    console.log('Sending waypoints to back-end:', flightpath);
     // TODO: Communicate with back-end
-    this.map.optimalFlightPath = coords;
+    this.map.optimalFlightPath = flightpath.waypoints;
     this.alertEvent.emit('Optimal flightplath successfully calculated.');
   }
 

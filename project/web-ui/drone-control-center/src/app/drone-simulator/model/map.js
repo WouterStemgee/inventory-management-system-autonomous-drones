@@ -7,18 +7,20 @@ export class Map {
 
   constructor(gridSize, tileSize, imageLoader) {
     this.name = '';
-    this.id = undefined;
+    this.id = 0;
     this.gridSize = gridSize;
     this.tileSize = tileSize;
     this.grid = new Grid(gridSize, tileSize);
     this.obstacles = [];
     this.inventoryItems = [];
-    this.flightpath = new FlightPath(tileSize,{x:1, y:1},{x:1, y:1});
+    this.flightpath = new FlightPath(tileSize,this.id,{x:1, y:1},{x:1, y:1});
     this.optimalFlightPath = undefined;
     this.imageLoader = imageLoader;
   }
 
   reset() {
+    this.name = '';
+    this.id = 0;
     this.obstacles = [];
     this.inventoryItems = [];
     this.flightpath.waypoints = [];
@@ -39,10 +41,12 @@ export class Map {
   exportMap() {
     console.log('Exporting map...');
     let map = {
-      "id" : 0,
-      "name" : "Exported Map",
-      "obstacles" : [],
-      "inventoryItems" : []
+      id : 0,
+      sizeX: this.gridSize.width,
+      sizeY: this.gridSize.height,
+      name : "Exported Map",
+      obstacles : [],
+      inventoryItems : []
     };
     this.obstacles.forEach((o) => map.obstacles.push({x:o.x, y:o.y}));
     this.inventoryItems.forEach((i) => map.inventoryItems.push({x:i.x, y:i.y}));
