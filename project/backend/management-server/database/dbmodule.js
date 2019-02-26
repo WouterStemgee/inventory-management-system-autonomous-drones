@@ -1,7 +1,7 @@
 const express = require('express');
 const joi = require('joi'); //validatie package
 
-const mongodb = require('mongodb')
+const mongodb = require('mongodb');
 
 let mapCache = [];
 

@@ -21,13 +21,13 @@ router.route('')
             })
     });
 
-
 router.route('/:id')
     .get((req, res, next) => {
         let id = req.params.id;
         dbmodule.getMap(id)
             .then((result) => {
                 res.send(result);
+
             }).catch((error) => {
             res.status(404).send(error);
         });
