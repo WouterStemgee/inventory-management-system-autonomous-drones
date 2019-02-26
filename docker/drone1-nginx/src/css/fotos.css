@@ -1,0 +1,29 @@
+figure { 
+    display: inline-block;
+    margin: 5px;
+}
+
+figure:hover {
+    background-color: #ffb270;
+}
+
+img {
+    width: 150px;
+}
+
+figcaption {
+    text-align: center;
+}
+
+form {
+    border-width: thin;
+    border-style: dashed;
+    padding: 3px;
+    margin: 3px;
+}
+
+label {
+    float: left;
+    width: 10em;
+}
+

@@ -1,0 +1,30 @@
+version: "2"  # "3" if beta release (swarm mode)
+services:
+  # Glassfish Container
+  drone1-glassfish:                      
+    build:
+      context: drone1-glassfish/
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"                # External port: choose between glassfish and nginx
+  # NGINX Container
+  drone1-nginx:
+    build: 
+      context: drone1-nginx/
+      dockerfile: Dockerfile
+    # ports:                           # External port: choose between glassfish and nginx
+    #   - "8081:80"
+  # NodeJS container
+  drone1-nodejs:
+    build:
+      context: drone1-nodejs/
+      dockerfile: Dockerfile
+    ports:                            # External port
+     - '8082:3000'                
+  # MongoDB container
+  drone1-mongodb:
+    build:
+      context: drone1-mongodb/
+      dockerfile: Dockerfile
+    #ports:
+    #  - '27017:27017'                 # Not allowed on production environment
