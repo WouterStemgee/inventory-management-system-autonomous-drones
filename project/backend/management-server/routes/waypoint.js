@@ -4,10 +4,8 @@ const mqttclient = require('../MQTT/mqttclient');
 
 const router = express.Router();
 
-router.route(':id')
+router.route('')
     .post((req, res, next) => {
-        let id = req.params.id;
-        console.log(id);
         let body = req.body;
         console.log(body);
         dijkstra.zoekPad(body.id, body.waypoints)
