@@ -12,5 +12,7 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 21/02/19,9:55,12:35,Extern,NodeJS + Express tutorials,,
 21/02/19,13:30,15:45,Campus,Log files bekijken + node,,
 23/02/19,10:30,13:00,Extern,Log files omzetten naar csv bestanden + verdere tutorials met wat probeersels (niet upgeload),,
-23/02/19,14:30,,Extern,verder met Node en Express,,
-
+23/02/19,14:30,16:00,Extern,verder met Node en Express,,
+26/02/19,8:15,12:30,Campus,Dataflow + nodered research,,
+26/02/19,17:30,18:45,Extern,nodered research,,
+27/02/19,10:45,12:30,Extern,verdere research + schema vanwaar de data gehaald wordt en welke eventueel gestuurd wordt vanuit de drone,,
