@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const productSchema = mongoose.Schema({
 	_id: mongoose.Schema.Types.ObjectId,
 	name: String,
-	quantity: Number
+	quantity: Number,
+	xCoord: Number,
+	yCoord: Number
 });
 // einde
 module.exports = mongoose.model('Product',productSchema);
