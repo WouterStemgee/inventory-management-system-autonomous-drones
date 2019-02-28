@@ -19,7 +19,9 @@ router.route('')
 	    const product = new Product({
 		    _id: new mongoose.Types.ObjectId(),
 		    name: req.body.name,
-		    quantity: req.body.quantity
+		    quantity: req.body.quantity,
+			xCoord: req.body.xCoord,
+			yCoord: req.body.YCoord
 	    });
         product.save().then(result =>{
             console.log(result);
