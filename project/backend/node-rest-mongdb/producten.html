@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <title>Producten in database beheren</title>
+
+        <!-- Bootstrap -->
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"> -->
+	</head>
+	<body>
+		<h1>Producten aan database toevoegen</h1>
+		 <form action="localhost:3000/products/" method="post">
+  			<label for="name">Naam:</label>
+  			<input type="text" name="name" id="naam"><br>
+  			<label for="quantity">Hoeveelheid:</label>
+  			<input name="quantity" type="number" min="0"><br>
+  			<label for="xCoord">xCoord:</label>
+  			<input name="xCoord"type="number" min="0"><br>
+  			<label for="yCoord">yCoord:</label>
+  			<input name="yCoord" type="number" min="0">
+			<br><br>
+  			<input type="submit" value="Submit">
+		</form> 
+
+
+		<h1>Product zoeken in de database via productId</h1>
+		<form action="localhost:3000/products/" method="GET"> <!-- links nog aan te passen -->
+  			<label for="id">ID:</label>
+  			<input type="text" name="id" id="id"><br><br>
+  			<input type="submit" value="Submit">
+		</form> 
+
+		<h1>Producten aanwezig in de database</h1>
+		<table>
+  			<thead>
+    			<tr>
+      				<th>Naam</th>
+      				<th>id</th>
+      				<th>hoeveelheid</th>
+      				<th>xCoord</th>
+      				<th>yCoord</th>
+    			</tr>
+  			</thead>
+  			<tbody>
+  				<tr>
+      				<td>testSubject</td>
+      				<td>758</td>
+      				<td>10</td>
+      				<td>5</td>
+      				<td>6</td>
+    			</tr>
+  			</tbody>
+		</table>
+
+		<script type="text/javascript">
+		/*
+			var request = new XMLHttpRequest();
+			request.open('GET', '/app.js/products/', true);
+			request.onload = function () {
+				 var data = JSON.parse(this.response);
+ 				 if (request.status >= 200 && request.status < 400) {
+    			 	data.forEach(movie => {
+     				console.log(movie.title);
+    				});
+  				} else {
+    				console.log('error');
+  				}
+			}
+			request.send();
+			*/
+		</script>
+	</body>
+</html>
