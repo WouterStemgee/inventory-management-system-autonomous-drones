@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/maps', mapRouter);
 app.use('/api/drone', droneRouter);
 app.use('/api/flightpath', waypointRouter);
-app.use('/api/product', productRouter);
+app.use('/api/products', productRouter);
 
 // je hebt mongDB lokaal geinstalleerd, indien deze nog niet bestaat wordt dit automatisch aangemaakt
 mongoose.connect('mongodb://localhost/projectDatabase', { useNewUrlParser: true });
