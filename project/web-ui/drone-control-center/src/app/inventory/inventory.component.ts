@@ -9,11 +9,21 @@ import {HttpService} from '../http.service';
 })
 export class InventoryComponent implements OnInit {
 
+
+  loaded = false;
+  selectedMapId = 0;
+  selectedMap;
   products;
 
   constructor(private sharedService: SharedService, private http: HttpService) {
     sharedService.onNavigateEvent.emit('inventory');
-    this.getAllProducts();
+    this.http.getMap(this.selectedMapId).then((map) => {
+      this.loaded = true;
+      this.selectedMap = map;
+      console.log(this.selectedMap);
+    }).then(() => {
+      this.getAllProducts();
+    });
   }
 
 
