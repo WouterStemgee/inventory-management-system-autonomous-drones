@@ -11,3 +11,5 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 23/02/19,12:00,13:30,Extern,rest api maken met node.js,,
 23/02/19,14:00,18:00,Extern,verder werken aan rest api en mongoDB toevoegen met mongoose,,
 25/02/19,20:20,21:20,Extern,wiki pagina gemaakt over hoe MongoDB te installeren,,
+26/02/19,08:15,12:30,Campus,html pagina gemaakt om snel database te kunnen testen,,
+28/02/19,13:30,17:45,Campus,rest api nakkijken en mqtt onderzoeken,,
