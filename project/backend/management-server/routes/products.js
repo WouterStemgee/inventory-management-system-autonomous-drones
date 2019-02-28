@@ -8,10 +8,10 @@ router.route('')
 	.get((req, res, next) => {
 	    Product.find().exec().then(docs => {
             console.log(docs);
-            res.status(200).json(docs);
+            res.status(200).send(docs);
 	    }).catch(err =>{
 		    console.log(err);
-		    res.status(500).json({
+		    res.status(500).send({
 			    error: err
 		    });
 	    }); // hier kan je allemal query operators aan toevoegen zoals where, limit,...
@@ -25,13 +25,13 @@ router.route('')
 	    });
         product.save().then(result =>{
             console.log(result);
-            res.status(201).json({
+            res.status(201).send({
                 message: 'Handling POST requests to /products',
                 createdProduct: result
             });
         }).catch(err =>{
             console.log(err);
-            res.status(500).json({
+            res.status(500).send({
                 error: err
             });
 	    });
@@ -43,14 +43,14 @@ router.route('/:productId')
         Product.findById(id).exec().then(doc => {
             console.log(doc);
             if(doc){
-                res.status(200).json(doc);
+                res.status(200).send(doc);
             }
             else{
-                res.status(404).json({message: "Dit is geen geldig id"});
+                res.status(404).send({message: "Dit is geen geldig id"});
             }
         }).catch(err => {
             console.log(err);
-            res.status(500).json({error: err});
+            res.status(500).send({error: err});
         });
     }).patch((req, res, next) => {
         const id = req.params.productId;
@@ -60,20 +60,20 @@ router.route('/:productId')
         }
         Product.update({_id: id},{$set: updateOps}).exec().then(result => {
             console.log(result);
-            res.status(200).json(result);
+            res.status(200).send(result);
         }).catch(err => {
             console.log(err);
-            res.status(500).json({
+            res.status(500).send({
                 error: err
             });
         });
     }).delete((req, res, next) => {
         const id = req.params.productId;
         Product.remove({_id: id}).exec().then(result => {
-            res.status(200).json(result);
+            res.status(200).send(result);
         }).catch(err => {
             console.log(err);
-            res.status(500).json({
+            res.status(500).send({
                 error: err
             });
         });
