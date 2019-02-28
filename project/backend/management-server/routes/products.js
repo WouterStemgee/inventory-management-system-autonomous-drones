@@ -21,7 +21,7 @@ router.route('')
 		    name: req.body.name,
 		    quantity: req.body.quantity,
 			xCoord: req.body.xCoord,
-			yCoord: req.body.YCoord
+			yCoord: req.body.yCoord
 	    });
         product.save().then(result =>{
             console.log(result);
