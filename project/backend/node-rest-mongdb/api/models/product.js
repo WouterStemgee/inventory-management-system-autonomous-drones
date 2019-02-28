@@ -5,5 +5,5 @@ const productSchema = mongoose.Schema({
 	name: String,
 	quantity: Number
 });
-
+// einde
 module.exports = mongoose.model('Product',productSchema);
