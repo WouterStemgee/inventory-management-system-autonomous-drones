@@ -1,3 +1,51 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
   <h1>Inventory</h1>
 </div>
+<h2>Producten aan database toevoegen</h2>
+<div class="container">
+  <form #productForm="ngForm" (ngSubmit)="onSubmit(productForm.form);">
+    <div class="form-group">
+      <label for="name">Naam:</label>
+      <input type="text" class="form-control" id="name" name="name" #nameField="ngModel" ngModel required>
+    </div>
+    <div class="form-group">
+      <label for="quantity">Hoeveelheid:</label>
+      <input id="quantity" type="number" min="0" class="form-control" name="quantity" #quantityField="ngModel" ngModel  required>
+    </div>
+    <div class="form-group">
+      <label for="xCoord">xCoord:</label>
+      <input id="xCoord" type="number" min="0" class="form-control" name="xCoord" #xField="ngModel" ngModel  required>
+    </div>
+    <div class="form-group">
+      <label for="yCoord">yCoord:</label>
+      <input id="yCoord" type="number" min="0" class="form-control" name="yCoord" #yField="ngModel" ngModel  required>
+    </div>
+    <button class="btn btn-success" type="submit">Submit</button>
+  </form>
+</div>
+<hr>
+<h2>Producten aanwezig in de database</h2>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Naam</th>
+    <th scope="col">id</th>
+    <th scope="col">hoeveelheid</th>
+    <th scope="col">xCoord</th>
+    <th scope="col">yCoord</th>
+    <th scope="col">Delete</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let product of products; index as i">
+    <th scope="row">{{ i + 1 }}</th>
+    <td>{{product.name}}</td>
+    <td>{{product._id}}</td>
+    <td>{{product.quantity}}</td>
+    <td>{{product.xCoord}}</td>
+    <td>{{product.yCoord}}</td>
+    <td><button type="button" class="btn btn-danger" (click)="deleteProduct(product._id)">X</button></td>
+  </tr>
+  </tbody>
+</table>

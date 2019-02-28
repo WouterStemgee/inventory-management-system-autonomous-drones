@@ -36,4 +36,31 @@ export class HttpService {
         });
     });
   }
+
+  getAllProducts() {
+    return new Promise((resolve, reject) => {
+      this.http.get(environment.baseAPIUrl + 'api/products/').subscribe(
+        res => {
+          resolve(res);
+        });
+    });
+  }
+
+  deleteProduct(id) {
+    return new Promise((resolve, reject) => {
+      this.http.delete(environment.baseAPIUrl + 'api/products/' + id).subscribe(
+        res => {
+          resolve(res);
+        });
+    });
+  }
+
+  putProduct(product) {
+    return new Promise((resolve, reject) => {
+      this.http.post(environment.baseAPIUrl + 'api/products/', product).subscribe(
+        res => {
+          resolve(res);
+        });
+    });
+  }
 }
