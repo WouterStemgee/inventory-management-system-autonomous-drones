@@ -7,11 +7,9 @@ router.route('')
     .get((req, res, next) => {
         dbmodule.getAllMaps()
             .then((result) => {
-                console.log("hey");
                 res.send(result);
             })
             .catch((error) => {
-                console.log("hey");
                 res.status(400).send(error);
         });
     })
@@ -22,7 +20,7 @@ router.route('')
             })
             .catch((error) => {
                 res.status(400).send(error);
-            })
+            });
     });
 
 router.route('/:id')
