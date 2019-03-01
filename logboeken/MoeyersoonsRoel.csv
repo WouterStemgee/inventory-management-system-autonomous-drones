@@ -14,3 +14,5 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 26/02/2019,13:30,17:45,Campus, samen verder werken: zelf: flightpath module geschreven en flow van code verbeterd,,
 27/02/2019,16:00,18:00,Campus, MQTT package opgezocht en mee geëxperimenteerd voor morgen goed op weg te kunnen,,
 28/02/2019,13:30,17:45,Campus, samen verder werken: zelf: mergen van de product router/db en node red bekijken,,
+01/03/2019,20:00,23:59,Thuis, dbmodule volledig verder uitgeschreven zodat deze ook werkt met de databank - grondig testen wat de meeste tijd op slokte door foutjes,,
+02/03/2019,00:01,00:30,Thuis, zie hierboven,,
