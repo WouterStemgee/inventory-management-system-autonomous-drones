@@ -1,14 +1,18 @@
 const express = require('express');
-const dbmodule = require('../database/dbmodule-mockup'); // vervangen door ../database/dbmodule-mockup voor te testen
+const dbmodule = require('../database/dbmodule'); // vervangen door ../database/dbmodule-mockup voor te testen
 
 const router = express.Router();
 
-//hier wordt overal gewerkt met json, die van de client of van de database komt
-//update: de date die binnen komt wordt automatisch omgezet naar een object
 router.route('')
     .get((req, res, next) => {
-        dbmodule.getAllMaps().then((result) => {
-            res.send(result);
+        dbmodule.getAllMaps()
+            .then((result) => {
+                console.log("hey");
+                res.send(result);
+            })
+            .catch((error) => {
+                console.log("hey");
+                res.status(400).send(error);
         });
     })
     .post((req, res, next) => {

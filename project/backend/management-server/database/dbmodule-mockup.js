@@ -66,8 +66,10 @@ const coordSchema = joi.object({
 });
 
 const mapSchema = joi.object({
-    id: joi.number().integer().required(),
+    id: joi.number().integer(),
     name: joi.string().required(),
+    sizeX: joi.number().integer().required(),
+    sizeY: joi.number().integer().required(),
     obstacles: joi.array().items(coordSchema),
     inventoryItems: joi.array().items(coordSchema)
 });

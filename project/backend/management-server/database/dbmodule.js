@@ -1,85 +1,102 @@
 const express = require('express');
 const joi = require('joi'); //validatie package
 
-const mongodb = require('mongodb');
+const Map = require('../models/map');
+const mongoose = require('mongoose');
 
 let mapCache = [];
 
-//methodes moeten promises terug geven, of via Promise.Resolve(result)
-//naast connectie enzo maken moet er ook voorzien worden: getAllMaps, getMap(id), deleteMap(id)
 
 let getAllMaps = () => {
-    getCache().then((result) => {
-        return Promise.resolve(result)
+    return getCache().then((result) => {
+        return Promise.resolve(mapCache);
     });
 };
 
 let getMap = (id) => {
-    getCache().then((result) => {
-        let map = result.find(map => map.id === parseInt(id));
+    return getCache().then((result) => {
+        let map = result.find(map => map._id == id);
         return map ? Promise.resolve(map)
             : Promise.reject("Map id not found in the database");
     });
 };
 
-
-//NOG NIET KLAAR
 let updateMap = (id, map) => {
-    if (!validateMap(map))
+    if (!validateMap(map)) {
+        //console.log("LOOOOOOOOOL");
         return Promise.reject("Bad request");
+    }
+    return getCache().then((result) => {
+        let cacheId =  result.findIndex(m => m._id == id);
+        if (cacheId === -1)
+            return Promise.reject("Map id not found in the database, unable to update");
 
-    let gecacheteMap = getCache().then((result) => {
-        return result.find(m => m.id === parseInt(id))
+        //opm: dit werkt wrs enkel maar als dit single threaded is, denk ik, als iets anders de db aan past en zijn mapcache aan past
+        //maar de mapcache in dit programma niet, dan toont de mapcache foute, onaangevulde data data
+
+        return Map.updateOne({_id: id}, {$set: map}).exec().then(result => {
+            console.log(cacheId);
+            mapCache[cacheId] = map;
+            console.log(result);
+            console.log(map);
+            return Promise.resolve(map);
+        });
     });
 
-    //opm: dit werkt wrs enkel maar als dit single threaded is, denk ik, als iets anders de db aan past en zijn mapcache aan past
-    //maar de mapcache in dit programma niet, dan toont de mapcache foute, onaangevulde data data
-    if (!gecacheteMap)
-        return Promise.reject("Map id not found in the database, unable to update");
-
-    //nog invullen, mapcache en db aanpassen
-
-
-    return Promise.resolve(map);
 };
 
-//NOG NIET KLAAR
+
 let postMap = (map) => {
     if (!validateMap(map))
         return Promise.reject("Bad request");
 
-    getCache().then((result) => {
-        result.push(map)
-    });
     //nog invullen, mapcache en db aanpassen
+    let dbmap = new Map({});
+    Object.assign(dbmap, map);
+    Object.assign(dbmap, {_id: new mongoose.Types.ObjectId()});
 
-
-    return Promise.resolve(map);
+    return dbmap.save().then(result => {
+        console.log(result);
+        getCache().then((result) => {
+            result.push(dbmap);
+            return Promise.resolve(dbmap);
+        });
+    });
 };
 
-//NOG NIET KLAAR
 let deleteMap = (id) => {
-    getCache().then((result) => {
-        let map = result.find(map => {
-            return id === parseInt(map.id)
+    return getCache().then((result) => {
+        let cacheId = result.findIndex(map => {
+            return id == map._id;
         });
-        if (!map)
+        console.log(cacheId);
+        if (cacheId === -1)
             return Promise.reject("Map id not found in the database, unable to delete");
 
         // verwijder van db en cache
-        return Promise.resolve(map);
+        result.splice(cacheId, 1);
+        return Map.deleteOne({_id: id}).exec().then(result => {
+            return Promise.resolve(result);
+        });
     });
 };
+
 
 
 let getCache = () => {
     if (mapCache.length) {
         return Promise.resolve(mapCache);
     }
-    //else ...
-    //maak connectie met de db en haal de data op, en steek deze in mapcache
-    //return promise ((resolve, reject) => { ... ; mapCache = result; resolve(mapCache)})
+    return Map.find().exec()
+        .then(items => {
+            mapCache = items;
+            return Promise.resolve(mapCache);
+        }).catch(err =>{
+            return Promise.reject({error: "An error with the database occured"});
+        });
 };
+
+
 
 
 // VALIDATIE
@@ -90,8 +107,11 @@ const coordSchema = joi.object({
 });
 
 const mapSchema = joi.object({
-    id: joi.number().integer().required(),
+    _id: joi.string(),
+    __v: joi.number(),
     name: joi.string().required(),
+    sizeX: joi.number().integer().required(),
+    sizeY: joi.number().integer().required(),
     obstacles: joi.array().items(coordSchema),
     inventoryItems: joi.array().items(coordSchema)
 });
