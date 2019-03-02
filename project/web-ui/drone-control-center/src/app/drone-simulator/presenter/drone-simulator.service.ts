@@ -93,35 +93,38 @@ export class DroneSimulatorService {
   }
 
   load() {
-    this.canvas = document.getElementById('simulator');
-
-    if (!this.loaded) {
-      const gridSize = {width: this.canvas.width / this.tileSize, height: this.canvas.height / this.tileSize};
-      this.imageLoader.loadImages().then(() => {
-        this.map = new Map(gridSize, this.tileSize, this.imageLoader);
-        this.drone = new Drone(1, 1, this.tileSize, gridSize, this.imageLoader);
-        this.http.getAllMaps()
-          .then(result => {
-            this.maps = result;
-            this.map.loadMap(this.maps[this.selectedMap]).then(() => {
-              window.addEventListener('keydown', (event) => {
-                this.keyhandler(event);
+    return new Promise((resolve, reject) => {
+      this.canvas = document.getElementById('simulator');
+      if (!this.loaded) {
+        const gridSize = {width: this.canvas.width / this.tileSize, height: this.canvas.height / this.tileSize};
+        this.imageLoader.loadImages().then(() => {
+          this.map = new Map(gridSize, this.tileSize, this.imageLoader);
+          this.drone = new Drone(1, 1, this.tileSize, gridSize, this.imageLoader);
+          this.http.getAllMaps()
+            .then(result => {
+              this.maps = result;
+              this.map.loadMap(this.maps[this.selectedMap]).then(() => {
+                window.addEventListener('keydown', (event) => {
+                  this.keyhandler(event);
+                });
+                window.addEventListener('mousedown', (event) => {
+                  this.clickhandler(event);
+                });
+                window.addEventListener('mousemove', (event) => {
+                  this.mousehandler(event);
+                });
+                this.loaded = true;
+                this.render();
               });
-              window.addEventListener('mousedown', (event) => {
-                this.clickhandler(event);
-              });
-              window.addEventListener('mousemove', (event) => {
-                this.mousehandler(event);
-              });
-              this.loaded = true;
-              this.render();
+            })
+            .catch(error => {
+              console.log('Error loading maps: ', error);
+              reject();
             });
-          })
-          .catch(error => {
-            console.log('Error loading maps: ', error);
-          });
-      });
-    }
+        });
+      }
+      resolve();
+    });
   }
 
   start() {

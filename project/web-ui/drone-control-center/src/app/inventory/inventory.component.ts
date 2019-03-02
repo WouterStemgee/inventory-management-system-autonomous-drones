@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {SharedService} from '../shared.service';
 import {HttpService} from '../http.service';
+import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
 
 @Component({
   selector: 'app-inventory',
@@ -9,25 +10,15 @@ import {HttpService} from '../http.service';
 })
 export class InventoryComponent implements OnInit {
 
-
-  loaded = false;
-  selectedMapId = 0;
-  selectedMap;
   products;
 
-  constructor(private sharedService: SharedService, private http: HttpService) {
+  constructor(private sharedService: SharedService, private http: HttpService, private simulator: DroneSimulatorService) {
     sharedService.onNavigateEvent.emit('inventory');
-    this.http.getMap(this.selectedMapId).then((map) => {
-      this.loaded = true;
-      this.selectedMap = map;
-      console.log(this.selectedMap);
-    }).then(() => {
-      this.getAllProducts();
-    });
   }
 
 
   ngOnInit() {
+    this.getAllProducts();
   }
 
   getAllProducts() {

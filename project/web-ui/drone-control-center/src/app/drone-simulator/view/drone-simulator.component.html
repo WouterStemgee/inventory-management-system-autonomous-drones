@@ -50,7 +50,7 @@
       {{simulator.maps[simulator.selectedMap].name}}
     </button>
     <div class="dropdown-menu" ngbDropdownMenu>
-      <button *ngFor="let map of simulator.maps" class="dropdown-item" (click)="simulator.selectMap(map.id)">
+      <button *ngFor="let map of simulator.maps; index as i" class="dropdown-item" (click)="simulator.selectMap(i)">
         {{map.name}}
       </button>
     </div>
