@@ -12,7 +12,7 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 23/02/19,12:00,17:00,Thuis, Express leren en begin centrale server schrijven - map.js en db-module beginnen schrijven - configuratie express wijzigen,,
 24/02/19,12:00,16:00,Thuis, de maps router en de db module refractoren - db module uitgebreid - db module mockup gemaakt - testen maps router via postman: werkt,,
 26/02/19,13:30,17:45,Campus, samen verder werken: zelf: flightpath module geschreven en flow van code verbeterd,,
-27/02/19,16:00,18:00,Campus, MQTT package opgezocht en mee geëxperimenteerd voor morgen goed op weg te kunnen,,
+27/02/19,16:00,18:00,Campus, MQTT package opgezocht en mee geexperimenteerd voor morgen goed op weg te kunnen,,
 28/02/19,13:30,17:45,Campus, samen verder werken: zelf: mergen van de product router/db en node red bekijken,,
 01/03/19,20:00,23:59,Thuis, dbmodule volledig verder uitgeschreven zodat deze ook werkt met de databank - grondig testen wat de meeste tijd op slokte door foutjes,,
 02/03/19,00:01,00:30,Thuis, zie hierboven,,
