@@ -6,10 +6,10 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 
-const mapRouter = require('./routes/map');
-const droneRouter = require('./routes/drone');
-const waypointRouter = require('./routes/flightpath');
-const productRouter = require('./routes/products');
+const mapRouter = require('./api/maps');
+const droneRouter = require('./api/drone');
+const waypointRouter = require('./api/flightpath');
+
 const app = express();
 
 // CORS om vanuit angular lokaal toegang te krijgen naar express
@@ -20,14 +20,12 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 app.use('/api/maps', mapRouter);
 app.use('/api/drone', droneRouter);
 app.use('/api/flightpath', waypointRouter);
-app.use('/api/products', productRouter);
 
-// je hebt mongDB lokaal geinstalleerd, indien deze nog niet bestaat wordt dit automatisch aangemaakt
-mongoose.connect('mongodb://localhost/projectDatabase', { useNewUrlParser: true });
+// je hebt MongoDB lokaal geinstalleerd, indien deze nog niet bestaat wordt dit automatisch aangemaakt
+mongoose.connect('mongodb://localhost/drone1', {useNewUrlParser: true});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

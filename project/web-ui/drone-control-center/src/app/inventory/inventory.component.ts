@@ -18,29 +18,42 @@ export class InventoryComponent implements OnInit {
 
 
   ngOnInit() {
-    this.getAllProducts();
+    if (this.simulator.loaded) {
+      this.getAllProducts();
+    }
   }
 
   getAllProducts() {
-    this.http.getAllProducts().then((res) => {
-      this.products = res;
-      console.log(res);
-    });
+    const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
+    this.http.getAllProducts(mapId)
+      .then((res) => {
+        this.products = res;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
-  deleteProduct(id) {
-    this.http.deleteProduct(id).then((res) => {
-      this.getAllProducts();
-      console.log(res);
-    });
+  deleteProduct(productId) {
+    const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
+    this.http.deleteProduct(mapId, productId)
+      .then((res) => {
+        this.getAllProducts();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   onSubmit(form) {
-    console.log('Form values:', form.value);
-    this.http.putProduct(form.value).then((res) => {
-      this.getAllProducts();
-      console.log(res);
-    });
-    form.reset();
+    const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
+    this.http.putProduct(mapId, form.value)
+      .then((res) => {
+        this.getAllProducts();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    //form.reset();
   }
 }

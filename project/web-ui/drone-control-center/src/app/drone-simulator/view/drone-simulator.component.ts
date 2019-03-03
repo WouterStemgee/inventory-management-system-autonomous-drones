@@ -33,7 +33,15 @@ export class DroneSimulatorComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.simulator.load();
+    this.simulator.load()
+      .then(() => {
+        if (this.simulator.loaded) {
+          this.simulator.render();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     if (this.simulator.loaded) {
       this.simulator.render();
     }

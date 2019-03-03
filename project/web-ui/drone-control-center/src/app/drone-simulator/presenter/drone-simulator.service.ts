@@ -24,10 +24,9 @@ export class DroneSimulatorService {
   mouseX;
   mouseY;
 
-  private http: HttpService;
   @Output() alertEvent = new EventEmitter<string>();
 
-  constructor(private data: DataService, http: HttpService) {
+  constructor(private data: DataService, private http: HttpService) {
     this.imageLoader = new ImageLoader();
     this.loaded = false;
     this.simulationRunner = undefined;
@@ -58,8 +57,8 @@ export class DroneSimulatorService {
         this.map.toggleWaypoint(x, y);
       } else if (this.selectedDrawable === 'obstacle') {
         this.map.toggleObstacle(x, y);
-      } else if (this.selectedDrawable === 'inventoryItem') {
-        this.map.toggleInventoryItem(x, y);
+      } else if (this.selectedDrawable === 'product') {
+        this.map.toggleProduct(x, y);
       }
     }
     this.render();
@@ -92,36 +91,52 @@ export class DroneSimulatorService {
     this.map.loadMap(this.maps[this.selectedMap]).then(() => this.render());
   }
 
+  init() {
+    const gridSize = {width: this.canvas.width / this.tileSize, height: this.canvas.height / this.tileSize};
+    this.map = new Map(gridSize, this.tileSize, this.imageLoader);
+    this.drone = new Drone(1, 1, this.tileSize, gridSize, this.imageLoader);
+    this.map.loadMap(this.maps[this.selectedMap]).then(() => {
+      window.addEventListener('keydown', (event) => {
+        this.keyhandler(event);
+      });
+      window.addEventListener('mousedown', (event) => {
+        this.clickhandler(event);
+      });
+      window.addEventListener('mousemove', (event) => {
+        this.mousehandler(event);
+      });
+    });
+    this.render();
+  }
+
   load() {
     return new Promise((resolve, reject) => {
       this.canvas = document.getElementById('simulator');
       if (!this.loaded) {
-        const gridSize = {width: this.canvas.width / this.tileSize, height: this.canvas.height / this.tileSize};
-        this.imageLoader.loadImages().then(() => {
-          this.map = new Map(gridSize, this.tileSize, this.imageLoader);
-          this.drone = new Drone(1, 1, this.tileSize, gridSize, this.imageLoader);
-          this.http.getAllMaps()
-            .then(result => {
-              this.maps = result;
-              this.map.loadMap(this.maps[this.selectedMap]).then(() => {
-                window.addEventListener('keydown', (event) => {
-                  this.keyhandler(event);
-                });
-                window.addEventListener('mousedown', (event) => {
-                  this.clickhandler(event);
-                });
-                window.addEventListener('mousemove', (event) => {
-                  this.mousehandler(event);
-                });
-                this.loaded = true;
-                this.render();
+        this.imageLoader.loadImages()
+          .then(() => {
+            this.http.getAllMaps()
+              .then(result => {
+                this.maps = result;
+                if (this.maps.length > 0) {
+                  this.loaded = true;
+                  this.init();
+                } else {
+                  this.alertEvent.emit('No maps found in database');
+                  reject();
+                }
+              })
+              .catch(error => {
+                this.alertEvent.emit('Error loading maps');
+                console.log(error);
+                reject();
               });
-            })
-            .catch(error => {
-              console.log('Error loading maps: ', error);
-              reject();
-            });
-        });
+          })
+          .catch(error => {
+            this.alertEvent.emit('Error loading images');
+            console.log(error);
+            reject();
+          });
       }
       resolve();
     });
@@ -175,6 +190,6 @@ export class DroneSimulatorService {
   }
 
   exportMap() {
-    this.map.exportMap();
+    this.http.saveMap(this.map.exportMap());
   }
 }

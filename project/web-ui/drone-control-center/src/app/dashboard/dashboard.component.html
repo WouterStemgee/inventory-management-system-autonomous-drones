@@ -5,11 +5,11 @@
   <main class="col-md">
     <app-drone-simulator></app-drone-simulator>
   </main>
-  <aside class="col-md controls">
+  <aside *ngIf="simulator.loaded" class="col-md controls">
     <h2>Drone Controls</h2>
     <hr>
     <div class="card-deck">
-      <div *ngIf="simulator.loaded" class="card bg-light mb-3" style="max-width: 540px;">
+      <div class="card bg-light mb-3" style="max-width: 540px;">
         <div class="card-header"></div>
         <div class="card-body">
           <h5 class="card-title">Drone Information</h5>
@@ -65,8 +65,8 @@
               <button type="button" class="dropdown-item" (click)="simulator.selectDrawable('obstacle')">
                 Obstacles
               </button>
-              <button type="button" class="dropdown-item" (click)="simulator.selectDrawable('inventoryItem')">
-                Inventory Items
+              <button type="button" class="dropdown-item" (click)="simulator.selectDrawable('product')">
+                Products
               </button>
             </div>
           </div>
