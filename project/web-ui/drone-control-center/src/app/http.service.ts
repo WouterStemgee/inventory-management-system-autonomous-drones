@@ -49,6 +49,20 @@ export class HttpService {
     });
   }
 
+  updateMap(map) {
+    return new Promise((resolve, reject) => {
+      console.log(map);
+      this.http.put(environment.baseAPIUrl + 'api/maps/' + map.id, map).subscribe(
+        result => {
+          resolve(result);
+        },
+        (error: HttpErrorResponse) => {
+          reject(error);
+        }
+      );
+    });
+  }
+
   fetchOptimalFlightpath(flightpath) {
     return new Promise((resolve, reject) => {
       this.http.post(environment.baseAPIUrl + 'api/flightpath/', flightpath).subscribe(
@@ -88,7 +102,7 @@ export class HttpService {
     });
   }
 
-  putProduct(mapId, product) {
+  addProduct(mapId, product) {
     return new Promise((resolve, reject) => {
       this.http.post(environment.baseAPIUrl + 'api/maps/' + mapId + '/products/', product).subscribe(
         result => {

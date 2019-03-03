@@ -24,14 +24,18 @@ export class InventoryComponent implements OnInit {
   }
 
   getAllProducts() {
-    const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
-    this.http.getAllProducts(mapId)
-      .then((res) => {
-        this.products = res;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    return new Promise((resolve, reject) => {
+      const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
+      this.http.getAllProducts(mapId)
+        .then((res) => {
+          this.products = res;
+          resolve();
+        })
+        .catch((err) => {
+          console.log(err);
+          reject(err);
+        });
+    });
   }
 
   deleteProduct(productId) {
@@ -47,13 +51,25 @@ export class InventoryComponent implements OnInit {
 
   onSubmit(form) {
     const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
-    this.http.putProduct(mapId, form.value)
+    this.http.addProduct(mapId, form.value)
       .then((res) => {
-        this.getAllProducts();
+        this.getAllProducts()
+          .then(() => {
+            this.http.getAllMaps()
+              .then(result => {
+                this.simulator.maps = result;
+                this.simulator.reset();
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         console.log(err);
       });
-    //form.reset();
   }
 }

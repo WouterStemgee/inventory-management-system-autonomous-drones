@@ -42,11 +42,20 @@ let addMap = (map) => {
 };
 
 let updateMap = (map) => {
-    return Map.updateOne({_id: map._id}, {$set: map}).exec()
+    const m = {
+        "_id": mongoose.Types.ObjectId(map.id),
+        "sizeX": map.sizeX,
+        "sizeY": map.sizeY,
+        "name": map.name,
+        "obstacles": map.obstacles,
+        "products": map.products
+    };
+    return Map.updateOne({_id: map.id}, {$set: m}).exec()
         .then(result => {
             return Promise.resolve(result);
         })
         .catch(err => {
+            console.log(err);
             return Promise.reject({error: err});
         });
 };

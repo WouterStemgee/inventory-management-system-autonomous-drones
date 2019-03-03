@@ -30,14 +30,14 @@ mapRouter.route('/:mapId')
     .get((req, res) => {
         mapsDAO.getMap(req.params.mapId)
             .then((result) => {
-                res.status(400).status(200).send(result);
+                res.status(200).send(result);
             })
             .catch((error) => {
                 res.status(400).send(error);
             });
     })
     .put((req, res) => {
-        mapsDAO.updateMap(req.params.mapId, req.body)
+        mapsDAO.updateMap(req.body)
             .then((result) => {
                 res.status(200).send(result);
             })
@@ -60,7 +60,7 @@ productRouter.route('/')
     .get((req, res) => {
         mapsDAO.getMap(req.params.mapId)
             .then((result) => {
-                res.status(400).status(200).send(result.products);
+                res.status(200).send(result.products);
             })
             .catch((error) => {
                 res.status(400).send(error);

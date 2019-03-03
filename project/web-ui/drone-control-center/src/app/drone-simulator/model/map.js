@@ -39,12 +39,12 @@ export class Map {
     });
   }
 
-  exportMap() {
-    console.log('Exporting map...');
+  exportMap(name) {
     let map = {
+      id: this.id,
       sizeX: this.gridSize.width,
       sizeY: this.gridSize.height,
-      name: 'Exported Map',
+      name: name,
       obstacles: [],
       products: []
     };
@@ -55,7 +55,6 @@ export class Map {
         position: {x: p.x, y: p.y}
       })
     );
-    console.log(map);
     return map;
   }
 

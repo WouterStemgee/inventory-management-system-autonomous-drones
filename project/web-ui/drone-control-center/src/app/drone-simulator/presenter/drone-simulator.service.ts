@@ -20,6 +20,8 @@ export class DroneSimulatorService {
   loaded;
   imageLoader;
 
+  mockupDrone = false;
+
   maps;
   mouseX;
   mouseY;
@@ -158,7 +160,7 @@ export class DroneSimulatorService {
           this.simulationRunner = undefined;
           this.alertEvent.emit('Simulation finished.');
         }
-      }, 500);
+      }, 100);
     } else {
       this.alertEvent.emit('No optimal flightpath calculated.');
     }
@@ -190,6 +192,28 @@ export class DroneSimulatorService {
   }
 
   exportMap() {
-    this.http.saveMap(this.map.exportMap());
+    console.log('Exporting map...');
+    this.http.saveMap(this.map.exportMap('Exported Map')).then(() => {
+      this.http.getAllMaps()
+        .then(result => {
+          this.maps = result;
+          this.selectedMap = this.maps.length - 1;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  }
+
+  updateMap() {
+    this.http.updateMap(this.map.exportMap(this.map.name)).then(() => {
+      this.http.getAllMaps()
+        .then(result => {
+          this.maps = result;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
   }
 }

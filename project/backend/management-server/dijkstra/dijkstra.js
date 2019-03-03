@@ -19,9 +19,14 @@ class Dijkstra {
                 })
                 .catch(err => {
                     reject(err);
+                    console.log(err);
                 });
         });
     };
+
+    recalculateGraaf() {
+      // TODO: Wanneer een nieuwe map toegevoegd wordt of een bestaande map aangepast werd, moet de graaf herberekend worden
+    }
 
     zoekPad(id, waypointsJSON) {
         let graaf = this.grafen.find(graaf => graaf.mapId == id);
