@@ -7,8 +7,8 @@ const coordSchema = mongoose.Schema({
 
 const productSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    name: {type: String},
-    quantity: {type: Number},
+    name: {type: String, required: true},
+    quantity: {type: Number, required: true},
     position: coordSchema
 });
 

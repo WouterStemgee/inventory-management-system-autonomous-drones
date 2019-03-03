@@ -14,7 +14,7 @@ export class Map {
     this.obstacles = [];
     this.products = [];
     this.flightpath = undefined;
-    this.optimalFlightPath = undefined;
+    this.optimalFlightPath = [];
     this.imageLoader = imageLoader;
   }
 
@@ -23,7 +23,7 @@ export class Map {
     this.id = 0;
     this.obstacles = [];
     this.products = [];
-    this.flightpath = undefined;
+    this.flightpath = [];
     this.optimalFlightPath = undefined;
   }
 
@@ -109,7 +109,7 @@ export class Map {
   toggleProduct(x, y) {
     if (!this.contains('obstacle', x, y)) {
       if (!this.contains('product', x, y)) {
-        this.addProduct('Manually added', undefined, x, y);
+        this.addProduct('Manually added', 1, x, y);
       } else {
         this.removeProduct(x, y);
       }

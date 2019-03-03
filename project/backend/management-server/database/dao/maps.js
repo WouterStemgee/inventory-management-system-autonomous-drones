@@ -62,7 +62,7 @@ let deleteMap = (id) => {
 };
 
 let addProduct = (mapId, product) => {
-    let p = {
+    const p = {
         "_id": new mongoose.Types.ObjectId(),
         "name": product.name,
         "quantity": product.quantity,

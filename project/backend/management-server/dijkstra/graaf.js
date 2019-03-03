@@ -3,6 +3,7 @@ class Graaf {
     constructor() {
         this.knopen = [];
         this.verbindingen = [];
+        this.mapId = undefined;
     }
 
     toString(){
