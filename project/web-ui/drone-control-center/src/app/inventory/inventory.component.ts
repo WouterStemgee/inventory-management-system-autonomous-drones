@@ -42,7 +42,20 @@ export class InventoryComponent implements OnInit {
     const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
     this.http.deleteProduct(mapId, productId)
       .then((res) => {
-        this.getAllProducts();
+        this.getAllProducts()
+          .then(() => {
+            this.http.getAllMaps()
+              .then(result => {
+                this.simulator.maps = result;
+                this.simulator.reset();
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         console.log(err);
@@ -51,7 +64,9 @@ export class InventoryComponent implements OnInit {
 
   onSubmit(form) {
     const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
-    this.http.addProduct(mapId, form.value)
+    const mapData = form.value;
+    mapData.position = {x: form.value.x, y: form.value.y};
+    this.http.addProduct(mapId, mapData)
       .then((res) => {
         this.getAllProducts()
           .then(() => {

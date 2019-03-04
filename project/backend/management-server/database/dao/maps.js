@@ -48,10 +48,11 @@ let updateMap = (map) => {
         "sizeY": map.sizeY,
         "name": map.name,
         "obstacles": map.obstacles,
-        "products": map.products
+        "products": []
     };
     return Map.updateOne({_id: map.id}, {$set: m}).exec()
         .then(result => {
+            map.products.forEach(p => addProduct(m._id, p));
             return Promise.resolve(result);
         })
         .catch(err => {
@@ -76,8 +77,8 @@ let addProduct = (mapId, product) => {
         "name": product.name,
         "quantity": product.quantity,
         "position": {
-            x: product.x,
-            y: product.y
+            x: product.position.x,
+            y: product.position.y
         }
     };
     return Map.updateOne({_id: mapId}, {$push: {products: p}}).exec()
