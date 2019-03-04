@@ -13,4 +13,5 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 26/02/19,08:15,12:15,Extern,dijkstra klasse + communicatie met de centrale server,16,
 28/02/19,10:30,12:00,Extern,communicatie met de centrale server en de database Dijkstra,16,
 28/02/19,13:30,17:45,Extern,communicatie met de centrale server en de database Dijkstra,16,
-03/03/19,09:30,10:30,Extern,,16,laatste correcties voor de communicatie met de Dijkstra module,16,
+03/03/19,09:30,10:30,Extern,laatste correcties voor de communicatie met de Dijkstra module,16,
+04/03/19,15:30,16:45,Extern,Research node-red,,
