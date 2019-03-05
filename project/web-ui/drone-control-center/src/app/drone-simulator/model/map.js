@@ -1,7 +1,7 @@
 import {Grid} from './grid.js';
 import {FlightPath} from "./flightpath.js";
 import {Product} from "./product.js";
-import {Obstacle} from "./obstacle.js";
+import {Tile} from "./tile";
 
 export class Map {
 
@@ -14,7 +14,6 @@ export class Map {
     this.obstacles = [];
     this.products = [];
     this.flightpath = undefined;
-    this.optimalFlightPath = [];
     this.imageLoader = imageLoader;
   }
 
@@ -23,8 +22,7 @@ export class Map {
     this.id = 0;
     this.obstacles = [];
     this.products = [];
-    this.flightpath = [];
-    this.optimalFlightPath = undefined;
+    this.flightpath = undefined;
   }
 
   loadMap(map) {
@@ -39,7 +37,7 @@ export class Map {
     });
   }
 
-  mapToJSON(name) {
+  toJSON(name) {
     let map = {
       _id: this.id,
       sizeX: this.gridSize.width,
@@ -74,7 +72,7 @@ export class Map {
   }
 
   addObstacle(x, y) {
-    this.obstacles.push(new Obstacle(x, y, this.tileSize));
+    this.obstacles.push(new Tile(x, y, this.tileSize, '#a80a0a'));
   }
 
   removeObstacle(x, y) {

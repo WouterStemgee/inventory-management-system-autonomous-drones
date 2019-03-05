@@ -3,7 +3,7 @@ import {Map} from '../model/map';
 import {Drone} from '../model/drone';
 import {HttpService} from '../../http.service';
 import {DataService} from '../../data.service';
-import {ImageLoader} from '../utils/image-loader';
+import {ImageLoader} from '../utils/imageloader';
 
 @Injectable({
   providedIn: 'root'
@@ -35,20 +35,7 @@ export class DroneSimulatorService {
     this.http = http;
   }
 
-  keyhandler(e) {
-    if (this.simulationRunner) {
-      if (e.keyCode === 37) {
-        this.drone.move('west');
-      } else if (e.keyCode === 38) {
-        this.drone.move('south');
-      } else if (e.keyCode === 39) {
-        this.drone.move('east');
-      } else if (e.keyCode === 40) {
-        this.drone.move('north');
-      }
-    }
-    this.render();
-  }
+  keyhandler(e) { }
 
   clickhandler(e) {
     const pos = this.mousePos(e);
@@ -167,14 +154,14 @@ export class DroneSimulatorService {
   }
 
   start() {
-    if (this.map.optimalFlightPath && this.simulationRunner === undefined) {
+    if (this.map.flightpath.optimalPath && this.simulationRunner === undefined) {
       this.alertEvent.emit('Starting simulation...');
       const context = this.canvas.getContext('2d');
 
       let currentWaypoint = 0;
       this.simulationRunner = setInterval(() => {
-        if (currentWaypoint < this.map.optimalFlightPath.length) {
-          this.drone.moveTo(this.map.optimalFlightPath[currentWaypoint].x, this.map.optimalFlightPath[currentWaypoint].y);
+        if (currentWaypoint < this.map.flightpath.optimalPath.length) {
+          this.drone.moveTo(this.map.flightpath.optimalPath[currentWaypoint].x, this.map.flightpath.optimalPath[currentWaypoint].y);
           this.render();
           currentWaypoint++;
         } else {
@@ -204,13 +191,14 @@ export class DroneSimulatorService {
   }
 
   calculateOptimalFlightPath() {
-    const flightpath = this.map.flightpath.saveFlightPath();
+    const flightpath = this.map.flightpath.toJSON();
     console.log('Sending waypoints to back-end:', flightpath);
     this.updateMap().then(() => {
       this.http.fetchOptimalFlightpath(flightpath).then((optimal) => {
         console.log('Received optimal flightpath from server: ', optimal);
         this.alertEvent.emit('Optimal flightplath successfully calculated.');
-        this.map.optimalFlightPath = optimal;
+        this.map.flightpath.setOptimalPath(optimal);
+        this.render();
       });
     })
       .catch((err) => {
@@ -221,7 +209,7 @@ export class DroneSimulatorService {
 
   duplicateMap() {
     console.log('Exporting map...');
-    this.http.addMap(this.map.mapToJSON('Exported Map')).then(() => {
+    this.http.addMap(this.map.toJSON('Exported Map')).then(() => {
       this.http.getAllMaps()
         .then(result => {
           this.maps = result;
@@ -235,7 +223,7 @@ export class DroneSimulatorService {
 
   updateMap() {
     return new Promise(((resolve, reject) => {
-      this.http.updateMap(this.map.mapToJSON(this.map.name)).then(() => {
+      this.http.updateMap(this.map.toJSON(this.map.name)).then(() => {
         this.http.getAllMaps()
           .then(result => {
             this.maps = result;

@@ -11,11 +11,11 @@ export class ImageLoader {
         return new Promise((resolve, reject) => {
           let img = new Image();
           img.src = 'assets/images/simulator/' + filename + '.png';
-          img.addEventListener("load", () => {
+          img.addEventListener('load', () => {
             this.loadedImages[filename] = img;
             resolve(filename, img);
           });
-          img.addEventListener("error", (error) => {
+          img.addEventListener('error', (error) => {
             reject(error);
           });
         });

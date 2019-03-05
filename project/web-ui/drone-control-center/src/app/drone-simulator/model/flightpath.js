@@ -1,16 +1,17 @@
-import {Waypoint} from './waypoint.js';
+import {Tile} from "./tile";
 
 export class FlightPath {
   constructor(tileSize, mapId, takeoff, landing) {
     this.mapId = mapId;
     this.tileSize = tileSize;
     this.waypoints = [];
+    this.optimalPath = [];
     this.takeoff = takeoff;
     this.landing = landing;
   }
 
   addWaypoint(x, y) {
-    let waypoint = new Waypoint(x, y, this.tileSize);
+    let waypoint = new Tile(x, y, this.tileSize, '#699868');
     this.waypoints.push(waypoint);
     console.log('Waypoint added: [X: ' + x + ', Y: ' + y + ']');
   }
@@ -24,11 +25,15 @@ export class FlightPath {
     console.log('Waypoint removed: [X: ' + x + ', Y: ' + y + ']');
   }
 
-  printWaypoints() {
-    console.log(this.waypoints);
+  setOptimalPath(optimalPath) {
+    this.optimalPath = [];
+    for (let i = 0; i < optimalPath.length; i++) {
+      let tile = new Tile(optimalPath[i].x, optimalPath[i].y, this.tileSize, '#4286f4');
+      this.optimalPath[i] = tile;
+    }
   }
 
-  saveFlightPath() {
+  toJSON() {
     let flightpath = {
       mapId: 0,
       waypoints: []
@@ -40,11 +45,8 @@ export class FlightPath {
     return flightpath;
   }
 
-  loadFlightPath(flightpath) {
-    // TODO
-  }
-
   draw(context) {
+    this.optimalPath.forEach((t) => t.draw(context));
     this.waypoints.forEach((w) => w.draw(context));
   }
 }

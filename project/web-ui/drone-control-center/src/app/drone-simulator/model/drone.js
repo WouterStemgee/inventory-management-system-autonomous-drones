@@ -1,4 +1,4 @@
-import {DrawableImage} from './drawable-image.js';
+import {DrawableImage} from './image.js';
 
 export class Drone extends DrawableImage {
   constructor(x, y, tileSize, gridSize, imageLoader) {
