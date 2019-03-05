@@ -16,10 +16,15 @@ export class InventoryComponent implements OnInit {
     sharedService.onNavigateEvent.emit('inventory');
   }
 
-
   ngOnInit() {
     if (this.simulator.loaded) {
       this.getAllProducts();
+    } else {
+      this.simulator.onSimulatorLoadedEvent.subscribe((loaded) => {
+        if (loaded) {
+          this.getAllProducts();
+        }
+      });
     }
   }
 

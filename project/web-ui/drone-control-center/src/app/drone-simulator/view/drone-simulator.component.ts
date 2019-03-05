@@ -12,6 +12,8 @@ export class DroneSimulatorComponent implements OnInit {
   alerts = [];
 
   constructor(private simulator: DroneSimulatorService) {
+
+
     let i = 0;
     simulator.alertEvent.subscribe(
       (alertMessage) => {
@@ -33,17 +35,15 @@ export class DroneSimulatorComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.simulator.load()
-      .then(() => {
-        if (this.simulator.loaded) {
-          this.simulator.render();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    this.simulator.initialized = false;
     if (this.simulator.loaded) {
-      this.simulator.render();
+      this.simulator.init();
+    } else {
+      this.simulator.onSimulatorLoadedEvent.subscribe((loaded) => {
+        if (loaded) {
+          this.simulator.init();
+        }
+      });
     }
   }
 }

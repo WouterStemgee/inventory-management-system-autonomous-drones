@@ -18,24 +18,33 @@ export class DroneSimulatorService {
   drone;
   simulationRunner;
   loaded;
+  initialized;
   imageLoader;
-
-  mockupDrone = false;
 
   maps;
   mouseX;
   mouseY;
 
   @Output() alertEvent = new EventEmitter<string>();
+  @Output() onSimulatorLoadedEvent = new EventEmitter<boolean>();
 
   constructor(private data: DataService, private http: HttpService) {
+    console.log('Starting simulator service...');
+
+    this.onSimulatorLoadedEvent.subscribe((loaded) => {
+        if (loaded) {
+          console.log('Simulator finished loading data.');
+          this.loaded = true;
+        }
+      }
+    );
+
     this.imageLoader = new ImageLoader();
-    this.loaded = false;
     this.simulationRunner = undefined;
-    this.http = http;
   }
 
-  keyhandler(e) { }
+  keyhandler(e) {
+  }
 
   clickhandler(e) {
     const pos = this.mousePos(e);
@@ -81,6 +90,7 @@ export class DroneSimulatorService {
   }
 
   init() {
+    this.canvas = document.getElementById('simulator');
     const gridSize = {width: this.canvas.width / this.tileSize, height: this.canvas.height / this.tileSize};
     this.map = new Map(gridSize, this.tileSize, this.imageLoader);
     this.drone = new Drone(1, 1, this.tileSize, gridSize, this.imageLoader);
@@ -95,69 +105,64 @@ export class DroneSimulatorService {
         this.mousehandler(event);
       });
     });
-    this.loaded = true;
+    this.initialized = true;
     this.render();
   }
 
   load() {
     return new Promise((resolve, reject) => {
-      this.canvas = document.getElementById('simulator');
-      if (!this.loaded) {
-        this.imageLoader.loadImages()
-          .then(() => {
-            this.http.getAllMaps()
-              .then(result => {
-                this.maps = result;
-                if (this.maps.length > 0) {
-                  this.init();
-                } else {
-                  this.alertEvent.emit('No maps found in database, initializing new map...');
-                  this.data.getNewMap()
-                    .then((res) => {
-                      this.http.addMap(res)
-                        .then(() => {
-                          this.alertEvent.emit('New map added.');
-                          this.http.getAllMaps()
-                            .then(newMaps => {
-                              this.maps = newMaps;
-                              this.init();
-                            })
-                            .catch(err => {
-                              console.log(err);
-                            });
-                        })
-                        .catch(error => {
-                          this.alertEvent.emit('Error adding new maps');
-                          console.log(error);
-                        });
-                    })
-                    .catch(error => {
-                      this.alertEvent.emit('Error loading new map from JSON.');
-                      console.log(error);
-                    });
-                }
-              })
-              .catch(error => {
-                this.alertEvent.emit('Error loading maps from database');
-                console.log(error);
-                reject();
-              });
-          })
-          .catch(error => {
-            this.alertEvent.emit('Error loading images');
-            console.log(error);
-            reject();
-          });
-      }
-      resolve();
+      console.log('Loading simulator data...');
+      this.imageLoader.loadImages()
+        .then(() => {
+          this.http.getAllMaps()
+            .then(result => {
+              this.maps = result;
+              if (this.maps.length === 0) {
+                this.alertEvent.emit('No maps found in database, initializing new map...');
+                this.data.getNewMap()
+                  .then((res) => {
+                    this.http.addMap(res)
+                      .then(() => {
+                        this.alertEvent.emit('New map added.');
+                        this.http.getAllMaps()
+                          .then(newMaps => {
+                            this.maps = newMaps;
+                            resolve();
+                          })
+                          .catch(err => {
+                            console.log(err);
+                          });
+                      })
+                      .catch(error => {
+                        this.alertEvent.emit('Error adding new maps.');
+                        console.log(error);
+                      });
+                  })
+                  .catch(error => {
+                    this.alertEvent.emit('Error loading new map from JSON.');
+                    console.log(error);
+                  });
+              } else {
+                resolve();
+              }
+            })
+            .catch(error => {
+              this.alertEvent.emit('Error loading maps from database.');
+              console.log(error);
+              reject();
+            });
+        })
+        .catch(error => {
+          this.alertEvent.emit('Error loading images.');
+          console.log(error);
+          reject();
+        });
     });
   }
 
   start() {
     if (this.map.flightpath.optimalPath && this.simulationRunner === undefined) {
       this.alertEvent.emit('Starting simulation...');
-      const context = this.canvas.getContext('2d');
-
       let currentWaypoint = 0;
       this.simulationRunner = setInterval(() => {
         if (currentWaypoint < this.map.flightpath.optimalPath.length) {

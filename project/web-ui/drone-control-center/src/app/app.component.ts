@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { SharedService } from './shared.service';
+import {Component} from '@angular/core';
+import {SharedService} from './shared.service';
+import {DroneSimulatorService} from './drone-simulator/presenter/drone-simulator.service';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,11 @@ export class AppComponent {
   title = 'Drone Control Center';
   activeTab;
 
-  constructor(service: SharedService) {
+  constructor(private service: SharedService, private simulator: DroneSimulatorService) {
+    this.simulator.load()
+      .then(() => {
+        simulator.onSimulatorLoadedEvent.emit(true);
+      });
     service.onNavigateEvent.subscribe(
       (activeTab) => {
         this.activeTab = activeTab;
