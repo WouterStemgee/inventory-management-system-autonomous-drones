@@ -12,20 +12,20 @@ class Graaf {
     }
 
     maakGrid(sizeX, sizeY){
-        for (i = 0; i < sizeX; i++){
-            for (j = 0; j < sizeY; j++){
+        for (let i = 0; i < sizeX; i++){
+            for (let j = 0; j < sizeY; j++){
                 this.voegKnopenToe([i+'X'+j+'Y']);
             }
         }
-        for (i = 0; i < sizeX-1; i++) {
-            for (j = 0; j < sizeY-1; j++) {
+        for (let i = 0; i < sizeX-1; i++) {
+            for (let j = 0; j < sizeY-1; j++) {
                 this.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+j+'Y',1]]);
                 this.voegVerbindingenToe([[i+'X'+j+'Y',i+'X'+(j.valueOf()+1)+'Y',1]]);
                 this.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+(j.valueOf()+1)+'Y',1]]);
             }
         }
-        for (i = 0; i < sizeX-1; i++) {
-            for (j = 1; j < sizeY-1; j++) {
+        for (let i = 0; i < sizeX-1; i++) {
+            for (let j = 1; j < sizeY-1; j++) {
                 this.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+(j.valueOf()-1)+'Y',1]]);
             }
         }
