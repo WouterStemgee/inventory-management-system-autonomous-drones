@@ -22,4 +22,4 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 03/03/19,13:30,18:30,Extern,UI en backend aangepast zodat alles aangesloten is op de juiste endpoints,17,
 03/03/19,21:30,23:00,Extern,UI tweaks voor de map editor - maps kunnen aangepast/opgeslagen worden via de API,15,
 04/03/19,21:30,23:00,Extern,API bug fixes,5,
-05/03/19,08:15,12:30,Campus,UI tweaks voor de map editor - maps kunnen aangepast/opgeslagen worden via de API,15,
+05/03/19,08:15,12:30,Campus,Testing van de API en het pathfinding algoritme,15,
