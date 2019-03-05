@@ -1,5 +1,5 @@
 Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
-12/02/19,08:15,12:15,Campus,Uitlegsessie VOP,,
+12/02/19,08:15,12:30,Campus,Uitlegsessie VOP,,
 12/02/19,12:30,13:20,Extern,Brainstormen over project - vragen opstellen,4,
 13/02/19,08:15,10:15,Campus,Communicatieles 1,,
 14/02/19,13:30,16:00,Campus,Gesprek klant - User stories aan product backlog toevoegen,,
@@ -21,3 +21,5 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 02/03/19,16:30,23:30,Extern,API herwerkt met geneste end points voor database toegang,5,
 03/03/19,13:30,18:30,Extern,UI en backend aangepast zodat alles aangesloten is op de juiste endpoints,17,
 03/03/19,21:30,23:00,Extern,UI tweaks voor de map editor - maps kunnen aangepast/opgeslagen worden via de API,15,
+04/03/19,21:30,23:00,Extern,API bug fixes,5,
+05/03/19,08:15,12:30,Campus,UI tweaks voor de map editor - maps kunnen aangepast/opgeslagen worden via de API,15,
