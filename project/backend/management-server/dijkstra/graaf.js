@@ -21,12 +21,12 @@ class Graaf {
             for (let j = 0; j < sizeY-1; j++) {
                 this.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+j+'Y',1]]);
                 this.voegVerbindingenToe([[i+'X'+j+'Y',i+'X'+(j.valueOf()+1)+'Y',1]]);
-                this.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+(j.valueOf()+1)+'Y',1]]);
+                this.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+(j.valueOf()+1)+'Y',1.9]]);
             }
         }
         for (let i = 0; i < sizeX-1; i++) {
             for (let j = 1; j < sizeY-1; j++) {
-                this.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+(j.valueOf()-1)+'Y',1]]);
+                this.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+(j.valueOf()-1)+'Y',1.9]]);
             }
         }
     }

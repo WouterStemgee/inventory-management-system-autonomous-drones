@@ -160,7 +160,7 @@ export class DroneSimulatorService {
           this.simulationRunner = undefined;
           this.alertEvent.emit('Simulation finished.');
         }
-      }, 100);
+      }, 250);
     } else {
       this.alertEvent.emit('No optimal flightpath calculated.');
     }
