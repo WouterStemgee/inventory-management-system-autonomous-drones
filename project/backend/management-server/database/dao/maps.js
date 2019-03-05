@@ -30,7 +30,6 @@ let addMap = (map) => {
         obstacles: map.obstacles,
         products: map.products
     });
-    m.products.forEach(p => p._id = new mongoose.Types.ObjectId());
     return m.save()
         .then(result => {
             return Promise.resolve(result);
