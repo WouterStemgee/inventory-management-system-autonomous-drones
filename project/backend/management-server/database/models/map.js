@@ -6,20 +6,20 @@ const coordSchema = mongoose.Schema({
     y: {type: Number, required: true}
 });
 
-const productSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
-    name: {type: String, required: true},
-    quantity: {type: Number, required: true},
-    position: coordSchema
-});
-
 const mapSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     sizeX: {type: Number, required: true},
     sizeY: {type: Number, required: true},
     name: {type: String, required: true},
     obstacles: [coordSchema],
-    products: [productSchema]
+    products: [
+        {
+            _id: mongoose.Schema.Types.ObjectId,
+            name: {type: String, required: true},
+            quantity: {type: Number, required: true},
+            position: coordSchema
+        }
+    ]
 });
 
 module.exports = mongoose.model('Map', mapSchema);
