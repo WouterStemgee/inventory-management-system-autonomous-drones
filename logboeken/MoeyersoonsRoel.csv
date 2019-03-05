@@ -16,3 +16,6 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 28/02/19,13:30,17:45,Campus, samen verder werken: zelf: mergen van de product router/db en node red bekijken,,
 01/03/19,20:00,23:59,Thuis, dbmodule volledig verder uitgeschreven zodat deze ook werkt met de databank - grondig testen wat de meeste tijd op slokte door foutjes,,
 02/03/19,00:01,00:30,Thuis, zie hierboven,,
+04/03/19,16:00,19:00,Thuis, In de code grasduinen  + Node red bekijekn + testen om alle aanpassingen bij te leren - modules database en aanvragen op mijn beide computers laten werken zodat ik makkelijk van station kan wisselen,,
+05/03/19,08:15,12:30,Campus, Samen werken aan project - vooral testen en debuggen van enkele aanvragen + het dijkstra algoritme (pair programming),,
+05/03/19,15:30,18:00,Thuis, Dijkstra begrijpen ipv erop zitten staren deze voormiddag + Node red verder bekijken + github readme's en wiki's aanpassen,,
