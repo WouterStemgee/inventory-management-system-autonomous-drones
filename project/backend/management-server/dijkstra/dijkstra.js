@@ -24,7 +24,7 @@ class Dijkstra {
         });
     };
 
-    recalculateGraaf() {
+    recalculateGraaf(id) {
       // TODO: Wanneer een nieuwe map toegevoegd wordt of een bestaande map aangepast werd, moet de graaf herberekend worden
     }
 
