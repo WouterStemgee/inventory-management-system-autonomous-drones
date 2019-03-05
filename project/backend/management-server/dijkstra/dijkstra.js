@@ -26,7 +26,19 @@ class Dijkstra {
 
     recalculateGraaf(id) {
       // TODO: Wanneer een nieuwe map toegevoegd wordt of een bestaande map aangepast werd, moet de graaf herberekend worden
-    }
+        let dijkstra = this;
+        return new Promise((resolve, reject) => {
+            console.log('recalculating graph');
+            mapsDAO.getMap(id)
+                .then(res => {
+                    dijkstra[id] = dijkstra.jsonMapNaarGraaf(res);
+                })
+                .catch(err => {
+                    reject(err);
+                    console.log(err);
+                });
+        });
+    };
 
     zoekPad(id, waypointsJSON) {
         let graaf = this.grafen.find(graaf => graaf.mapId == id);
