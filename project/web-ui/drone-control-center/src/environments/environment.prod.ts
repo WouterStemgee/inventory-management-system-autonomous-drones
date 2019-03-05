@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  baseAPIUrl: 'https://node-server-ip-address:port/'
+  baseAPIUrl: 'https://localhost:3000/'
 };
