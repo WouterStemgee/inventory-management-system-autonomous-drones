@@ -1,7 +1,7 @@
 <h2>Drone Simulator</h2>
 <hr>
 <div>
-  <div class="btn-toolbar mb-2 mb-md-2">
+  <div class="btn-toolbar mb-2 mb-md-2" *ngIf="simulator.loaded">
     <div class="btn-group mr-2">
       <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.calculateOptimalFlightPath()">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -20,7 +20,7 @@
       </button>
     </div>
     <div class="btn-group mr-2">
-      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.start()">
+      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.start()" [disabled]="simulator.map.optimalFlightPath === undefined">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
              class="feather feather-play">

@@ -36,7 +36,7 @@ export class HttpService {
     });
   }
 
-  saveMap(map) {
+  addMap(map) {
     return new Promise((resolve, reject) => {
       this.http.post(environment.baseAPIUrl + 'api/maps/', map).subscribe(
         result => {
@@ -52,7 +52,7 @@ export class HttpService {
   updateMap(map) {
     return new Promise((resolve, reject) => {
       console.log(map);
-      this.http.put(environment.baseAPIUrl + 'api/maps/' + map.id, map).subscribe(
+      this.http.put(environment.baseAPIUrl + 'api/maps/' + map._id, map).subscribe(
         result => {
           resolve(result);
         },

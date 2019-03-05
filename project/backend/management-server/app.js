@@ -6,6 +6,8 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 
+const dijkstra = require('./dijkstra/dijkstra');
+
 const mapRouter = require('./api/maps');
 const droneRouter = require('./api/drone');
 const waypointRouter = require('./api/flightpath');
@@ -46,4 +48,8 @@ app.use(function (err, req, res, next) {
     });
 });
 
+let Dijkstra = new dijkstra();
+Dijkstra.initializeMaps();
+
 module.exports = app;
+exports.Dijkstra = Dijkstra;

@@ -9,7 +9,7 @@ export class DataService {
   constructor(private http: HttpClient) {
   }
 
-  getAllMaps(): Promise<any[]> {
-    return this.http.get<any[]>('../assets/data/maps.json').toPromise();
+  getNewMap(): Promise<any> {
+    return this.http.get<any>('../assets/data/new_map.json').toPromise();
   }
 }

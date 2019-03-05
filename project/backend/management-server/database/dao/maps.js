@@ -1,4 +1,5 @@
 const Map = require('../models/map');
+const dijkstra = require('../../app');
 const mongoose = require('mongoose');
 
 let getAllMaps = () => {
@@ -32,6 +33,7 @@ let addMap = (map) => {
     });
     return m.save()
         .then(result => {
+            dijkstra.Dijkstra.recalculateGraaf(m._id.toString());
             return Promise.resolve(result);
         })
         .catch(err => {
@@ -42,15 +44,16 @@ let addMap = (map) => {
 
 let updateMap = (map) => {
     const m = {
-        "_id": mongoose.Types.ObjectId(map.id),
+        "_id": mongoose.Types.ObjectId(map._id),
         "sizeX": map.sizeX,
         "sizeY": map.sizeY,
         "name": map.name,
         "obstacles": map.obstacles,
         "products": []
     };
-    return Map.updateOne({_id: map.id}, {$set: m}).exec()
+    return Map.updateOne({_id: map._id}, {$set: m}).exec()
         .then(result => {
+            dijkstra.Dijkstra.recalculateGraaf(m._id.toString());
             map.products.forEach(p => addProduct(m._id, p));
             return Promise.resolve(result);
         })

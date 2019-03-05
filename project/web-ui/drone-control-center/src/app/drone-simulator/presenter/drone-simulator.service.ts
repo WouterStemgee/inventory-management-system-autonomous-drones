@@ -108,6 +108,7 @@ export class DroneSimulatorService {
         this.mousehandler(event);
       });
     });
+    this.loaded = true;
     this.render();
   }
 
@@ -121,15 +122,36 @@ export class DroneSimulatorService {
               .then(result => {
                 this.maps = result;
                 if (this.maps.length > 0) {
-                  this.loaded = true;
                   this.init();
                 } else {
-                  this.alertEvent.emit('No maps found in database');
-                  reject();
+                  this.alertEvent.emit('No maps found in database, initializing new map...');
+                  this.data.getNewMap()
+                    .then((res) => {
+                      this.http.addMap(res)
+                        .then(() => {
+                          this.alertEvent.emit('New map added.');
+                          this.http.getAllMaps()
+                            .then(newMaps => {
+                              this.maps = newMaps;
+                              this.init();
+                            })
+                            .catch(err => {
+                              console.log(err);
+                            });
+                        })
+                        .catch(error => {
+                          this.alertEvent.emit('Error adding new maps');
+                          console.log(error);
+                        });
+                    })
+                    .catch(error => {
+                      this.alertEvent.emit('Error loading new map from JSON.');
+                      console.log(error);
+                    });
                 }
               })
               .catch(error => {
-                this.alertEvent.emit('Error loading maps');
+                this.alertEvent.emit('Error loading maps from database');
                 console.log(error);
                 reject();
               });
@@ -160,7 +182,7 @@ export class DroneSimulatorService {
           this.simulationRunner = undefined;
           this.alertEvent.emit('Simulation finished.');
         }
-      }, 250);
+      }, 100);
     } else {
       this.alertEvent.emit('No optimal flightpath calculated.');
     }
@@ -184,16 +206,22 @@ export class DroneSimulatorService {
   calculateOptimalFlightPath() {
     const flightpath = this.map.flightpath.saveFlightPath();
     console.log('Sending waypoints to back-end:', flightpath);
-    this.http.fetchOptimalFlightpath(flightpath).then((optimal) => {
-      console.log('Received optimal flightpath from server: ', optimal);
-      this.map.optimalFlightPath = optimal;
-    });
-    this.alertEvent.emit('Optimal flightplath successfully calculated.');
+    this.updateMap().then(() => {
+      this.http.fetchOptimalFlightpath(flightpath).then((optimal) => {
+        console.log('Received optimal flightpath from server: ', optimal);
+        this.alertEvent.emit('Optimal flightplath successfully calculated.');
+        this.map.optimalFlightPath = optimal;
+      });
+    })
+      .catch((err) => {
+        console.log(err);
+      });
+
   }
 
-  exportMap() {
+  duplicateMap() {
     console.log('Exporting map...');
-    this.http.saveMap(this.map.exportMap('Exported Map')).then(() => {
+    this.http.addMap(this.map.mapToJSON('Exported Map')).then(() => {
       this.http.getAllMaps()
         .then(result => {
           this.maps = result;
@@ -206,14 +234,18 @@ export class DroneSimulatorService {
   }
 
   updateMap() {
-    this.http.updateMap(this.map.exportMap(this.map.name)).then(() => {
-      this.http.getAllMaps()
-        .then(result => {
-          this.maps = result;
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    });
+    return new Promise(((resolve, reject) => {
+      this.http.updateMap(this.map.mapToJSON(this.map.name)).then(() => {
+        this.http.getAllMaps()
+          .then(result => {
+            this.maps = result;
+            resolve();
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    }));
+
   }
 }

@@ -39,9 +39,9 @@ export class Map {
     });
   }
 
-  exportMap(name) {
+  mapToJSON(name) {
     let map = {
-      id: this.id,
+      _id: this.id,
       sizeX: this.gridSize.width,
       sizeY: this.gridSize.height,
       name: name,

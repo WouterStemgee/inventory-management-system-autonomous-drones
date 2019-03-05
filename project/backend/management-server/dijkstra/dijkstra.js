@@ -15,7 +15,7 @@ class Dijkstra {
                     res.forEach((map, index) => {
                         dijkstra.grafen[index] = dijkstra.jsonMapNaarGraaf(map);
                     });
-                    console.log('Graphs loaded: ' + JSON.stringify(this.grafen));
+                    console.log('Graphs loaded.');
                 })
                 .catch(err => {
                     reject(err);
@@ -25,13 +25,18 @@ class Dijkstra {
     };
 
     recalculateGraaf(id) {
-      // TODO: Wanneer een nieuwe map toegevoegd wordt of een bestaande map aangepast werd, moet de graaf herberekend worden
+        // Wanneer een nieuwe map toegevoegd wordt of een bestaande map aangepast werd, moet de graaf herberekend worden
+        console.log('recalculating graph for id: ' + id);
         let dijkstra = this;
         return new Promise((resolve, reject) => {
-            console.log('recalculating graph');
             mapsDAO.getMap(id)
                 .then(res => {
-                    dijkstra[id] = dijkstra.jsonMapNaarGraaf(res);
+                    let mapIndex = this.grafen.findIndex(g => g.mapId == id);
+                    if (mapIndex > -1) {
+                        dijkstra.grafen[mapIndex] = dijkstra.jsonMapNaarGraaf(res);
+                    } else {
+                        dijkstra.grafen.push(dijkstra.jsonMapNaarGraaf(res));
+                    }
                 })
                 .catch(err => {
                     reject(err);
@@ -41,8 +46,9 @@ class Dijkstra {
     };
 
     zoekPad(id, waypointsJSON) {
-        let graaf = this.grafen.find(graaf => graaf.mapId == id);
-        //graaf.toString();
+        console.log('calculating path for id: ' + id);
+        let graaf = this.grafen.find(g => g.mapId == id);
+        //console.log(graaf);
         let waypoints = this.jsonWaypointsNaarPad(waypointsJSON);
         //console.log(waypoints);
         let start = waypoints.splice(0, 1);
