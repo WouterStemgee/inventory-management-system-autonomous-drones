@@ -30,9 +30,12 @@ class Dijkstra {
 
     zoekPad(id, waypointsJSON) {
         let graaf = this.grafen.find(graaf => graaf.mapId == id);
+        //graaf.toString();
         let waypoints = this.jsonWaypointsNaarPad(waypointsJSON);
+        //console.log(waypoints);
         let start = waypoints.splice(0, 1);
         let pad = graaf.zoekKortstePadWaypoints(start, waypoints);
+        //console.log(pad);
         return this.padNaarJsonWaypoints(pad);
     };
 
@@ -47,6 +50,7 @@ class Dijkstra {
         map.obstacles.forEach(function (obstakel) {
             obstakels.push(obstakel.x + 'X' + obstakel.y + 'Y');
         });
+        //console.log(obstakels);
         graaf.verwijderKnopen(obstakels);
         return graaf;
     };
