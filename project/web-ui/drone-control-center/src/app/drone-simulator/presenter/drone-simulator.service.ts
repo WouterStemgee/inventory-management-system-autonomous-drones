@@ -17,11 +17,15 @@ export class DroneSimulatorService {
   map;
   drone;
   simulationRunner;
+
   loaded;
   initialized;
+  eventListenersRegistered;
+
   imageLoader;
 
   maps;
+
   mouseX;
   mouseY;
 
@@ -106,6 +110,10 @@ export class DroneSimulatorService {
     this.map = new Map(gridSize, this.tileSize, this.imageLoader);
     this.drone = new Drone(1, 1, this.tileSize, gridSize, this.imageLoader);
     this.map.loadMap(this.maps[this.selectedMap]);
+    if (!this.eventListenersRegistered) {
+      this.registerEventListeners();
+      this.eventListenersRegistered = true;
+    }
     this.initialized = true;
     this.render();
   }

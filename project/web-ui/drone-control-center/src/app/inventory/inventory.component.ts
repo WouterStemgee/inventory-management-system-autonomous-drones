@@ -18,17 +18,17 @@ export class InventoryComponent implements OnInit {
 
   ngOnInit() {
     if (this.simulator.loaded) {
-      this.getAllProducts();
+      this.loadProducts();
     } else {
       this.simulator.onSimulatorLoadedEvent.subscribe((loaded) => {
         if (loaded) {
-          this.getAllProducts();
+          this.loadProducts();
         }
       });
     }
   }
 
-  getAllProducts() {
+  loadProducts() {
     return new Promise((resolve, reject) => {
       const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
       this.http.getAllProducts(mapId)
@@ -47,12 +47,11 @@ export class InventoryComponent implements OnInit {
     const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
     this.http.deleteProduct(mapId, productId)
       .then((res) => {
-        this.getAllProducts()
+        this.loadProducts()
           .then(() => {
             this.http.getAllMaps()
               .then(result => {
                 this.simulator.maps = result;
-                this.simulator.reset();
               })
               .catch(err => {
                 console.log(err);
@@ -73,12 +72,11 @@ export class InventoryComponent implements OnInit {
     mapData.position = {x: form.value.x, y: form.value.y};
     this.http.addProduct(mapId, mapData)
       .then((res) => {
-        this.getAllProducts()
+        this.loadProducts()
           .then(() => {
             this.http.getAllMaps()
               .then(result => {
                 this.simulator.maps = result;
-                this.simulator.reset();
               })
               .catch(err => {
                 console.log(err);
