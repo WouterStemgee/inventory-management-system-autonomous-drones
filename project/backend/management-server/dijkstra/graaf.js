@@ -59,7 +59,6 @@ class Graaf {
         let graaf = this;
         verbindingen.forEach(function(verbinding){
             if (verbinding.constructor === Array && verbinding.length === 3 && (typeof verbinding[2] === "number" || verbinding[2] >= 0) && graaf.knopen.indexOf(verbinding[0]) >= 0 && graaf.knopen.indexOf(verbinding[1]) >= 0){
-                console.log(verbinding)
                 graaf.verbindingen.push(verbinding);
             } else {
                 console.log("AJE HIER WE HEBT HEBDE EEN SERIEUS PROBLEEM VRIEND")
@@ -75,16 +74,11 @@ class Graaf {
             knopen.forEach(function(knoop){
                 graaf.verbindingen.forEach(function(verbinding){
                     if (verbinding[0] === knoop){
-                        console.log("verbinding start");
-                        console.log(verbinding[0]);
-                        console.log(graaf.verbindingen.splice(graaf.verbindingen.indexOf(verbinding),1));
+                        graaf.verbindingen.splice(graaf.verbindingen.indexOf(verbinding),1);
                     } else if (verbinding[1] === knoop){
-                        console.log("verbinding einde");
-                        console.log(verbinding[1]);
-                        console.log(graaf.verbindingen.splice(graaf.verbindingen.indexOf(verbinding),1));
+                        graaf.verbindingen.splice(graaf.verbindingen.indexOf(verbinding),1);
                     }
                 });
-                console.log("ja die knoop kan nu okk weg right ?" + knoop);
                 graaf.knopen.splice(graaf.knopen.indexOf(knoop),1);
             });
         } else {
