@@ -30,7 +30,6 @@ export class DroneSimulatorService {
 
   constructor(private data: DataService, private http: HttpService) {
     console.log('Starting simulator service...');
-
     this.onSimulatorLoadedEvent.subscribe((loaded) => {
         if (loaded) {
           console.log('Simulator finished loading data.');
@@ -38,9 +37,20 @@ export class DroneSimulatorService {
         }
       }
     );
-
     this.imageLoader = new ImageLoader();
     this.simulationRunner = undefined;
+  }
+
+  registerEventListeners() {
+    window.addEventListener('keydown', (event) => {
+      this.keyhandler(event);
+    });
+    window.addEventListener('mousedown', (event) => {
+      this.clickhandler(event);
+    });
+    window.addEventListener('mousemove', (event) => {
+      this.mousehandler(event);
+    });
   }
 
   keyhandler(e) {
@@ -86,7 +96,8 @@ export class DroneSimulatorService {
     }
     this.drone.reset();
     this.map.reset();
-    this.map.loadMap(this.maps[this.selectedMap]).then(() => this.render());
+    this.map.loadMap(this.maps[this.selectedMap]);
+    this.render();
   }
 
   init() {
@@ -94,17 +105,7 @@ export class DroneSimulatorService {
     const gridSize = {width: this.canvas.width / this.tileSize, height: this.canvas.height / this.tileSize};
     this.map = new Map(gridSize, this.tileSize, this.imageLoader);
     this.drone = new Drone(1, 1, this.tileSize, gridSize, this.imageLoader);
-    this.map.loadMap(this.maps[this.selectedMap]).then(() => {
-      window.addEventListener('keydown', (event) => {
-        this.keyhandler(event);
-      });
-      window.addEventListener('mousedown', (event) => {
-        this.clickhandler(event);
-      });
-      window.addEventListener('mousemove', (event) => {
-        this.mousehandler(event);
-      });
-    });
+    this.map.loadMap(this.maps[this.selectedMap]);
     this.initialized = true;
     this.render();
   }

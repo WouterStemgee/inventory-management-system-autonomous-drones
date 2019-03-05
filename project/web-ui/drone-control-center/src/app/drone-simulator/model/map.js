@@ -18,23 +18,19 @@ export class Map {
   }
 
   reset() {
-    this.name = '';
     this.id = 0;
+    this.name = '';
+    this.flightpath = undefined;
     this.obstacles = [];
     this.products = [];
-    this.flightpath = undefined;
   }
 
   loadMap(map) {
-    return new Promise((resolve) => {
-      this.reset();
-      this.id = map._id;
-      this.name = map.name;
-      this.flightpath = new FlightPath(this.tileSize, this.id, {x: 1, y: 1}, {x: 1, y: 1});
-      map.obstacles.forEach(o => this.addObstacle(o.x, o.y));
-      map.products.forEach(p => this.addProduct(p.name, p.quantity, p.position.x, p.position.y));
-      resolve();
-    });
+    this.id = map._id;
+    this.name = map.name;
+    this.flightpath = new FlightPath(this.tileSize, this.id, {x: 1, y: 1}, {x: 1, y: 1});
+    map.obstacles.forEach(o => this.addObstacle(o.x, o.y));
+    map.products.forEach(p => this.addProduct(p.name, p.quantity, p.position.x, p.position.y));
   }
 
   toJSON(name) {
