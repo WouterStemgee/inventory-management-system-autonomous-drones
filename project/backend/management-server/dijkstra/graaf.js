@@ -18,15 +18,23 @@ class Graaf {
             }
         }
         for (let i = 0; i < sizeX-1; i++) {
-            for (let j = 0; j < sizeY-1; j++) {
+            for (let j = 0; j < sizeY; j++) {
                 this.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+j+'Y',1]]);
+            }
+        }
+        for (let i = 0; i < sizeX; i++) {
+            for (let j = 0; j < sizeY-1; j++) {
                 this.voegVerbindingenToe([[i+'X'+j+'Y',i+'X'+(j.valueOf()+1)+'Y',1]]);
-                this.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+(j.valueOf()+1)+'Y',1]]);
             }
         }
         for (let i = 0; i < sizeX-1; i++) {
-            for (let j = 1; j < sizeY-1; j++) {
-                this.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+(j.valueOf()-1)+'Y',1]]);
+            for (let j = 0; j < sizeY-1; j++) {
+                this.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+(j.valueOf()+1)+'Y',1.9]]);
+            }
+        }
+        for (let i = 0; i < sizeX-1; i++) {
+            for (let j = 1; j < sizeY; j++) {
+                this.voegVerbindingenToe([[i+'X'+j+'Y',(i.valueOf()+1)+'X'+(j.valueOf()-1)+'Y',1.9]]);
             }
         }
     }
@@ -51,11 +59,13 @@ class Graaf {
         let graaf = this;
         verbindingen.forEach(function(verbinding){
             if (verbinding.constructor === Array && verbinding.length === 3 && (typeof verbinding[2] === "number" || verbinding[2] >= 0) && graaf.knopen.indexOf(verbinding[0]) >= 0 && graaf.knopen.indexOf(verbinding[1]) >= 0){
+                console.log(verbinding)
+                graaf.verbindingen.push(verbinding);
             } else {
+                console.log("AJE HIER WE HEBT HEBDE EEN SERIEUS PROBLEEM VRIEND")
                 throw 'Geen correcte array van verbindingen'
             }
         });
-        this.verbindingen = this.verbindingen.concat(verbindingen);
     }
 
     //verwijderen van knopen en zijn verbindingen
@@ -64,10 +74,17 @@ class Graaf {
         if (knopen.constructor === Array){
             knopen.forEach(function(knoop){
                 graaf.verbindingen.forEach(function(verbinding){
-                    if (verbinding[0] == knoop || verbinding[1] == knoop){
-                        graaf.verbindingen.splice(graaf.verbindingen.indexOf(verbinding),3);
+                    if (verbinding[0] === knoop){
+                        console.log("verbinding start");
+                        console.log(verbinding[0]);
+                        console.log(graaf.verbindingen.splice(graaf.verbindingen.indexOf(verbinding),1));
+                    } else if (verbinding[1] === knoop){
+                        console.log("verbinding einde");
+                        console.log(verbinding[1]);
+                        console.log(graaf.verbindingen.splice(graaf.verbindingen.indexOf(verbinding),1));
                     }
                 });
+                console.log("ja die knoop kan nu okk weg right ?" + knoop);
                 graaf.knopen.splice(graaf.knopen.indexOf(knoop),1);
             });
         } else {
