@@ -26,6 +26,10 @@ app.use('/api/maps', mapRouter);
 app.use('/api/drone', droneRouter);
 app.use('/api/flightpath', waypointRouter);
 
+//route voor statische context -> node-red
+//app.use("/node-red",express.static("public"));
+
+
 // je hebt MongoDB lokaal geinstalleerd, indien deze nog niet bestaat wordt dit automatisch aangemaakt
 mongoose.connect('mongodb://localhost/drone1', {useNewUrlParser: true});
 

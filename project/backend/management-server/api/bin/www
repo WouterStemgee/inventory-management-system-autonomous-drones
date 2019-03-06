@@ -4,9 +4,22 @@
  * Module dependencies.
  */
 
-var app = require('../../app');
-var debug = require('debug')('untitled:server');
-var http = require('http');
+const app = require('../../app');
+const debug = require('debug')('untitled:server');
+const http = require('http');
+
+/*
+const RED = require('node-red');
+
+//settings voor node-red (normaal settings.js file)
+var settings = {
+    httpAdminRoot:"/red",
+    httpNodeRoot: "/api",
+    //plaats waar nodered geïnstalleerd is, bij iedereen anders :s
+    userDir:"/Gebuikers/jochen/.nodered/",
+    functionGlobalContext: { }    // enables global context
+};
+*/
 
 /**
  * Get port from environment and store in Express.
@@ -21,6 +34,20 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
+/*
+
+//intitialiseren node red
+RED.init(server, settings);
+
+// Serve the editor UI from /red
+app.use(settings.httpAdminRoot,RED.httpAdmin);
+
+// Serve the http nodes UI from /api
+app.use(settings.httpNodeRoot,RED.httpNode);
+
+RED.start();
+*/
+
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -30,6 +57,7 @@ server.listen(port, () => {
 });
 server.on('error', onError);
 server.on('listening', onListening);
+
 
 /**
  * Normalize a port into a number, string, or false.
