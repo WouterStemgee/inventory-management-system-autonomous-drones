@@ -20,4 +20,11 @@ services:
       context: drone1-mongodb/
       dockerfile: Dockerfile
     #ports:
-    #  - '27017:27017'                 
+    #  - '27017:27017'                
+  drone1-mosquitto:
+    build:
+      context: drone1-mosquitto/
+      dockerfile: Dockerfile
+    ports:
+     # - "1883:1883"
+     # - "9001:9001" 
