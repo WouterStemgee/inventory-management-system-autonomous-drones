@@ -26,7 +26,7 @@ app.use('/api/maps', mapRouter);
 app.use('/api/drone', droneRouter);
 app.use('/api/flightpath', waypointRouter);
 
-//route voor statische context -> node-red
+//route voor statische context -> node-red, mss niet meer nodig door de vorige call met directory name
 //app.use("/node-red",express.static("public"));
 
 
