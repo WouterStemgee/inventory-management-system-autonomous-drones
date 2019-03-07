@@ -9,31 +9,12 @@ import {DroneSimulatorService} from '../presenter/drone-simulator.service';
 })
 export class DroneSimulatorComponent implements OnInit {
 
-  alerts = [];
-
   constructor(public simulator: DroneSimulatorService) {
-    let i = 0;
-    simulator.onAlertEvent.subscribe(
-      (alertMessage) => {
-        this.alerts.push({
-          id: i++,
-          type: 'warning',
-          message: alertMessage
-        });
-      }
-    );
-  }
-
-  close(alert) {
-    for (let i = this.alerts.length - 1; i >= 0; i--) {
-      if (this.alerts[i].id === alert.id) {
-        this.alerts.splice(i, 1);
-      }
-    }
   }
 
   ngOnInit() {
     this.simulator.initialized = false;
+    this.simulator.eventListenersRegistered = false;
     if (this.simulator.loaded) {
       this.simulator.init();
     } else {

@@ -29,7 +29,7 @@ export class DroneSimulatorService {
   mouseX;
   mouseY;
 
-  @Output() onAlertEvent = new EventEmitter<string>();
+  @Output() onAlertEvent = new EventEmitter<any>();
   @Output() onSimulatorLoadedEvent = new EventEmitter<boolean>();
 
   constructor(private data: DataService, private http: HttpService) {
@@ -96,12 +96,13 @@ export class DroneSimulatorService {
     if (this.simulationRunner) {
       window.clearInterval(this.simulationRunner);
       this.simulationRunner = undefined;
-      this.onAlertEvent.emit('Simulation stopped.');
+      this.onAlertEvent.emit({title: 'Simulator', message: 'Simulation stopped.', type: 'error'});
     }
     this.drone.reset();
     this.map.reset();
     this.map.loadMap(this.maps[this.selectedMap]);
     this.render();
+    this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Simulation reset.', type: 'info'});
   }
 
   init() {
@@ -127,43 +128,62 @@ export class DroneSimulatorService {
             .then(result => {
               this.maps = result;
               if (this.maps.length === 0) {
-                this.onAlertEvent.emit('No maps found in database, initializing new map...');
+                this.onAlertEvent.emit({
+                  title: 'Drone Control Center',
+                  message: 'No maps found in database, initializing new map...',
+                  type: 'warning'
+                });
                 this.data.getNewMap()
                   .then((res) => {
                     this.http.addMap(res)
                       .then(() => {
-                        this.onAlertEvent.emit('New map added.');
+                        this.onAlertEvent.emit();
+                        this.onAlertEvent.emit({
+                          title: 'Drone Control Center', message: 'New map added.', type: 'success'
+                        });
                         this.http.getAllMaps()
                           .then(newMaps => {
                             this.maps = newMaps;
                             resolve();
                           })
                           .catch(err => {
-                            console.log(err);
+                            this.onAlertEvent.emit({
+                              title: 'Drone Control Center',
+                              message: 'Error loading maps from database.',
+                              type: 'error'
+                            });
                           });
                       })
                       .catch(error => {
-                        this.onAlertEvent.emit('Error adding new maps.');
-                        console.log(error);
+                        this.onAlertEvent.emit({
+                          title: 'Drone Control Center',
+                          message: 'Error adding new maps.',
+                          type: 'error'
+                        });
                       });
                   })
                   .catch(error => {
-                    this.onAlertEvent.emit('Error loading new map from JSON.');
-                    console.log(error);
+                    this.onAlertEvent.emit({
+                      title: 'Drone Control Center',
+                      message: 'Error loading new map from JSON.',
+                      type: 'error'
+                    });
                   });
               } else {
                 resolve();
               }
             })
             .catch(error => {
-              this.onAlertEvent.emit('Error loading maps from database.');
-              console.log(error);
+              this.onAlertEvent.emit({
+                title: 'Drone Control Center',
+                message: 'Error loading maps from database.',
+                type: 'error'
+              });
               reject();
             });
         })
         .catch(error => {
-          this.onAlertEvent.emit('Error loading images.');
-          console.log(error);
+          this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Error loading images.', type: 'error'});
           reject();
         });
     });
@@ -171,7 +191,7 @@ export class DroneSimulatorService {
 
   start() {
     if (this.map.flightpath.optimalPath && this.simulationRunner === undefined) {
-      this.onAlertEvent.emit('Starting simulation...');
+      this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Starting simulation...', type: 'info'});
       let currentWaypoint = 0;
       this.simulationRunner = setInterval(() => {
         if (currentWaypoint < this.map.flightpath.optimalPath.length) {
@@ -181,11 +201,15 @@ export class DroneSimulatorService {
         } else {
           window.clearInterval(this.simulationRunner);
           this.simulationRunner = undefined;
-          this.onAlertEvent.emit('Simulation finished.');
+          this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Simulation finished.', type: 'success'});
         }
       }, 100);
     } else {
-      this.onAlertEvent.emit('No optimal flightpath calculated.');
+      this.onAlertEvent.emit({
+        title: 'Drone Control Center',
+        message: 'No optimal flightpath calculated.',
+        type: 'error'
+      });
     }
   }
 
@@ -206,31 +230,54 @@ export class DroneSimulatorService {
 
   calculateOptimalFlightPath() {
     const flightpath = this.map.flightpath.toJSON();
-    console.log('Sending waypoints to back-end:', flightpath);
-    this.updateMap().then(() => {
-      this.http.fetchOptimalFlightpath(flightpath).then((optimal) => {
-        console.log('Received optimal flightpath from server: ', optimal);
-        this.onAlertEvent.emit('Optimal flightplath successfully calculated.');
-        this.map.flightpath.setOptimalPath(optimal);
-        this.render();
+    if (flightpath.waypoints.length > 2) {
+      console.log('Sending waypoints to back-end:', flightpath);
+      this.updateMap().then(() => {
+        this.http.fetchOptimalFlightpath(flightpath).then((optimal) => {
+          console.log('Received optimal flightpath from server: ', optimal);
+          this.onAlertEvent.emit({
+            title: 'Drone Control Center',
+            message: 'Optimal flightplath successfully calculated.',
+            type: 'success'
+          });
+          this.map.flightpath.setOptimalPath(optimal);
+          this.render();
+        });
+      })
+        .catch((err) => {
+          this.onAlertEvent.emit({
+            title: 'Drone Control Center',
+            message: err.toString(),
+            type: 'error'
+          });
+        });
+    } else {
+      this.onAlertEvent.emit({
+        title: 'Drone Control Center',
+        message: 'No waypoints selected.',
+        type: 'error'
       });
-    })
-      .catch((err) => {
-        console.log(err);
-      });
-
+    }
   }
 
   duplicateMap() {
-    console.log('Duplicating map...');
     this.http.addMap(this.map.toJSON('New Map')).then(() => {
       this.http.getAllMaps()
         .then(result => {
           this.maps = result;
           this.selectedMap = this.maps.length - 1;
+          this.onAlertEvent.emit({
+            title: 'Drone Control Center',
+            message: 'Duplicated map.',
+            type: 'success'
+          });
         })
         .catch(err => {
-          console.log(err);
+          this.onAlertEvent.emit({
+            title: 'Drone Control Center',
+            message: err.toString(),
+            type: 'error'
+          });
         });
     });
   }
@@ -241,13 +288,25 @@ export class DroneSimulatorService {
         this.http.getAllMaps()
           .then(result => {
             this.maps = result;
+            this.onAlertEvent.emit({
+              title: 'Drone Control Center',
+              message: 'Saved map.',
+              type: 'success'
+            });
             resolve();
           })
           .catch(err => {
-            reject(err);
+            this.onAlertEvent.emit({
+              title: 'Drone Control Center',
+              message: err.toString(),
+              type: 'error'
+            });
           });
       });
     }));
+  }
 
+  exportMap() {
+    // TODO: Generate JSON file on backend and download file
   }
 }

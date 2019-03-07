@@ -3,6 +3,7 @@ import {NgModule} from '@angular/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
+import {ToastNoAnimationModule} from 'ngx-toastr';
 
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
@@ -11,6 +12,7 @@ import {DroneSimulatorComponent} from './drone-simulator/view/drone-simulator.co
 import {FlightPlannerComponent} from './flight-planner/flight-planner.component';
 import {MapEditorComponent} from './map-editor/map-editor.component';
 import {InventoryComponent} from './inventory/inventory.component';
+
 
 @NgModule({
   declarations: [
@@ -26,7 +28,13 @@ import {InventoryComponent} from './inventory/inventory.component';
     NgbModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ToastNoAnimationModule.forRoot({
+      timeOut: 8000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+      closeButton: true
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
