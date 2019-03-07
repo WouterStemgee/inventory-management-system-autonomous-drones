@@ -15,8 +15,8 @@ const RED = require('node-red');
 var settings = {
     httpAdminRoot:"/red",
     httpNodeRoot: "/api",
-    //plaats waar nodered geïnstalleerd is, bij iedereen anders :s
-    userDir:"/Gebuikers/jochen/.nodered/",
+    //plaats waar node-red geïnstalleerd wordt?
+    userDir:"/home/nol/.nodered/",
     functionGlobalContext: { }    // enables global context
 };
 */
