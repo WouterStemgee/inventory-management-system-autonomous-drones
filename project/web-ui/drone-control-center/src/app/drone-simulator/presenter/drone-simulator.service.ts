@@ -29,7 +29,7 @@ export class DroneSimulatorService {
   mouseX;
   mouseY;
 
-  @Output() alertEvent = new EventEmitter<string>();
+  @Output() onAlertEvent = new EventEmitter<string>();
   @Output() onSimulatorLoadedEvent = new EventEmitter<boolean>();
 
   constructor(private data: DataService, private http: HttpService) {
@@ -46,13 +46,13 @@ export class DroneSimulatorService {
   }
 
   registerEventListeners() {
-    window.addEventListener('keydown', (event) => {
+    this.canvas.addEventListener('keydown', (event) => {
       this.keyhandler(event);
     });
-    window.addEventListener('mousedown', (event) => {
+    this.canvas.addEventListener('mousedown', (event) => {
       this.clickhandler(event);
     });
-    window.addEventListener('mousemove', (event) => {
+    this.canvas.addEventListener('mousemove', (event) => {
       this.mousehandler(event);
     });
   }
@@ -96,7 +96,7 @@ export class DroneSimulatorService {
     if (this.simulationRunner) {
       window.clearInterval(this.simulationRunner);
       this.simulationRunner = undefined;
-      this.alertEvent.emit('Simulation stopped.');
+      this.onAlertEvent.emit('Simulation stopped.');
     }
     this.drone.reset();
     this.map.reset();
@@ -127,12 +127,12 @@ export class DroneSimulatorService {
             .then(result => {
               this.maps = result;
               if (this.maps.length === 0) {
-                this.alertEvent.emit('No maps found in database, initializing new map...');
+                this.onAlertEvent.emit('No maps found in database, initializing new map...');
                 this.data.getNewMap()
                   .then((res) => {
                     this.http.addMap(res)
                       .then(() => {
-                        this.alertEvent.emit('New map added.');
+                        this.onAlertEvent.emit('New map added.');
                         this.http.getAllMaps()
                           .then(newMaps => {
                             this.maps = newMaps;
@@ -143,12 +143,12 @@ export class DroneSimulatorService {
                           });
                       })
                       .catch(error => {
-                        this.alertEvent.emit('Error adding new maps.');
+                        this.onAlertEvent.emit('Error adding new maps.');
                         console.log(error);
                       });
                   })
                   .catch(error => {
-                    this.alertEvent.emit('Error loading new map from JSON.');
+                    this.onAlertEvent.emit('Error loading new map from JSON.');
                     console.log(error);
                   });
               } else {
@@ -156,13 +156,13 @@ export class DroneSimulatorService {
               }
             })
             .catch(error => {
-              this.alertEvent.emit('Error loading maps from database.');
+              this.onAlertEvent.emit('Error loading maps from database.');
               console.log(error);
               reject();
             });
         })
         .catch(error => {
-          this.alertEvent.emit('Error loading images.');
+          this.onAlertEvent.emit('Error loading images.');
           console.log(error);
           reject();
         });
@@ -171,7 +171,7 @@ export class DroneSimulatorService {
 
   start() {
     if (this.map.flightpath.optimalPath && this.simulationRunner === undefined) {
-      this.alertEvent.emit('Starting simulation...');
+      this.onAlertEvent.emit('Starting simulation...');
       let currentWaypoint = 0;
       this.simulationRunner = setInterval(() => {
         if (currentWaypoint < this.map.flightpath.optimalPath.length) {
@@ -181,11 +181,11 @@ export class DroneSimulatorService {
         } else {
           window.clearInterval(this.simulationRunner);
           this.simulationRunner = undefined;
-          this.alertEvent.emit('Simulation finished.');
+          this.onAlertEvent.emit('Simulation finished.');
         }
       }, 100);
     } else {
-      this.alertEvent.emit('No optimal flightpath calculated.');
+      this.onAlertEvent.emit('No optimal flightpath calculated.');
     }
   }
 
@@ -210,7 +210,7 @@ export class DroneSimulatorService {
     this.updateMap().then(() => {
       this.http.fetchOptimalFlightpath(flightpath).then((optimal) => {
         console.log('Received optimal flightpath from server: ', optimal);
-        this.alertEvent.emit('Optimal flightplath successfully calculated.');
+        this.onAlertEvent.emit('Optimal flightplath successfully calculated.');
         this.map.flightpath.setOptimalPath(optimal);
         this.render();
       });
@@ -222,8 +222,8 @@ export class DroneSimulatorService {
   }
 
   duplicateMap() {
-    console.log('Exporting map...');
-    this.http.addMap(this.map.toJSON('Exported Map')).then(() => {
+    console.log('Duplicating map...');
+    this.http.addMap(this.map.toJSON('New Map')).then(() => {
       this.http.getAllMaps()
         .then(result => {
           this.maps = result;

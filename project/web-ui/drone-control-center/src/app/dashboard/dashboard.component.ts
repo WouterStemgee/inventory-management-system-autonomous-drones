@@ -9,7 +9,7 @@ import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulato
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(private sharedService: SharedService, private simulator: DroneSimulatorService) {
+  constructor(private sharedService: SharedService, public simulator: DroneSimulatorService) {
     sharedService.onNavigateEvent.emit('dashboard');
   }
 

@@ -11,7 +11,7 @@ export class AppComponent {
   title = 'Drone Control Center';
   activeTab;
 
-  constructor(private service: SharedService, private simulator: DroneSimulatorService) {
+  constructor(private service: SharedService, public simulator: DroneSimulatorService) {
     this.simulator.load()
       .then(() => {
         simulator.onSimulatorLoadedEvent.emit(true);

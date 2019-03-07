@@ -11,9 +11,9 @@ export class DroneSimulatorComponent implements OnInit {
 
   alerts = [];
 
-  constructor(private simulator: DroneSimulatorService) {
+  constructor(public simulator: DroneSimulatorService) {
     let i = 0;
-    simulator.alertEvent.subscribe(
+    simulator.onAlertEvent.subscribe(
       (alertMessage) => {
         this.alerts.push({
           id: i++,
