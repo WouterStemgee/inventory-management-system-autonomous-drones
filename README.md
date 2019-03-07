@@ -28,7 +28,7 @@
 Voor de volledige functionaliteit te bekomen moeten er drie dingen gebeuren:
 1. De database opzetten. (zie opnieuw de wiki)
 
-2. De backend server laten draaien. Dit gebeurt door via de node.js shell te navigeren naar ~/project/backend/management-server en daar "node api\bin\www" uit te voeren.
+2. De backend server laten draaien. Dit gebeurt door via de node.js shell te navigeren naar ~/project/backend/management-server en daar "npm start" uit te voeren. Wanneer je wil dat aanpassingen uitgevoerd worden zonder dat de applicatie moet gestopt en heropgestart worden, kan je gebruik maken van het commando: "npm run start-watch" waarbij gebruik gemaakt wordt van nodemon.
 
 3. De frontend (Angular) opzetten, analoog wordt genavigeerd naar ~/project/web-ui/drone-control-center in een tweede shell en wordt het commando "ng serve" uitgevoerd.
 
