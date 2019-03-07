@@ -1,16 +1,14 @@
 const express = require('express');
 const router = express.Router();
 
-const Product = require('../models/product');
+const Product = require('../models/product'); // eigen product module implementeren
 const mongoose = require('mongoose');
 
-
-// dit is 1 van de dingen die veranderd werd en een effect heeft op de front-end
 router.get('/', (req, res, next) => {
 	Product.find().select('name quantity _id xCoord yCoord').exec().then(docs => { // in de select wordt er beslist welke velden je precies allemaal gaat terug sturen
 		console.log(docs);
 		const response = {
-			count : docs.length,
+			count : docs.length, // je geeft al mee hoeveel verschillende producten er in totaal al in de database zitten
 			products: docs.map(doc => {
 				return {
 					name : doc.name,
@@ -20,30 +18,31 @@ router.get('/', (req, res, next) => {
 					_id : doc._id,
 					request : {
 						type : 'GET',
-						url : 'http://localhost:3001/products/'+ doc._id
+						url : 'http://localhost:3001/products/'+ doc._id // er wordt ook een soort van url voor extra info over een bepaald product terug gegeven
 					}
 				};
-			}) // je geeft nu de oorspronkelijke response weer in een nieuw json antwoord
+			})
 		};
 		res.status(200).json(response);
 	}).catch(err =>{
 		console.log(err);
-		res.status(500).json({
+		res.status(500).json({ // als er een fout optreedt dan stuur je een error-antwoord terug
 			error: err
 		});
-	}); // hier kan je allemal query operators aan toevoegen zoals where, limit,...
+	}); 
 });
 
 router.post('/', (req, res, next) => {
+	// je maakt een nieuw product aan, dat je wilt opslaan in de database
 	const product = new Product({
 		_id: new mongoose.Types.ObjectId(),
 		name: req.body.name,
 		quantity: req.body.quantity
 	});
-	product.save().then(result =>{
+	product.save().then(result =>{ // je slaat het nieuw aangemaakte product effectief op in de database
 		console.log(result);
 		res.status(201).json({
-        	message: 'Product was succesfully created',
+        	message: 'Product was succesfully created', 
         	createdProduct: {
         		name: result.name,
         		quantity: result.quantity,
@@ -52,7 +51,7 @@ router.post('/', (req, res, next) => {
         		_id: result._id,
         		request: {
         			type: 'GET',
-        			url: 'http://localhost:3001/products' + result._id
+        			url: 'http://localhost:3001/products' + result._id // je geeft een link terug om het nieuw aangemaakte product makkelijker te kunnen opzoeken
         		}
         	}
     	});
@@ -66,7 +65,7 @@ router.post('/', (req, res, next) => {
 
 router.get('/:productId', (req, res, next) => {
     const id = req.params.productId;
-    Product.findById(id).select('name quantity _id xCoord yCoord').exec().then(doc => {
+    Product.findById(id).select('name quantity _id xCoord yCoord').exec().then(doc => { // de select bepaal wat je exact gaat terug kunnen geven, zo voorkom je dat er ongewenst interne gegevens naar buiten lekken
     	console.log(doc);
     	if(doc){
     		res.status(200).json({
@@ -79,7 +78,7 @@ router.get('/:productId', (req, res, next) => {
     		});
     	}
     	else{
-    		res.status(404).json({message: "Dit is geen geldig id"});
+    		res.status(404).json({message: "Dit is geen geldig id"}); // foutbericht
     	}
     }).catch(err => {
     	console.log(err);
@@ -88,8 +87,10 @@ router.get('/:productId', (req, res, next) => {
 });
 
 router.patch('/:productId', (req, res, next) => {
-	const id = req.params.productId;
+	const id = req.params.productId; 
 	const updateOps = {};
+	// deze manier van werken zorgt er voor dat je niet alle gegevens die je niet wilt aanpassen opnieuw moet opgeven
+	// een mogelijk nadeel kan zijn dat je geen nieuwe attributen kan toevoegen
 	for(const ops of req.body){
 		updateOps[ops.propName] = ops.value;
 	}
