@@ -16,6 +16,7 @@ class Dijkstra {
                         dijkstra.grafen[index] = dijkstra.jsonMapNaarGraaf(map);
                     });
                     console.log('Graphs loaded.');
+                    //resolve(true);
                 })
                 .catch(err => {
                     reject(err);
@@ -37,6 +38,7 @@ class Dijkstra {
                     } else {
                         dijkstra.grafen.push(dijkstra.jsonMapNaarGraaf(res));
                     }
+                    //resolve(true);
                 })
                 .catch(err => {
                     reject(err);
