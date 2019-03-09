@@ -73,6 +73,21 @@ let deleteMap = (id) => {
         });
 };
 
+let getProduct = (mapId, productId) => {
+    return Map.findById(mapId).exec()
+        .then(result => {
+            let product = result.products.find(pr => pr._id == productId);
+            if(product)
+                return Promise.resolve(product);
+            else
+                return Promise.reject("product not found");
+        })
+        .catch(err => {
+            return Promise.reject({error: err});
+        });
+};
+
+
 let addProduct = (mapId, product) => {
     const p = {
         "_id": new mongoose.Types.ObjectId(),
@@ -118,6 +133,7 @@ module.exports.getMap = getMap;
 module.exports.addMap = addMap;
 module.exports.updateMap = updateMap;
 module.exports.deleteMap = deleteMap;
+module.exports.getProduct = getProduct;
 module.exports.addProduct = addProduct;
 module.exports.updateProduct = updateProduct;
 module.exports.removeProduct = removeProduct;
