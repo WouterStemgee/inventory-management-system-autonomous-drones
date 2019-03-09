@@ -1,7 +1,7 @@
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised).should();
-const Dijkstra = require('./dijkstra');
+const Dijkstra = require('./dijkstra/dijkstra');
 let dijkstra = new Dijkstra();
 describe('initialisatie van de map', function(){
     it('zou de map moeten ophalen uit de databank en deze opslaan als een graaf waarop dijkstra kan worden toegepast', function(){
