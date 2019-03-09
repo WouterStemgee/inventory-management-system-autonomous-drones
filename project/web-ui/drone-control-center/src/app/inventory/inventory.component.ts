@@ -12,7 +12,7 @@ export class InventoryComponent implements OnInit {
 
   products;
 
-  constructor(private sharedService: SharedService, private http: HttpService, private simulator: DroneSimulatorService) {
+  constructor(private sharedService: SharedService, private http: HttpService, public simulator: DroneSimulatorService) {
     sharedService.onNavigateEvent.emit('inventory');
   }
 

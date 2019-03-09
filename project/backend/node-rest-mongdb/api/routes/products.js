@@ -86,6 +86,15 @@ router.get('/:productId', (req, res, next) => {
     });
 });
 
+/*
+router.get('/find/:parameter',(req,res,next) => {
+	const param = reg.params.parameter;
+	Product.findOne(){
+
+	}
+});
+*/
+
 router.patch('/:productId', (req, res, next) => {
 	const id = req.params.productId; 
 	const updateOps = {};

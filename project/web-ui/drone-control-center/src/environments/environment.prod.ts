@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  baseAPIUrl: 'https://localhost:3000/'
+  baseAPIUrl: 'http://bpvop4.ugent.be:8082/'
 };
