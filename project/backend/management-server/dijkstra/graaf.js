@@ -39,12 +39,27 @@ class Graaf {
         }
     }
 
+    checkKnopen(knopen){
+        let correct = true;
+        if (knopen.constructor === Array) {
+            let regex = /(\d+)X(\d+)Y/;
+            knopen.forEach(function (knoop) {
+                if (!regex.test(knoop)) {
+                    correct = false;
+                }
+            });
+        } else {
+            correct = false;
+        }
+        return correct;
+    }
+
     //toevoegen van knopen op de graaf adhv een array.
     voegKnopenToe(knopen) {
-        if (knopen.constructor === Array){
-            this.knopen = this.knopen.concat(knopen);
+        if (this.checkKnopen(knopen)){
+            this.knopen = this.knopen.concat(knopen)
         } else {
-            throw 'Geen correcte array van knopen'
+            throw 'Foute knopen'
         }
     }
 
@@ -62,7 +77,7 @@ class Graaf {
                 graaf.verbindingen.push(verbinding);
             } else {
                 console.log("AJE HIER WE HEBT HEBDE EEN SERIEUS PROBLEEM VRIEND")
-                throw 'Geen correcte array van verbindingen'
+                throw 'Geen correcte array van verbindingen of een of meer van de opgegeven knopen bestaat niet'
             }
         });
     }
@@ -70,19 +85,19 @@ class Graaf {
     //verwijderen van knopen en zijn verbindingen
     verwijderKnopen(knopen){
         let graaf = this;
-        if (knopen.constructor === Array){
-            knopen.forEach(function(knoop){
-                graaf.verbindingen.forEach(function(verbinding){
-                    if (verbinding[0] === knoop){
-                        graaf.verbindingen.splice(graaf.verbindingen.indexOf(verbinding),1);
-                    } else if (verbinding[1] === knoop){
-                        graaf.verbindingen.splice(graaf.verbindingen.indexOf(verbinding),1);
+        if (this.checkKnopen(knopen)) {
+            knopen.forEach(function (knoop) {
+                graaf.verbindingen.forEach(function (verbinding) {
+                    if (verbinding[0] === knoop) {
+                        graaf.verbindingen.splice(graaf.verbindingen.indexOf(verbinding), 1);
+                    } else if (verbinding[1] === knoop) {
+                        graaf.verbindingen.splice(graaf.verbindingen.indexOf(verbinding), 1);
                     }
                 });
-                graaf.knopen.splice(graaf.knopen.indexOf(knoop),1);
+                graaf.knopen.splice(graaf.knopen.indexOf(knoop), 1);
             });
         } else {
-            throw 'Geen correcte array van knopen'
+            throw 'Array bevat een foute knoop'
         }
     }
 
@@ -154,10 +169,10 @@ class Graaf {
     }
 
     zoekKortstePadWaypoints(start, waypoints){
-        if (waypoints.constructor === Array){
+        if (this.checkKnopen(waypoints)){
             this.waypoints = waypoints;
         } else {
-            throw 'Geen correcte array van waypoints'
+            throw 'Foute array van waypoints'
         }
         let pad = [];
         //pad.push(start); //eerste knoop toevoegen
