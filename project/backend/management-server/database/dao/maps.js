@@ -93,7 +93,7 @@ let addProduct = (mapId, product) => {
 };
 
 let updateProduct = (mapId, product) => {
-    return Map.updateOne({_id: mapId}, {"products._id": product._id}, {$set: {"products.$": product}}).exec()
+    return Map.updateOne({_id: mapId, "products._id": product._id}, {$set: {"products.$": product}}).exec()
         .then(result => {
             return Promise.resolve(result);
         })

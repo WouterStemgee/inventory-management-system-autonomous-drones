@@ -77,6 +77,20 @@ productRouter.route('/')
     });
 
 productRouter.route('/:productId')
+    .get((req, res) => {
+        mapsDAO.getMap(req.params.mapId)
+            .then((result) => {
+                let product = result.products.find(pr => {return pr._id == req.params.productId} );
+                if(product != undefined)
+                    res.status(200).send(product);
+                else
+                    res.status(404).send("Not found");
+
+            })
+            .catch((error) => {
+                res.status(400).send(error);
+            });
+    })
     .put((req, res) => {
         mapsDAO.updateProduct(req.params.mapId, req.body)
             .then((result) => {
