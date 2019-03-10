@@ -1,5 +1,4 @@
-import {Component, OnInit} from '@angular/core';
-import {SharedService} from '../shared.service';
+import {Component} from '@angular/core';
 import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
 
 @Component({
@@ -7,13 +6,9 @@ import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulato
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
 
-  constructor(private sharedService: SharedService, public simulator: DroneSimulatorService) {
-    sharedService.onNavigateEvent.emit('dashboard');
-  }
-
-  ngOnInit() {
+  constructor(public simulator: DroneSimulatorService) {
   }
 
 }
