@@ -1,20 +1,75 @@
-var chai = require('chai');
-var chaiAsPromised = require('chai-as-promised');
-chai.use(chaiAsPromised).should();
-const Dijkstra = require('./dijkstra/dijkstra');
-let dijkstra = new Dijkstra();
-describe('initialisatie van de map', function(){
-    it('zou de map moeten ophalen uit de databank en deze opslaan als een graaf waarop dijkstra kan worden toegepast', function(){
-        return    dijkstra.initializeMaps().should.eventually.be.true;
-    });
-});
-describe('recalculate van de map', function(){
-    it('zou de graaf opnieuw moeten berekenen aan de hand vn de geupdate map uit de database', function(){
-        return    dijkstra.recalculateGraaf(0).should.eventually.be.true;
-    });
-});
-describe('bereken het kortste pad ', function(){
-    it('zou de graaf opnieuw moeten berekenen aan de hand vn de geupdate map uit de database', function(){
-        return    dijkstra.recalculateGraaf(0).should.eventually.be.true;
+const app = require('../app');
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+
+// Configure chai
+chai.use(chaiHttp);
+chai.should();
+
+describe("zoekpad", function () {
+    describe("POST /", function () {
+        //test om het snelste pad te vinden
+        it("Zou het pad moeten zoeken", function (done) {
+            chai.request(app)
+                .post('/api/flightpath')
+                .set('content-type', 'application/json')
+                .send({mapId: "5c851e1c392e923b60fff836" })
+                .send({waypoints: [{x: 1, y: 1}, {x: 12, y: 26}, {x: 20, y: 18}, {x: 12, y: 10}, {x: 38, y: 1}]})
+                .end((err, res) => {
+                    res.body.should.equal([{x: '1', y: '1'}, {x: '1', y: '1'}, {x: '1', y: '2'}, {
+                        x: '2',
+                        y: '3'
+                    }, {x: '3', y: '4'}, {x: '4', y: '5'}, {x: '5', y: '6'}, {x: '6', y: '7'}, {
+                        x: '7',
+                        y: '8'
+                    }, {x: '8', y: '8'}, {x: '9', y: '8'}, {x: '10', y: '8'}, {x: '11', y: '9'}, {
+                        x: '12',
+                        y: '10'
+                    }, {x: '12', y: '10'}, {x: '11', y: '10'}, {x: '10', y: '10'}, {x: '9', y: '11'}, {
+                        x: '8',
+                        y: '12'
+                    }, {x: '7', y: '12'}, {x: '6', y: '13'}, {x: '6', y: '14'}, {x: '6', y: '15'}, {
+                        x: '6',
+                        y: '16'
+                    }, {x: '6', y: '17'}, {x: '6', y: '18'}, {x: '6', y: '19'}, {x: '6', y: '20'}, {
+                        x: '6',
+                        y: '21'
+                    }, {x: '6', y: '22'}, {x: '6', y: '23'}, {x: '7', y: '24'}, {x: '8', y: '24'}, {
+                        x: '9',
+                        y: '24'
+                    }, {x: '10', y: '24'}, {x: '11', y: '25'}, {x: '12', y: '26'}, {x: '12', y: '26'}, {
+                        x: '11',
+                        y: '26'
+                    }, {x: '10', y: '26'}, {x: '9', y: '25'}, {x: '8', y: '24'}, {x: '7', y: '24'}, {
+                        x: '6',
+                        y: '23'
+                    }, {x: '6', y: '22'}, {x: '6', y: '21'}, {x: '7', y: '20'}, {x: '8', y: '20'}, {
+                        x: '9',
+                        y: '20'
+                    }, {x: '10', y: '20'}, {x: '11', y: '20'}, {x: '12', y: '20'}, {x: '13', y: '20'}, {
+                        x: '14',
+                        y: '20'
+                    }, {x: '15', y: '20'}, {x: '16', y: '20'}, {x: '17', y: '20'}, {x: '18', y: '20'}, {
+                        x: '19',
+                        y: '19'
+                    }, {x: '20', y: '18'}, {x: '20', y: '18'}, {x: '21', y: '18'}, {x: '22', y: '18'}, {
+                        x: '23',
+                        y: '18'
+                    }, {x: '24', y: '18'}, {x: '25', y: '18'}, {x: '26', y: '18'}, {x: '27', y: '18'}, {
+                        x: '28',
+                        y: '18'
+                    }, {x: '29', y: '18'}, {x: '30', y: '17'}, {x: '31', y: '16'}, {x: '32', y: '15'}, {
+                        x: '32',
+                        y: '14'
+                    }, {x: '32', y: '13'}, {x: '32', y: '12'}, {x: '32', y: '11'}, {x: '32', y: '10'}, {
+                        x: '32',
+                        y: '9'
+                    }, {x: '32', y: '8'}, {x: '32', y: '7'}, {x: '33', y: '6'}, {x: '34', y: '5'}, {
+                        x: '35',
+                        y: '4'
+                    }, {x: '36', y: '3'}, {x: '37', y: '2'}, {x: '38', y: '1'}]);
+                    done();
+                });
+        }).timeout(5000000);
     });
 });
