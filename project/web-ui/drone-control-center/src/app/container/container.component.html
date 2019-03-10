@@ -22,13 +22,15 @@
       </button>
       </span>
       <span class="fill-remaining-space">Drone Control Center</span>
+      <span>
+        <mat-icon aria-label="map icon">map</mat-icon>
+      </span>
       <span *ngIf="simulator.loaded">
-        <mat-form-field>
-          <mat-select [value]="simulator.maps[simulator.selectedMap].name">
-            <mat-option *ngFor="let map of simulator.maps; index as i" [value]="map.name"
-                        (click)="simulator.selectMap(i)">{{map.name}} - #{{map._id}}</mat-option>
-          </mat-select>
-        </mat-form-field>
+        <mat-select>
+          <mat-option *ngFor="let map of simulator.maps; index as i" (click)="simulator.selectMap(i)">
+            {{map.name}}
+          </mat-option>
+        </mat-select>
       </span>
     </mat-toolbar>
     <router-outlet></router-outlet>

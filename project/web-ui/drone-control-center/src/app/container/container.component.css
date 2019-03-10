@@ -19,3 +19,7 @@
 .fill-remaining-space {
   flex: 1 1 auto;
 }
+
+.map-select {
+  max-width: 100px;
+}
