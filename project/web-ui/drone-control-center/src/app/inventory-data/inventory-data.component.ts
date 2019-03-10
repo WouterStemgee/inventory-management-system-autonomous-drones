@@ -15,7 +15,7 @@ export class InventoryDataComponent implements OnInit {
 
   displayedColumns = ['id', 'name', 'quantity', 'x', 'y', 'delete'];
 
-  products = [];
+  products;
 
   constructor(private sharedService: SharedService, private http: HttpService, public simulator: DroneSimulatorService) {
     sharedService.onNavigateEvent.emit('inventory');
