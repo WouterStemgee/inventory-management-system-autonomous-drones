@@ -64,26 +64,34 @@ export class InventoryComponent implements OnInit {
     const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
     const mapData = form.value;
     mapData.position = {x: form.value.x, y: form.value.y};
-    this.http.addProduct(mapId, mapData)
-      .then((res) => {
-        this.loadProducts()
-          .then(() => {
-            this.http.getAllMaps()
-              .then(result => {
-                this.simulator.maps = result;
-                this.simulator.reset(false);
-              })
-              .catch(err => {
-                console.log(err);
-              });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
+    if (mapData.name === '' || mapData.quanity === '' || mapData.position.x === '' || mapData.position.y === '') {
+      this.simulator.onAlertEvent.emit({
+        title: 'Inventory',
+        message: 'Please fill in all the fields before submitting.',
+        type: 'error'
       });
+    } else {
+      this.http.addProduct(mapId, mapData)
+        .then((res) => {
+          this.loadProducts()
+            .then(() => {
+              this.http.getAllMaps()
+                .then(result => {
+                  this.simulator.maps = result;
+                  this.simulator.reset(false);
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
 
   initDataSource() {
