@@ -92,7 +92,7 @@ export class DroneSimulatorService {
     };
   }
 
-  reset() {
+  reset(sendNotification = true) {
     if (this.simulationRunner) {
       window.clearInterval(this.simulationRunner);
       this.simulationRunner = undefined;
@@ -102,7 +102,9 @@ export class DroneSimulatorService {
     this.map.reset();
     this.map.loadMap(this.maps[this.selectedMap]);
     this.render();
-    this.onAlertEvent.emit({title: 'Drone Simulator', message: 'Simulation reset.', type: 'info'});
+    if (sendNotification) {
+      this.onAlertEvent.emit({title: 'Drone Simulator', message: 'Simulation reset.', type: 'info'});
+    }
   }
 
   init() {
@@ -223,7 +225,7 @@ export class DroneSimulatorService {
 
   selectMap(id) {
     this.selectedMap = id;
-    this.reset();
+    this.reset(false);
   }
 
   selectDrawable(drawable) {

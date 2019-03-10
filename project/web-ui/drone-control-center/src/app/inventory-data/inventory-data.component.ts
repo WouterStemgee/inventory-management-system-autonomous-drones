@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort } from '@angular/material';
-import { InventoryDataDataSource } from './inventory-data-datasource';
+import {Component, OnInit, Output, ViewChild} from '@angular/core';
+import {MatPaginator, MatSort} from '@angular/material';
+import {InventoryDataDataSource} from './inventory-data-datasource';
 import {HttpService} from '../http.service';
 import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
+import {SharedService} from '../shared.service';
 
 @Component({
   selector: 'app-inventory-data',
@@ -10,17 +11,14 @@ import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulato
   styleUrls: ['./inventory-data.component.css']
 })
 export class InventoryDataComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
   dataSource: InventoryDataDataSource;
 
-  /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['id', 'name'];
+  displayedColumns = ['id', 'name', 'quantity', 'x', 'y', 'delete'];
 
-  products;
+  products = [];
 
-  constructor(private http: HttpService, public simulator: DroneSimulatorService) {
-
+  constructor(private sharedService: SharedService, private http: HttpService, public simulator: DroneSimulatorService) {
+    sharedService.onNavigateEvent.emit('inventory');
   }
 
   deleteProduct(productId) {
@@ -32,6 +30,7 @@ export class InventoryDataComponent implements OnInit {
             this.http.getAllMaps()
               .then(result => {
                 this.simulator.maps = result;
+                this.simulator.reset(false);
               })
               .catch(err => {
                 console.log(err);
@@ -52,6 +51,7 @@ export class InventoryDataComponent implements OnInit {
       this.http.getAllProducts(mapId)
         .then((res) => {
           this.products = res;
+          this.initDataSource();
           resolve();
         })
         .catch((err) => {
@@ -61,16 +61,50 @@ export class InventoryDataComponent implements OnInit {
     });
   }
 
+  onSubmit(form) {
+    const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
+    const mapData = form.value;
+    mapData.position = {x: form.value.x, y: form.value.y};
+    this.http.addProduct(mapId, mapData)
+      .then((res) => {
+        this.loadProducts()
+          .then(() => {
+            this.http.getAllMaps()
+              .then(result => {
+                this.simulator.maps = result;
+                this.simulator.reset(false);
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  initDataSource() {
+    this.dataSource = new InventoryDataDataSource(this.products);
+  }
+
   ngOnInit() {
+    this.initDataSource();
     if (this.simulator.loaded) {
-      this.loadProducts();
+      this.loadProducts().then(() => {
+        // this.initDataSource();
+      });
     } else {
       this.simulator.onSimulatorLoadedEvent.subscribe((loaded) => {
         if (loaded) {
-          this.loadProducts();
+          this.loadProducts().then(() => {
+            // this.initDataSource();
+          });
         }
       });
     }
-    this.dataSource = new InventoryDataDataSource(this.paginator, this.sort);
   }
 }

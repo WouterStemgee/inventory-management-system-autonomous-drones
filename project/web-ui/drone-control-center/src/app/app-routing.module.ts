@@ -1,11 +1,11 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 import {DashboardComponent} from './dashboard/dashboard.component';
-import {InventoryComponent} from './inventory/inventory.component';
+import {InventoryDataComponent} from './inventory-data/inventory-data.component';
 
 const routes: Routes = [
   {path: '', component: DashboardComponent},
-  {path: 'inventory', component: InventoryComponent}
+  {path: 'inventory', component: InventoryDataComponent}
 ];
 
 @NgModule({

@@ -11,17 +11,26 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      <button
-        type="button"
-        aria-label="Toggle sidenav"
-        mat-icon-button
-        (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
+      <span>
+        <button
+          type="button"
+          aria-label="Toggle sidenav"
+          mat-icon-button
+          (click)="drawer.toggle()"
+          *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>Drone Control Center</span>
+      </span>
+      <span class="fill-remaining-space">Drone Control Center</span>
+      <span *ngIf="simulator.loaded">
+        <mat-form-field>
+          <mat-select [value]="simulator.maps[simulator.selectedMap].name">
+            <mat-option *ngFor="let map of simulator.maps; index as i" [value]="map.name"
+                        (click)="simulator.selectMap(i)">{{map.name}} - #{{map._id}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </span>
     </mat-toolbar>
-    <!-- Add Content Here -->
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
