@@ -1,4 +1,4 @@
-const app = require('../../app');
+const app = require('../app');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 
@@ -6,18 +6,17 @@ const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 chai.should();
 
-describe("Map", () => {
-    describe("GET /", () => {
+describe("Map", function() {
+    describe("GET /", function() {
         //test om de map op te halen
-        it("Zou de map moeten opgehaald hebben", (done) => {
+        it("Zou de map moeten opgehaald hebben", function(done) {
             chai.request(app)
-                .get('/')
+                .get('/api/maps')
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.should.be.a('object');
+                    res.body.should.be.an('array');
                     done();
                 });
-
-        });
+        }).timeout(5000);
     });
 });
