@@ -1,46 +1,24 @@
-import {Component, OnInit} from '@angular/core';
-import {SharedService} from '../shared.service';
+import {Component, OnInit, Output, ViewChild} from '@angular/core';
+import {MatPaginator, MatSort} from '@angular/material';
+import {InventoryDataDataSource} from './inventory-data-datasource';
 import {HttpService} from '../http.service';
 import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
+import {SharedService} from '../shared.service';
 
 @Component({
-  selector: 'app-inventory',
-  templateUrl: './inventory.component.html',
-  styleUrls: ['./inventory.component.css']
+  selector: 'app-inventory-data',
+  templateUrl: './inventory-data.component.html',
+  styleUrls: ['./inventory-data.component.css']
 })
-export class InventoryComponent implements OnInit {
+export class InventoryDataComponent implements OnInit {
+  dataSource: InventoryDataDataSource;
 
-  products;
+  displayedColumns = ['id', 'name', 'quantity', 'x', 'y', 'delete'];
+
+  products = [];
 
   constructor(private sharedService: SharedService, private http: HttpService, public simulator: DroneSimulatorService) {
     sharedService.onNavigateEvent.emit('inventory');
-  }
-
-  ngOnInit() {
-    if (this.simulator.loaded) {
-      this.loadProducts();
-    } else {
-      this.simulator.onSimulatorLoadedEvent.subscribe((loaded) => {
-        if (loaded) {
-          this.loadProducts();
-        }
-      });
-    }
-  }
-
-  loadProducts() {
-    return new Promise((resolve, reject) => {
-      const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
-      this.http.getAllProducts(mapId)
-        .then((res) => {
-          this.products = res;
-          resolve();
-        })
-        .catch((err) => {
-          console.log(err);
-          reject(err);
-        });
-    });
   }
 
   deleteProduct(productId) {
@@ -52,6 +30,7 @@ export class InventoryComponent implements OnInit {
             this.http.getAllMaps()
               .then(result => {
                 this.simulator.maps = result;
+                this.simulator.reset(false);
               })
               .catch(err => {
                 console.log(err);
@@ -64,6 +43,22 @@ export class InventoryComponent implements OnInit {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  loadProducts() {
+    return new Promise((resolve, reject) => {
+      const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
+      this.http.getAllProducts(mapId)
+        .then((res) => {
+          this.products = res;
+          this.initDataSource();
+          resolve();
+        })
+        .catch((err) => {
+          console.log(err);
+          reject(err);
+        });
+    });
   }
 
   onSubmit(form) {
@@ -77,6 +72,7 @@ export class InventoryComponent implements OnInit {
             this.http.getAllMaps()
               .then(result => {
                 this.simulator.maps = result;
+                this.simulator.reset(false);
               })
               .catch(err => {
                 console.log(err);
@@ -89,5 +85,26 @@ export class InventoryComponent implements OnInit {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  initDataSource() {
+    this.dataSource = new InventoryDataDataSource(this.products);
+  }
+
+  ngOnInit() {
+    this.initDataSource();
+    if (this.simulator.loaded) {
+      this.loadProducts().then(() => {
+        // this.initDataSource();
+      });
+    } else {
+      this.simulator.onSimulatorLoadedEvent.subscribe((loaded) => {
+        if (loaded) {
+          this.loadProducts().then(() => {
+            // this.initDataSource();
+          });
+        }
+      });
+    }
   }
 }

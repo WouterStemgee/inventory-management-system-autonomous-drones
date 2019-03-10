@@ -1,94 +1,84 @@
-<h2>Drone Simulator</h2>
-<hr>
 <div>
-  <div *ngIf="simulator.initialized" class="btn-toolbar mb-2 mb-md-2" >
-    <div class="btn-group mr-2">
-      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.calculateOptimalFlightPath()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-             class="feather feather-loader">
-          <line x1="12" y1="2" x2="12" y2="6"></line>
-          <line x1="12" y1="18" x2="12" y2="22"></line>
-          <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
-          <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
-          <line x1="2" y1="12" x2="6" y2="12"></line>
-          <line x1="18" y1="12" x2="22" y2="12"></line>
-          <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
-          <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
-        </svg>
-        Calculate Optimal Flightpath
-      </button>
-    </div>
-    <div class="btn-group mr-2">
-      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.start()" [disabled]="simulator.map.flightpath.optimalPath.length === 0">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-             class="feather feather-play">
-          <polygon points="5 3 19 12 5 21 5 3"></polygon>
-        </svg>
-        Fly Drone
-      </button>
-      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.reset(); this.alerts = [];">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-             class="feather feather-x">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-        Reset
-      </button>
-    </div>
-    <div class="btn-group mr-2">
-      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.updateMap()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-save"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-        Save
-      </button>
-      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.duplicateMap()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>        Duplicate
-      </button>
-      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.exportMap()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-             class="feather feather-download">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-          <polyline points="7 10 12 15 17 10"></polyline>
-          <line x1="12" y1="15" x2="12" y2="3"></line>
-        </svg>
-        Export
-      </button>
-    </div>
-    <div class="btn-group" ngbDropdown role="group" aria-label="map-selection">
-      <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"
-              ngbDropdownToggle>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-             class="feather feather-codepen">
-          <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon>
-          <line x1="12" y1="22" x2="12" y2="15.5"></line>
-          <polyline points="22 8.5 12 15.5 2 8.5"></polyline>
-          <polyline points="2 15.5 12 8.5 22 15.5"></polyline>
-          <line x1="12" y1="2" x2="12" y2="8.5"></line>
-        </svg>
-        <span class="capitalize"> {{simulator.selectedDrawable}}</span>
-      </button>
-      <div class="dropdown-menu" ngbDropdownMenu>
-        <button type="button" class="dropdown-item" (click)="simulator.selectDrawable('waypoint')">
+  <mat-toolbar *ngIf="simulator.initialized">
+    <button (click)="simulator.calculateOptimalFlightPath()" mat-button>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+           class="feather feather-loader">
+        <line x1="12" y1="2" x2="12" y2="6"></line>
+        <line x1="12" y1="18" x2="12" y2="22"></line>
+        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+        <line x1="2" y1="12" x2="6" y2="12"></line>
+        <line x1="18" y1="12" x2="22" y2="12"></line>
+        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+        <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+      </svg>
+      Calculate Optimal Flightpath
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.start()"
+            [disabled]="simulator.map.flightpath.optimalPath.length === 0" mat-button>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+           class="feather feather-play">
+        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+      </svg>
+      Fly Drone
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.reset()" mat-button>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+           class="feather feather-x">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+      Reset
+    </button>
+    <mat-divider [vertical]="true"></mat-divider>
+    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.updateMap()" mat-button>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+           class="feather feather-save">
+        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+        <polyline points="7 3 7 8 15 8"></polyline>
+      </svg>
+      Save
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.duplicateMap()" mat-button>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+           class="feather feather-copy">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+      </svg>
+      Duplicate
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.exportMap()" mat-button>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+           class="feather feather-download">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+      Export
+    </button>
+  </mat-toolbar>
+  <div class="simulator">
+    <canvas id="simulator" width="800" height="600"></canvas>
+    <p>
+      <mat-button-toggle-group #group="matButtonToggleGroup" (click)="simulator.selectDrawable(group.value)">
+        <mat-button-toggle value="waypoint">
           Waypoint
-        </button>
-        <button type="button" class="dropdown-item" (click)="simulator.selectDrawable('obstacle')">
+        </mat-button-toggle>
+        <mat-button-toggle value="obstacle">
           Obstacle
-        </button>
-        <button type="button" class="dropdown-item" (click)="simulator.selectDrawable('product')">
+        </mat-button-toggle>
+        <mat-button-toggle value="product">
           Product
-        </button>
-      </div>
-    </div>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </p>
+    <p>MouseX: {{simulator.mouseX}}, MouseY: {{simulator.mouseY}}</p>
   </div>
-  <canvas id="simulator" width="800" height="600"></canvas>
-  <p>
-    mouseX: {{simulator.mouseX}}, mouseY: {{simulator.mouseY}}
-  </p>
 </div>
-
-
-

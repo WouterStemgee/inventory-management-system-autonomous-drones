@@ -92,7 +92,7 @@ export class DroneSimulatorService {
     };
   }
 
-  reset() {
+  reset(sendNotification = true) {
     if (this.simulationRunner) {
       window.clearInterval(this.simulationRunner);
       this.simulationRunner = undefined;
@@ -102,15 +102,19 @@ export class DroneSimulatorService {
     this.map.reset();
     this.map.loadMap(this.maps[this.selectedMap]);
     this.render();
-    this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Simulation reset.', type: 'info'});
+    if (sendNotification) {
+      this.onAlertEvent.emit({title: 'Drone Simulator', message: 'Simulation reset.', type: 'info'});
+    }
   }
 
   init() {
     this.canvas = document.getElementById('simulator');
     const gridSize = {width: this.canvas.width / this.tileSize, height: this.canvas.height / this.tileSize};
-    this.map = new Map(gridSize, this.tileSize, this.imageLoader);
-    this.drone = new Drone(1, 1, this.tileSize, gridSize, this.imageLoader);
-    this.map.loadMap(this.maps[this.selectedMap]);
+    if (this.map === undefined) {
+      this.map = new Map(gridSize, this.tileSize, this.imageLoader);
+      this.drone = new Drone(1, 1, this.tileSize, gridSize, this.imageLoader);
+      this.map.loadMap(this.maps[this.selectedMap]);
+    }
     if (!this.eventListenersRegistered) {
       this.registerEventListeners();
       this.eventListenersRegistered = true;
@@ -137,7 +141,6 @@ export class DroneSimulatorService {
                   .then((res) => {
                     this.http.addMap(res)
                       .then(() => {
-                        this.onAlertEvent.emit();
                         this.onAlertEvent.emit({
                           title: 'Drone Control Center', message: 'New map added.', type: 'success'
                         });
@@ -191,22 +194,23 @@ export class DroneSimulatorService {
 
   start() {
     if (this.map.flightpath.optimalPath && this.simulationRunner === undefined) {
-      this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Starting simulation...', type: 'info'});
+      this.onAlertEvent.emit({title: 'Drone Simulator', message: 'Starting simulation...', type: 'info'});
       let currentWaypoint = 0;
       this.simulationRunner = setInterval(() => {
         if (currentWaypoint < this.map.flightpath.optimalPath.length) {
-          this.drone.moveTo(this.map.flightpath.optimalPath[currentWaypoint].x, this.map.flightpath.optimalPath[currentWaypoint].y);
+          this.drone.moveTo(this.map.flightpath.optimalPath[currentWaypoint].x, this.map.flightpath.optimalPath[currentWaypoint].y, 1);
           this.render();
           currentWaypoint++;
         } else {
           window.clearInterval(this.simulationRunner);
           this.simulationRunner = undefined;
-          this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Simulation finished.', type: 'success'});
+          this.drone.z = 0;
+          this.onAlertEvent.emit({title: 'Drone Simulator', message: 'Simulation finished.', type: 'success'});
         }
       }, 100);
     } else {
       this.onAlertEvent.emit({
-        title: 'Drone Control Center',
+        title: 'Drone Simulator',
         message: 'No optimal flightpath calculated.',
         type: 'error'
       });
@@ -221,7 +225,7 @@ export class DroneSimulatorService {
 
   selectMap(id) {
     this.selectedMap = id;
-    this.reset();
+    this.reset(false);
   }
 
   selectDrawable(drawable) {
@@ -232,28 +236,35 @@ export class DroneSimulatorService {
     const flightpath = this.map.flightpath.toJSON();
     if (flightpath.waypoints.length > 2) {
       console.log('Sending waypoints to back-end:', flightpath);
-      this.updateMap().then(() => {
-        this.http.fetchOptimalFlightpath(flightpath).then((optimal) => {
-          console.log('Received optimal flightpath from server: ', optimal);
-          this.onAlertEvent.emit({
-            title: 'Drone Control Center',
-            message: 'Optimal flightplath successfully calculated.',
-            type: 'success'
+      this.updateMap()
+        .then(() => {
+            this.http.fetchOptimalFlightpath(flightpath)
+              .then((optimal) => {
+                console.log('Received optimal flightpath from server: ', optimal);
+                this.onAlertEvent.emit({
+                  title: 'Drone Simulator',
+                  message: 'Optimal flightpath calculated.',
+                  type: 'success'
+                });
+                this.map.flightpath.setOptimalPath(optimal);
+                this.render();
+              })
+              .catch((err) => {
+                this.onAlertEvent.emit({
+                  title: 'Drone Simulator',
+                  message: 'Error calculating optimal flightpath.',
+                  type: 'error'
+                });
+              });
+          }
+        )
+        .catch(
+          (err) => {
+            this.onAlertEvent.emit({title: 'Drone Simulator', message: err.toString(), type: 'error'});
           });
-          this.map.flightpath.setOptimalPath(optimal);
-          this.render();
-        });
-      })
-        .catch((err) => {
-          this.onAlertEvent.emit({
-            title: 'Drone Control Center',
-            message: err.toString(),
-            type: 'error'
-          });
-        });
     } else {
       this.onAlertEvent.emit({
-        title: 'Drone Control Center',
+        title: 'Drone Simulator',
         message: 'No waypoints selected.',
         type: 'error'
       });
@@ -267,14 +278,14 @@ export class DroneSimulatorService {
           this.maps = result;
           this.selectedMap = this.maps.length - 1;
           this.onAlertEvent.emit({
-            title: 'Drone Control Center',
+            title: 'Drone Simulator',
             message: 'Duplicated map.',
             type: 'success'
           });
         })
         .catch(err => {
           this.onAlertEvent.emit({
-            title: 'Drone Control Center',
+            title: 'Drone Simulator',
             message: err.toString(),
             type: 'error'
           });
@@ -289,7 +300,7 @@ export class DroneSimulatorService {
           .then(result => {
             this.maps = result;
             this.onAlertEvent.emit({
-              title: 'Drone Control Center',
+              title: 'Drone Simulator',
               message: 'Saved map.',
               type: 'success'
             });
@@ -297,7 +308,7 @@ export class DroneSimulatorService {
           })
           .catch(err => {
             this.onAlertEvent.emit({
-              title: 'Drone Control Center',
+              title: 'Drone Simulator',
               message: err.toString(),
               type: 'error'
             });
