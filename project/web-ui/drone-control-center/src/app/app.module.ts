@@ -12,7 +12,11 @@ import {DroneSimulatorComponent} from './drone-simulator/view/drone-simulator.co
 import {ContainerComponent} from './container/container.component';
 import {MaterialModule} from './material.module';
 import {DroneDataComponent} from './drone-data/drone-data.component';
-import {InventoryDataComponent} from './inventory-data/inventory-data.component';
+import {InventoryComponent} from './inventory/inventory.component';
+import {SharedService} from './shared.service';
+import {DroneSimulatorService} from './drone-simulator/presenter/drone-simulator.service';
+import {HttpService} from './http.service';
+import {DataService} from './data.service';
 
 @NgModule({
   declarations: [
@@ -21,7 +25,7 @@ import {InventoryDataComponent} from './inventory-data/inventory-data.component'
     DashboardComponent,
     DroneSimulatorComponent,
     DroneDataComponent,
-    InventoryDataComponent
+    InventoryComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +42,7 @@ import {InventoryDataComponent} from './inventory-data/inventory-data.component'
     })
   ],
   entryComponents: [DroneSimulatorComponent, DroneDataComponent],
-  providers: [],
+  providers: [SharedService, DroneSimulatorService, HttpService, DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

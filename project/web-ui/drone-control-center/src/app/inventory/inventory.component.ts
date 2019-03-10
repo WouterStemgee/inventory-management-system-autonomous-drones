@@ -1,17 +1,16 @@
-import {Component, OnInit, Output, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort} from '@angular/material';
-import {InventoryDataDataSource} from './inventory-data-datasource';
+import {Component, OnInit} from '@angular/core';
+import {InventoryDatasource} from './inventory-datasource';
 import {HttpService} from '../http.service';
 import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
 import {SharedService} from '../shared.service';
 
 @Component({
   selector: 'app-inventory-data',
-  templateUrl: './inventory-data.component.html',
-  styleUrls: ['./inventory-data.component.css']
+  templateUrl: './inventory.component.html',
+  styleUrls: ['./inventory.component.css']
 })
-export class InventoryDataComponent implements OnInit {
-  dataSource: InventoryDataDataSource;
+export class InventoryComponent implements OnInit {
+  dataSource: InventoryDatasource;
 
   displayedColumns = ['id', 'name', 'quantity', 'x', 'y', 'delete'];
 
@@ -88,7 +87,7 @@ export class InventoryDataComponent implements OnInit {
   }
 
   initDataSource() {
-    this.dataSource = new InventoryDataDataSource(this.products);
+    this.dataSource = new InventoryDatasource(this.products);
   }
 
   ngOnInit() {

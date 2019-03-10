@@ -4,6 +4,7 @@ import {Drone} from '../model/drone';
 import {HttpService} from '../../http.service';
 import {DataService} from '../../data.service';
 import {ImageLoader} from '../utils/imageloader';
+import {SharedService} from '../../shared.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,7 @@ export class DroneSimulatorService {
   @Output() onAlertEvent = new EventEmitter<any>();
   @Output() onSimulatorLoadedEvent = new EventEmitter<boolean>();
 
-  constructor(private data: DataService, private http: HttpService) {
+  constructor(private data: DataService, private http: HttpService, private shared: SharedService) {
     console.log('Starting simulator service...');
     this.onSimulatorLoadedEvent.subscribe((loaded) => {
         if (loaded) {
@@ -55,6 +56,7 @@ export class DroneSimulatorService {
     this.canvas.addEventListener('mousemove', (event) => {
       this.mousehandler(event);
     });
+    this.resize();
   }
 
   keyhandler(e) {
@@ -121,6 +123,19 @@ export class DroneSimulatorService {
     }
     this.initialized = true;
     this.render();
+  }
+
+  resize() {
+    if (this.shared.isHandset$) {
+      const width = window.innerWidth;
+      const canvas = document.getElementById('simulator') as HTMLCanvasElement;
+      if (canvas) {
+        const ratio = canvas.height / canvas.width;
+        const height = width * ratio;
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+      }
+    }
   }
 
   load() {
@@ -193,27 +208,30 @@ export class DroneSimulatorService {
   }
 
   start() {
-    if (this.map.flightpath.optimalPath && this.simulationRunner === undefined) {
-      this.onAlertEvent.emit({title: 'Drone Simulator', message: 'Starting simulation...', type: 'info'});
-      let currentWaypoint = 0;
-      this.simulationRunner = setInterval(() => {
-        if (currentWaypoint < this.map.flightpath.optimalPath.length) {
-          this.drone.moveTo(this.map.flightpath.optimalPath[currentWaypoint].x, this.map.flightpath.optimalPath[currentWaypoint].y, 1);
-          this.render();
-          currentWaypoint++;
-        } else {
-          window.clearInterval(this.simulationRunner);
-          this.simulationRunner = undefined;
-          this.drone.z = 0;
-          this.onAlertEvent.emit({title: 'Drone Simulator', message: 'Simulation finished.', type: 'success'});
-        }
-      }, 100);
-    } else {
-      this.onAlertEvent.emit({
-        title: 'Drone Simulator',
-        message: 'No optimal flightpath calculated.',
-        type: 'error'
-      });
+    if (this.simulationRunner === undefined) {
+      if (this.map.flightpath.optimalPath) {
+        this.onAlertEvent.emit({title: 'Drone Simulator', message: 'Starting simulation...', type: 'info'});
+        let currentWaypoint = 0;
+        this.simulationRunner = setInterval(() => {
+          if (currentWaypoint < this.map.flightpath.optimalPath.length) {
+            this.drone.moveTo(this.map.flightpath.optimalPath[currentWaypoint].x, this.map.flightpath.optimalPath[currentWaypoint].y, 1);
+            this.render();
+            currentWaypoint++;
+          } else {
+            window.clearInterval(this.simulationRunner);
+            this.simulationRunner = undefined;
+            this.drone.z = 0;
+            this.onAlertEvent.emit({title: 'Drone Simulator', message: 'Simulation finished.', type: 'success'});
+          }
+        }, 100);
+      } else {
+        this.onAlertEvent.emit({
+          title: 'Drone Simulator',
+          message: 'No optimal flightpath calculated.',
+          type: 'error'
+        });
+      }
+
     }
   }
 

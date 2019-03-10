@@ -13,7 +13,9 @@
         <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
         <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
       </svg>
-      Calculate Optimal Flightpath
+      <span *ngIf="!shared.isHandset$">
+        Calculate Optimal Flightpath
+      </span>
     </button>
     <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.start()"
             [disabled]="simulator.map.flightpath.optimalPath.length === 0" mat-button>
@@ -22,7 +24,9 @@
            class="feather feather-play">
         <polygon points="5 3 19 12 5 21 5 3"></polygon>
       </svg>
-      Fly Drone
+      <span *ngIf="!shared.isHandset$">
+        Fly Drone
+      </span>
     </button>
     <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.reset()" mat-button>
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -31,7 +35,9 @@
         <line x1="18" y1="6" x2="6" y2="18"/>
         <line x1="6" y1="6" x2="18" y2="18"/>
       </svg>
-      Reset
+      <span *ngIf="!shared.isHandset$">
+        Reset
+      </span>
     </button>
     <mat-divider [vertical]="true"></mat-divider>
     <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.updateMap()" mat-button>
@@ -42,7 +48,9 @@
         <polyline points="17 21 17 13 7 13 7 21"></polyline>
         <polyline points="7 3 7 8 15 8"></polyline>
       </svg>
-      Save
+      <span *ngIf="!shared.isHandset$">
+        Save
+      </span>
     </button>
     <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.duplicateMap()" mat-button>
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -51,7 +59,9 @@
         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
       </svg>
-      Duplicate
+      <span *ngIf="!shared.isHandset$">
+        Duplicate
+      </span>
     </button>
     <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.exportMap()" mat-button>
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -61,13 +71,15 @@
         <polyline points="7 10 12 15 17 10"></polyline>
         <line x1="12" y1="15" x2="12" y2="3"></line>
       </svg>
-      Export
+      <span *ngIf="!shared.isHandset$">
+        Export
+      </span>
     </button>
   </mat-toolbar>
   <div class="simulator">
     <canvas id="simulator" width="800" height="600"></canvas>
     <p>
-      <mat-button-toggle-group #group="matButtonToggleGroup" (click)="simulator.selectDrawable(group.value)">
+      <mat-button-toggle-group #group="matButtonToggleGroup" (click)="simulator.selectDrawable(group.value)" value="waypoint">
         <mat-button-toggle value="waypoint">
           Waypoint
         </mat-button-toggle>

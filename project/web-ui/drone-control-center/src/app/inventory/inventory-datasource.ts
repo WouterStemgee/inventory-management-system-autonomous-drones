@@ -11,7 +11,7 @@ export interface InventoryDataItem {
   y: number;
 }
 
-export class InventoryDataDataSource extends DataSource<InventoryDataItem> {
+export class InventoryDatasource extends DataSource<InventoryDataItem> {
   data;
 
   constructor(products) {
