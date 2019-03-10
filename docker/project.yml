@@ -2,26 +2,36 @@ version: "2"
 services:
   # NGINX Container
   drone1-nginx:
+    container_name: nginx
     build: 
       context: drone1-nginx/
       dockerfile: Dockerfile
     ports:                          
      - "8081:80"
+  # MongoDB container
+  drone1-mongodb:
+    container_name: mongo
+    image: mongo
+    build: 
+      context: drone1-mongodb/
+      dockerfile: Dockerfile
+    volumes:
+     - ./data:/data/db
+  # ports:
+  #  - '27017:27017'   
   # NodeJS container
   drone1-nodejs:
-    build:
+    container_name: node
+    restart: always
+    build: 
       context: drone1-nodejs/
       dockerfile: Dockerfile
     ports:                           
-     - '8082:3000'                
-  # MongoDB container
-  drone1-mongodb:
-    build:
-      context: drone1-mongodb/
-      dockerfile: Dockerfile
-    #ports:
-    #  - '27017:27017'                
+     - '8082:3000'     
+    links:
+     - drone1-mongodb                        
   drone1-mosquitto:
+    container_name: moquitto
     build:
       context: drone1-mosquitto/
       dockerfile: Dockerfile

@@ -78,22 +78,22 @@
   </mat-toolbar>
   <div class="simulator">
     <canvas id="simulator" width="800" height="600"></canvas>
-    <p>
-      <mat-button-toggle-group #group="matButtonToggleGroup" (click)="simulator.selectDrawable(group.value)"
-                               value="waypoint">
-        <mat-button-toggle value="waypoint">
-          Waypoint
-        </mat-button-toggle>
-        <mat-button-toggle value="obstacle">
-          Obstacle
-        </mat-button-toggle>
-        <mat-button-toggle value="product">
-          Product
-        </mat-button-toggle>
-      </mat-button-toggle-group>
-    </p>
-    <p *ngIf="simulator.initialized">MouseX: {{simulator.mouseX}}, MouseY: {{simulator.mouseY}}</p>
     <div *ngIf="simulator.initialized">
+      <p>
+        <mat-button-toggle-group #group="matButtonToggleGroup" (click)="simulator.selectDrawable(group.value)"
+                                 value="waypoint">
+          <mat-button-toggle value="waypoint">
+            Waypoint
+          </mat-button-toggle>
+          <mat-button-toggle value="obstacle">
+            Obstacle
+          </mat-button-toggle>
+          <mat-button-toggle value="product">
+            Product
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </p>
+      <p>MouseX: {{simulator.mouseX}}, MouseY: {{simulator.mouseY}}</p>
       <p *ngIf="simulator.map.flightpath.waypoints.length > 0">Waypoints:
         <span *ngFor="let waypoint of simulator.map.flightpath.waypoints">({{waypoint.x}}, {{waypoint.y}}) </span>
       </p>
