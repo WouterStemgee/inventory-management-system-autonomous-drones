@@ -6,6 +6,12 @@ export class Drone extends DrawableImage {
     this.gridSize = gridSize;
     this.dx = 0;
     this.dy = 0;
+    this.z = 0;
+    this.id = 1;
+    this.name = 'Mockup Drone';
+    this.battery = 100;
+    this.speed = 9000;
+    this.acceleration = 0;
   }
 
   draw(context) {
@@ -49,10 +55,11 @@ export class Drone extends DrawableImage {
     }
   }
 
-  moveTo(x, y) {
+  moveTo(x, y, z) {
     if (x > 0 && y > 0 && y < this.gridSize.height - 1 && x < this.gridSize.width - 1) {
       this.x = x;
       this.y = y;
+      this.z = z;
     }
   }
 
@@ -64,5 +71,6 @@ export class Drone extends DrawableImage {
   reset() {
     this.x = 1;
     this.y = 1;
+    this.z = 0;
   }
 }

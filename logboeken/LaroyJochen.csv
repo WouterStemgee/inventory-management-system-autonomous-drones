@@ -23,3 +23,4 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 05/03/19,08:15,12:30,Campus,bekeken hoe de mockup drone te realiseren + verder gewerkt,,
 07/03/19,11:15,12:50,Extern,flows in node-red gemaakt,,
 07/03/19,13:30,17:45,Campus,documentatie + unit testen,,
+09/03/19,00:00,01:30,Extern,testen schrijven + verschillende test modules in package-lock + test script proberen schrijven,,
