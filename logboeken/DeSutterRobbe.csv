@@ -18,3 +18,4 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 07/03/19,13:30,17:45,Campus,Dijkstra wiki + unit test dijkstra,,
 09/03/19,10:00,12:00,Extern,Dijkstra wiki + unit test dijkstra + toestandsdiagram,,
 10/03/19,14:30,16:15,Extern,Unit test dijkstra + Unit test API fix,,
+11/03/19,18:30,20:30,Extern,Unit test dijkstra 'fix' beter maar werkt nog niet correct,,
