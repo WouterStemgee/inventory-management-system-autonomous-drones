@@ -5,7 +5,7 @@ const productSchema = mongoose.Schema({
 	name: {type: String, required: true},
 	quantity: {type: Number, required: true},
 	// zowel name al quantity dienen verplicht opgegeven te worden bij het aanmaken van een nieuw product
-	xCoord: Number, // aangezien producten vaak verplaatst zullen worden moeten de coordinaten van hun positie niet verplicht opgegeven worden
+	xCoord: Number, 
 	yCoord: Number
 });
 module.exports = mongoose.model('Product',productSchema); // het schema naar buiten brengen
