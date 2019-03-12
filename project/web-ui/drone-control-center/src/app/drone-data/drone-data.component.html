@@ -1,0 +1,36 @@
+<div class="mat-elevation-z8">
+  <table mat-table class="full-width-table" [dataSource]="dataSource" matSort aria-label="DroneData">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+      <td mat-cell *matCellDef="let row">{{row.id}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+      <td mat-cell *matCellDef="let row">{{row.name}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="battery">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Battery</th>
+      <td mat-cell *matCellDef="let row">{{row.battery}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Position</th>
+      <td mat-cell *matCellDef="let row">{{row.x}}, {{row.y}}, {{row.z}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="speed">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Speed</th>
+      <td mat-cell *matCellDef="let row">{{row.speed}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="acceleration">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Acceleration</th>
+      <td mat-cell *matCellDef="let row">{{row.acceleration}}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

@@ -77,6 +77,15 @@ productRouter.route('/')
     });
 
 productRouter.route('/:productId')
+    .get((req, res) => {
+        mapsDAO.getProduct(req.params.mapId, req.params.productId)
+            .then((result) => {
+                res.status(200).send(result);
+            })
+            .catch((error) => {
+                res.status(400).send(error);
+            });
+    })
     .put((req, res) => {
         mapsDAO.updateProduct(req.params.mapId, req.body)
             .then((result) => {

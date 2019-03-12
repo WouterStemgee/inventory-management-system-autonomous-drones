@@ -13,7 +13,7 @@ export class FlightPath {
   addWaypoint(x, y) {
     let waypoint = new Tile(x, y, this.tileSize, '#699868');
     this.waypoints.push(waypoint);
-    console.log('Waypoint added: [X: ' + x + ', Y: ' + y + ']');
+    //console.log('Waypoint added: [X: ' + x + ', Y: ' + y + ']');
   }
 
   removeWaypoint(x, y) {
@@ -22,7 +22,7 @@ export class FlightPath {
         this.waypoints.splice(i, 1);
       }
     }
-    console.log('Waypoint removed: [X: ' + x + ', Y: ' + y + ']');
+    //console.log('Waypoint removed: [X: ' + x + ', Y: ' + y + ']');
   }
 
   setOptimalPath(optimalPath) {

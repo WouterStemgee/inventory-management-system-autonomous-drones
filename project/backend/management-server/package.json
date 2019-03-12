@@ -1,11 +1,11 @@
 {
   "name": "management-server",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "node api/bin/www",
     "start-watch": "nodemon api/bin/www",
-    "test": "node node_modules/mocha/bin/mocha"
+    "test": "mocha"
   },
   "dependencies": {
     "body-parser": "^1.18.3",

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
 import {DroneSimulatorService} from '../presenter/drone-simulator.service';
+import {SharedService} from '../../shared.service';
 
 @Component({
   selector: 'app-drone-simulator',
@@ -9,7 +10,7 @@ import {DroneSimulatorService} from '../presenter/drone-simulator.service';
 })
 export class DroneSimulatorComponent implements OnInit {
 
-  constructor(public simulator: DroneSimulatorService) {
+  constructor(public simulator: DroneSimulatorService, public shared: SharedService) {
   }
 
   ngOnInit() {

@@ -27,3 +27,5 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 05/03/19,22:00,23:00,Extern,Docker bestanden gedeployed,15,
 07/03/19,13:30,17:30,Campus,UI aanpassingen,15,
 07/03/19,18:30,19:30,Extern,Verdere UI aanpassingen,15,
+09/03/19,13:30,19:00,Extern,UI geconverteerd naar Angular Material,15,
+10/03/19,13:30,18:00,Extern,Testen van nieuwe UI - bugfixes,15,
