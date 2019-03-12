@@ -23,10 +23,11 @@ describe("Map", function() {
             //zelfde id als de map waarop getest wordt in dijkstra
             const id = "5c851e1c392e923b60fff836";
             chai.request(app)
-                .get(`api/maps/${id}`)
+                .get(`/api/maps/${id}`)
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.should.be.an('array');
+                    res.body.should.be.an('object');
+                    done();
                 })
         })
     });
