@@ -94,7 +94,6 @@ describe("Map", function() {
                     ]
                 })
                 .end(function(error, response){
-                    console.log(error);
                     response.should.have.status(200);
                     response.should.be.json;
                     response.body.should.deep.equal([
