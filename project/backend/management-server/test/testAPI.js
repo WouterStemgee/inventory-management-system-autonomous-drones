@@ -7,6 +7,7 @@ chai.use(chaiHttp);
 chai.should();
 
 let mapId;
+let aantal;
 describe("Map", function() {
     describe("GET ALL/", function() {
         //test om de map op te halen
@@ -16,6 +17,8 @@ describe("Map", function() {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.an('array');
+                    aantal = res.body.length;
+                    console.log(aantal);
                     done();
                 });
         }).timeout(3000);
@@ -33,6 +36,20 @@ describe("Map", function() {
                     done();
                 });
         });
+    });
+    describe("GET ALL/", function() {
+        //test om de map op te halen
+        it("Zou 1 extra map moeten vinden", function (done) {
+            chai.request(app)
+                .get('/api/maps')
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.an('array');
+                    console.log(res.body.length);
+                    chai.expect(aantal + 1).to.be.equal(res.body.length);
+                    done();
+                });
+        }).timeout(3000);
     });
     describe("GET 1 Map/", function() {
         it("Zou de Test map moeten ophalen", function(done) {
@@ -206,5 +223,30 @@ describe("Map", function() {
                     done();
                 });
         });
+    });
+    describe("GET 1 Map/", function() {
+        it("Zou de Test map niet mogen vinden", function(done) {
+            //zelfde id als de map waarop getest wordt in dijkstra
+            chai.request(app)
+                .get(`/api/maps/${mapId}`)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.deep.equal({});
+                    done();
+                });
+        });
+    });
+    describe("GET ALL/", function() {
+        //test om de map op te halen
+        it("Zou het originele aantal mappen moeten vinden", function (done) {
+            chai.request(app)
+                .get('/api/maps')
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.an('array');
+                    chai.expect(aantal).to.be.equal(res.body.length);
+                    done();
+                });
+        }).timeout(3000);
     });
 });
