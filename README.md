@@ -40,4 +40,4 @@ Vervolgens zal de site te vinden zijn op (http://localhost:4200), voor de REST a
 ## Unit Testen
 
 Om de backend server te testen is een unit test geschreven met behulp van [mocha](https://mochajs.org/) en [chai](https://www.chaijs.com/). 
-Deze test kan uitgevoerd worden door met van een shell naar ~/project/backend/management-server te navigeren en het commando npm test uit te voeren.
+Deze test kan uitgevoerd worden door met van een shell naar ~/project/backend/management-server te navigeren en het commando npm test uit te voeren. Hiermee wordt het testbestand ~/project/backend/management-server/test/testAPI.js uitgevoerd. 
