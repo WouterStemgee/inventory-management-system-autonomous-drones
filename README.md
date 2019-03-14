@@ -27,12 +27,17 @@ Om de applicatie te gebruiken zijn er 2 mogelijkheden.
 #### Uitvoeren:
 
 Voor de volledige functionaliteit te bekomen moeten er drie dingen gebeuren:
-1. De database opzetten. (zie opnieuw de wiki)
+1. De database opzetten. (zie opnieuw de [wiki](https://github.ugent.be/bp-vop-2019/drone1/wiki/MongoDB-installeren))
 
 2. De backend server laten draaien. Dit gebeurt door via de node.js shell te navigeren naar ~/project/backend/management-server en daar npm start uit te voeren. Wanneer je wil dat aanpassingen uitgevoerd worden zonder dat de applicatie moet gestopt en heropgestart worden, kan je gebruik maken van het commando: "npm run start-watch" waarbij gebruik gemaakt wordt van nodemon.
 
 3. De frontend (Angular) opzetten, analoog wordt genavigeerd naar ~/project/web-ui/drone-control-center in een tweede shell en wordt het commando "ng serve" uitgevoerd.
 
-**Belangrijk**, bij de eerste keer moeten bij stappen 2 en 3 eerst het commando "npm install" worden uitgevoerd wanneer de shell in de juiste folder zit, zo worden de nodige afhankelijkheden (o.a Angular) voor het project automatisch geïnstalleerd.
+**Belangrijk**, bij de eerste keer moeten bij stappen 2 en 3 eerst het commando "npm install" worden uitgevoerd wanneer de shell in de juiste folders zit (~/project/backend/management-server en ~/project/web-ui/drone-control-center), zo worden de nodige afhankelijkheden (o.a Angular) voor het project automatisch geïnstalleerd.
 
-Vervolgens zal de site te vinden zijn op (http://localhost:4200), voor de REST api te testen kan men de verschillende end points raadplegen via de wiki.
+Vervolgens zal de site te vinden zijn op (http://localhost:4200), voor de REST api te testen kan men de verschillende end points raadplegen via de [wiki](https://github.ugent.be/bp-vop-2019/drone1/wiki/API:-Endpoints).
+
+## Unit Testen
+
+Om de backend server te testen is een unit test geschreven met behulp van [mocha](https://mochajs.org/) en [chai](https://www.chaijs.com/). 
+Deze test kan uitgevoerd worden door met van een shell naar ~/project/backend/management-server te navigeren en het commando npm test uit te voeren.
