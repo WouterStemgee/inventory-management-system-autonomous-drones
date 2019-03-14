@@ -8,7 +8,7 @@ const app = require('../../app');
 const debug = require('debug')('untitled:server');
 const http = require('http');
 
-/*
+
 const RED = require('node-red');
 
 //settings voor node-red (normaal settings.js file)
@@ -19,7 +19,7 @@ var settings = {
     userDir:"/home/nol/.nodered/",
     functionGlobalContext: { }    // enables global context
 };
-*/
+
 
 /**
  * Get port from environment and store in Express.
@@ -34,7 +34,8 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
-/*
+//var REDserver = http.createServer(app);
+
 
 //intitialiseren node red
 RED.init(server, settings);
@@ -45,8 +46,12 @@ app.use(settings.httpAdminRoot,RED.httpAdmin);
 // Serve the http nodes UI from /api
 app.use(settings.httpNodeRoot,RED.httpNode);
 
+/*REDserver.listen(8000, () => {
+    console.log('REDserver aan het luisteren op poort 8000...')
+});*/
+
 RED.start();
-*/
+
 
 /**
  * Listen on provided port, on all network interfaces.
