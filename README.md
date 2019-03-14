@@ -14,7 +14,7 @@
 
 ## De applicatie laten uitvoeren
 Om de applicatie te gebruiken zijn er 2 mogelijkheden. 
-- Via de [website](https://bpvop4.ugent.be:8081/) surfen om de applicatie in werking te zien. Hiervoor is er wel een vpn verbinding nodig met de UGent server, [hier](https://helpdesk.ugent.be/vpn/asa.php) staat beschreven hoe dit moet.
+- Via de [website](https://bpvop4.ugent.be:8081/) om de applicatie in werking te zien. Hiervoor is er wel een vpn verbinding nodig met de UGent server, [hier](https://helpdesk.ugent.be/vpn/asa.php) staat beschreven hoe dit moet.
 - Door de onderdelen zelf locaal te draaien. 
 
 ### Zelf lokaal laten uitvoeren:
