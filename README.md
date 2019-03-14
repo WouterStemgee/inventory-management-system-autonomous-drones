@@ -13,15 +13,16 @@
 - Project: Hier staat de volledige applicatie, deze bestaat uit een front-end webapplicatie, en een back-end server die communiceert met de (toekomstige) drone en data op haalt en weg schrijft naar de database. De webapp is geschreven in het Angular framework, en de server in Express. Beiden maken gebruik van de Node Package Manager.
 
 ## De applicatie laten uitvoeren
-#### (release gebruiken, nog invullen)
-
+Om de applicatie te gebruiken zijn er 2 mogelijkheden. 
+- Via de [website](https://bpvop4.ugent.be:8081/) surfen om de applicatie in werking te zien. Hiervoor is er wel een vpn verbinding nodig met de UGent server, [hier](https://helpdesk.ugent.be/vpn/asa.php) staat beschreven hoe dit moet.
+- Door de onderdelen zelf locaal te draaien. 
 
 ### Zelf lokaal laten uitvoeren:
 #### Benodigdheden:
 
 - [Node.js](https://nodejs.org/en/)
 - Node Package Manager (wordt automatisch met Node.js geïnstalleerd)
-- [Mongodb Server](https://www.mongodb.com/download-center/community), voor instalatie wordt verwezen naar de wiki
+- [Mongodb Server](https://www.mongodb.com/download-center/community), voor instalatie wordt verwezen naar de [wiki](https://github.ugent.be/bp-vop-2019/drone1/wiki/MongoDB-installeren)
 
 #### Uitvoeren:
 
