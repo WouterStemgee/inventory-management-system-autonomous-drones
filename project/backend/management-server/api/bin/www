@@ -7,6 +7,7 @@
 const app = require('../../app');
 const debug = require('debug')('untitled:server');
 const http = require('http');
+var embeddedStart = require('node-red-embedded-start');
 
 
 const RED = require('node-red');
@@ -42,9 +43,6 @@ app.use(settings.httpAdminRoot,RED.httpAdmin);
 
 // Serve the http nodes UI from /api
 app.use(settings.httpNodeRoot,RED.httpNode);
-
-RED.start();
-
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -116,3 +114,14 @@ function onListening() {
         : 'port ' + addr.port;
     debug('Listening on ' + bind);
 }
+
+RED.start().then(embeddedStart(RED, 5)).then((result) => {
+    // result is whatever RED.start() resolved to
+    // RED.nodes.getFlows() etc are now ready to use
+    console.log(RED.nodes.getFlows());
+}).catch((err) => {
+    if (/^timed out/.test(err.message)) {
+        // embeddedStart() timed out
+        // the value that RED.start() resolved to is available as err.result
+    }
+});

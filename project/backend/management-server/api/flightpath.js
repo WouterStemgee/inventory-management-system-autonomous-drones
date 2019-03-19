@@ -1,5 +1,4 @@
 const express = require('express');
-const client = require('../mqtt/client');
 const dijkstra = require('../app');
 
 const router = express.Router();
