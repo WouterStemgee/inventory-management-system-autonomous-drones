@@ -134,6 +134,8 @@ function onListening() {
     debug('Listening on ' + bind);
 }
 
+//RED.flows.setFlows("flows_JOCHENLAROYA478.json") => {}
+
 RED.start().then(embeddedStart(RED, 5)).then((result) => {
     // result is whatever RED.start() resolved to
     // RED.nodes.getFlows() etc are now ready to use
