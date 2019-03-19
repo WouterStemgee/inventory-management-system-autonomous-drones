@@ -7,8 +7,6 @@
 const app = require('../../app');
 const debug = require('debug')('untitled:server');
 const http = require('http');
-var embeddedStart = require('node-red-embedded-start');
-
 
 var RED = require('node-red');
 
@@ -136,13 +134,5 @@ function onListening() {
 
 //RED.flows.setFlows("flows_JOCHENLAROYA478.json") => {}
 
-RED.start().then(embeddedStart(RED, 5)).then((result) => {
-    // result is whatever RED.start() resolved to
-    // RED.nodes.getFlows() etc are now ready to use
-    console.log(RED.nodes.getFlows());
-}).catch((err) => {
-    if (/^timed out/.test(err.message)) {
-        // embeddedStart() timed out
-        // the value that RED.start() resolved to is available as err.result
-    }
-});
+RED.start();
+//console.log(RED.runtime.flows);
