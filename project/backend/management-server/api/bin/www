@@ -15,9 +15,9 @@ const RED = require('node-red');
 var settings = {
     httpAdminRoot:"/red",
     httpNodeRoot: "/api",
-    //plaats waar node-red geïnstalleerd wordt?
-    userDir:"/home/nol/.nodered/",
-    functionGlobalContext: { }    // enables global context
+    userDir:"./nodered",
+    functionGlobalContext: { },    // enables global context
+    credentialSecret: 'drone'
 };
 
 
@@ -34,9 +34,6 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
-//var REDserver = http.createServer(app);
-
-
 //intitialiseren node red
 RED.init(server, settings);
 
@@ -45,10 +42,6 @@ app.use(settings.httpAdminRoot,RED.httpAdmin);
 
 // Serve the http nodes UI from /api
 app.use(settings.httpNodeRoot,RED.httpNode);
-
-/*REDserver.listen(8000, () => {
-    console.log('REDserver aan het luisteren op poort 8000...')
-});*/
 
 RED.start();
 
