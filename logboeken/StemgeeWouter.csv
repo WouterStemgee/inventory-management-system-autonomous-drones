@@ -35,4 +35,4 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 16/03/19,15:30,17:00,Extern,Research van leaflet.js plugins,,
 17/03/19,14:30,16:30,Extern,Leaflet.js implementatie van correcte projectie en kaart,,
 19/03/19,08:15,12:30,Campus,Socket.io toegevoegd aan leaflet voor realtime visualisatie van de drone,,
-20/03/19,15:30,19:00,Campus,Positie en yaw kan worden doorgestuurd via Socket.IO, drone wordt gevisuliseerd met correcte rotatie,,
+20/03/19,15:30,19:00,Campus,Positie en yaw kan worden doorgestuurd via Socket.IO - drone wordt gevisualiseerd met correcte rotatie,,
