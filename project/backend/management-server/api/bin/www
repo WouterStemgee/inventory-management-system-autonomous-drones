@@ -16,12 +16,7 @@ var settings = {
     httpNodeRoot: "/random",
     userDir:"./nodered",
     functionGlobalContext: { },    // enables global context
-    credentialSecret: 'drone',
-    editorTheme: {
-        projects: {
-            enabled: true
-        }
-    }
+    credentialSecret: 'drone'
 };
 
 
