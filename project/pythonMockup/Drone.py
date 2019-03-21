@@ -3,19 +3,23 @@ import xml.etree.ElementTree as et
 import paho.mqtt.client as mqtt
 import time
 
+#broker="test.mosquitto.org"
+
 class Drone:
-    # via mqtt vanuit python connecten naar broker
+    # via mqtt vanuit python connecten naar broker (mosquitto)
     def __init__(self,id, length,width=0):
         self.length = length
         if(width==0):
             self.width = length
         self.battery = 100
         self.drone_id = id
+        # positie array
         self.xCoord = None
         self.yCoord = None
         self.hoogte = None
         self.accel = None
         self.speed = None
+        # jaw pich roll
         self.blijfSturen = True # dit staat waarschijnlijk nog niet op de juiste plaats
         # er moet nog een hoop data toegevoegd worden
 
@@ -125,7 +129,49 @@ class Drone:
     def set_battery(self,battrij):
         self.battery = battrij
 
+    def testProgramma(self):
+        print("Print info drone: P")
+        print("stel waardes in met: S")
+        print("stop: Q")
+        loop = True
+        while loop:
+            var = input("Geef commando in: ")
+            if (var == "Q"):
+                loop = False
+            elif (var == "P"):
+                print(drone1.giveInfoTest())
+            elif (var == "S"):
+                print("lengte: L")
+                print("width: W")
+                print("battery: B")
+                print("xCoord: X")
+                print("yCoord: Y")
+                print("hoogte: H")
+                print("accel: A")
+                print("speed: S")
 
+                var = input("geef letter waarde in: ")
+                zin = var.split();
+                letter = zin[0]
+                waarde = zin[1]
+                if (letter == "L"):
+                    drone1.set_length(waarde)
+                elif (letter == "W"):
+                    drone1.set_width(waarde)
+                elif (letter == "B"):
+                    drone1.set_battery(waarde)
+                elif (letter == "X"):
+                    drone1.set_xCoord(waarde)
+                elif (letter == "Y"):
+                    drone1.set_yCoord(waarde)
+                elif (letter == "H"):
+                    drone1.set_hoogte(waarde)
+                elif (letter == "A"):
+                    drone1.set_accel(waarde)
+                elif (letter == "S"):
+                    drone1.set_speed(waarde)
+                else:
+                    print("geen juiste parameters")
 
 class DroneSerializer:
     def serialize(self,drone,format):
@@ -162,48 +208,7 @@ class DroneSerializer:
 
 
 drone1 = Drone(1,5)
-print("Print info drone: P")
-print("stel waardes in met: S")
-print("stop: Q")
-loop = True
-while loop:
-    var = input("Geef commando in: ")
-    if(var == "Q"):
-        loop = False
-    elif(var == "P"):
-        print(drone1.giveInfoTest())
-    elif(var == "S"):
-        print("lengte: L")
-        print("width: W")
-        print("battery: B")
-        print("xCoord: X")
-        print("yCoord: Y")
-        print("hoogte: H")
-        print("accel: A")
-        print("speed: S")
 
-        var = input("geef letter waarde in: ")
-        zin = var.split();
-        letter = zin[0]
-        waarde = zin[1]
-        if(letter == "L"):
-            drone1.set_length(waarde)
-        elif(letter == "W"):
-            drone1.set_width(waarde)
-        elif(letter == "B"):
-            drone1.set_battery(waarde)
-        elif(letter == "X"):
-            drone1.set_xCoord(waarde)
-        elif(letter == "Y"):
-            drone1.set_yCoord(waarde)
-        elif(letter == "H"):
-            drone1.set_hoogte(waarde)
-        elif(letter == "A"):
-            drone1.set_accel(waarde)
-        elif(letter == "S"):
-            drone1.set_speed(waarde)
-        else:
-            print("geen juiste parameters")
 #class client:
     # The callback for when the client receives a CONNACK response from the server.
 #    def on_connect(client, userdata, flags, rc):
