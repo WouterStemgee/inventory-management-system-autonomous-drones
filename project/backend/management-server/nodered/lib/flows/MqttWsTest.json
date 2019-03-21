@@ -1,0 +1,1 @@
+[{"id":"d3c91da3.456fd","type":"websocket out","z":"47e75e9a.a4f0a","name":"","server":"d3b62905.644528","client":"","x":570,"y":340,"wires":[]},{"id":"d3b62905.644528","type":"websocket-listener","z":"","path":"/ws/data","wholemsg":"true"}]
