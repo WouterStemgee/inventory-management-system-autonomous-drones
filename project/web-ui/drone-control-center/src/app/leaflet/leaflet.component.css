@@ -1,0 +1,22 @@
+.map {
+  width: 100%;
+  height: 600px;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.leaflet-grid-label .gridlabel-vert {
+  margin-left: 5px;
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+.leaflet-grid-label .gridlabel-vert,
+.leaflet-grid-label .gridlabel-horiz {
+  padding-left: 2px;
+  font-size: 0.8em;
+  text-shadow: -2px 0 #FFFFFF, 0 2px #FFFFFF, 2px 0 #FFFFFF, 0 -2px #FFFFFF;
+}
+
+.leaflet-container.crosshair-cursor-enabled {
+  cursor: crosshair;
+}

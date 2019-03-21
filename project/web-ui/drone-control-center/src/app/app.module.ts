@@ -13,10 +13,12 @@ import {ContainerComponent} from './container/container.component';
 import {MaterialModule} from './material.module';
 import {DroneDataComponent} from './drone-data/drone-data.component';
 import {InventoryComponent} from './inventory/inventory.component';
+import {LeafletComponent} from './leaflet/leaflet.component';
 import {SharedService} from './shared.service';
 import {DroneSimulatorService} from './drone-simulator/presenter/drone-simulator.service';
 import {HttpService} from './http.service';
 import {DataService} from './data.service';
+import {LeafletModule} from '@asymmetrik/ngx-leaflet';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,8 @@ import {DataService} from './data.service';
     DashboardComponent,
     DroneSimulatorComponent,
     DroneDataComponent,
-    InventoryComponent
+    InventoryComponent,
+    LeafletComponent
   ],
   imports: [
     BrowserModule,
@@ -34,6 +37,7 @@ import {DataService} from './data.service';
     HttpClientModule,
     BrowserAnimationsModule,
     MaterialModule,
+    LeafletModule.forRoot(),
     ToastrModule.forRoot({
       timeOut: 8000,
       positionClass: 'toast-bottom-right',
