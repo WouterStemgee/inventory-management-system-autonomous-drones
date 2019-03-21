@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+    <title>Socket.IO Client</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font: 13px Helvetica, Arial;
+        }
+
+        form {
+            background: #656565;
+            padding: 3px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        form input {
+            border: 0;
+            padding: 10px;
+            width: 90%;
+            margin-right: .5%;
+        }
+
+        form button {
+            width: 9%;
+            background: rgb(101, 101, 101);
+            border: none;
+            padding: 10px;
+        }
+
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #messages li {
+            padding: 5px 10px;
+        }
+
+        #messages li:nth-child(odd) {
+            background: #eee;
+        }
+
+        #messages {
+            margin-bottom: 40px
+        }
+    </style>
+</head>
+<body>
+<ul id="messages"></ul>
+<form action="">
+    <div>
+        <label for="x">X: </label>
+        <input id="x" type="number" autocomplete="off"/>
+    </div>
+    <div>
+        <label for="y">Y: </label>
+        <input id="y" type="number" autocomplete="off"/>
+    </div>
+    <div>
+        <label for="z">Z: </label>
+        <input id="z" type="number" autocomplete="off"/>
+    </div>
+    <div>
+        <label for="yaw">Yaw: </label>
+        <input id="yaw" type="number" step="0.00001" autocomplete="off"/>
+    </div>
+    <button>Send</button>
+</form>
+<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+    $(function () {
+
+        var socket = io.connect('http://localhost:3000');
+
+        var geoJSON = {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "properties": {
+                    "orientation": 90
+                    // add battery, speed, acc ...
+                },
+                "geometry": {
+                    "type": "Point", // LineString gebruiken voor paths
+                    "coordinates": [0, 0, 0]
+                }
+            }]
+        };
+
+
+        $('form').submit(function () {
+            geoJSON.features[0].geometry.coordinates = [$('#x').val(), $('#y').val(), $('#z').val()];
+            geoJSON.features[0].properties.orientation = $('#yaw').val();
+            socket.emit('update', JSON.stringify(geoJSON));
+            return false;
+        });
+        socket.on('update', function (msg) {
+            $('#messages').append($('<li>').text(msg));
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+    });
+</script>
+</body>
+</html>
