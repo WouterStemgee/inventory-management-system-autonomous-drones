@@ -12,16 +12,18 @@ class Drone:
         if(width==0):
             self.width = length
         self.battery = 100
-        self.drone_id = id
+        #self.drone_id = id
         # positie array
-        self.xCoord = None
-        self.yCoord = None
-        self.hoogte = None
+        self.position = [1,1,1] # xcoord, ycoord en zcoord, nog geen getters en setters
+        #self.xCoord = None
+        #self.yCoord = None
+        #self.hoogte = None
         self.accel = None
         self.speed = None
         # jaw pich roll
-        self.blijfSturen = True # dit staat waarschijnlijk nog niet op de juiste plaats
-        # er moet nog een hoop data toegevoegd worden
+        self.jaw = None # nog geen getters en setters
+        self.pitch = None # nog geen getters en setters
+        self.roll = None # nog geen getters en setters
 
     def simuleer_vliegen(self):
         self.set_hoogte(0)
@@ -75,6 +77,24 @@ class Drone:
         }
         return json.dumps(payload)
 
+    def get_xCoord(self):
+        return self.position[0]
+
+    def set_xCoord(self,x):
+        self.position[0] = x
+
+    def get_yCoord(self):
+        return self.position[1]
+
+    def set_yCoord(self,y):
+        self.position[1] = y
+
+    def get_zCoord(self):
+        return self.position[2]
+
+    def set_zCoord(self,z):
+        self.position[2] = z
+
     def set_speed(self,s):
         self.speed = s
 
@@ -88,28 +108,6 @@ class Drone:
         self.accel = a
 
     # getters en setters voor de variabelen van de drone
-    def get_hoogte(self):
-        return self.hoogte
-
-    def set_hoogte(self,h):
-        self.hoogte = h
-
-    def get_xCoord(self):
-        return self.xCoord
-
-    def set_xCoord(self,x):
-        self.xCoord = x
-
-    def get_yCoord(self):
-        return self.yCoord
-
-    def set_yCoord(self,y):
-        self.yCoord = y
-
-    def get_id(self):
-        return self.drone_id
-
-    # geen setter voor drone_id
 
     def get_length(self):
         return self.length
@@ -139,7 +137,7 @@ class Drone:
             if (var == "Q"):
                 loop = False
             elif (var == "P"):
-                print(drone1.giveInfoTest())
+                print(self.giveInfoTest())
             elif (var == "S"):
                 print("lengte: L")
                 print("width: W")
@@ -155,21 +153,21 @@ class Drone:
                 letter = zin[0]
                 waarde = zin[1]
                 if (letter == "L"):
-                    drone1.set_length(waarde)
+                    self.set_length(waarde)
                 elif (letter == "W"):
-                    drone1.set_width(waarde)
+                    self.set_width(waarde)
                 elif (letter == "B"):
-                    drone1.set_battery(waarde)
+                    self.set_battery(waarde)
                 elif (letter == "X"):
-                    drone1.set_xCoord(waarde)
+                    self.set_xCoord(waarde)
                 elif (letter == "Y"):
-                    drone1.set_yCoord(waarde)
+                    self.set_yCoord(waarde)
                 elif (letter == "H"):
-                    drone1.set_hoogte(waarde)
+                    self.set_hoogte(waarde)
                 elif (letter == "A"):
-                    drone1.set_accel(waarde)
+                    self.set_accel(waarde)
                 elif (letter == "S"):
-                    drone1.set_speed(waarde)
+                    self.set_speed(waarde)
                 else:
                     print("geen juiste parameters")
 

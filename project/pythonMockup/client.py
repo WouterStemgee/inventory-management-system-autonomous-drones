@@ -4,10 +4,11 @@ from Drone import Drone
 # je kan van hier uit ook subscriben op bepaalde topics
 # connected was al oke
 
-drone = Drone(1,5,6)# hier nog een betere manier voor zoeken
-
 class Client:
     def __init__(self):
+
+        self.drone = Drone(1,5,6)
+
         def on_log(client, userdata, level, buf):
             print("log: " + buf)
 
@@ -42,16 +43,26 @@ class Client:
 
     def stuurBattery(self):
         print("connecting to broker ", self.broker)
-
         self.client.connect(self.broker)
         self.client.loop_start()  # moet lopen om de callback functies te kunnen verbinden
         self.client.subscribe("drone/battery")
-        self.client.publish("drone/battery", drone.get_battery())  # eerste argument is het topic, 2de is de message
+        self.client.publish("drone/battery", self.drone.get_battery())  # eerste argument is het topic, 2de is de message
+        time.sleep(4)
+        self.client.loop_stop()
+        self.client.disconnect()
+
+    def stuurPosition(self):
+        print("connecting to broker ", self.broker)
+        self.client.connect(self.broker)
+        self.client.loop_start()  # moet lopen om de callback functies te kunnen verbinden
+        self.client.subscribe("drone/Position")
+        # positie opvragen en in string omzetten om door te sturen
+        string = ""+str(self.drone.get_xCoord())+";"+str(self.drone.get_yCoord())+";"+str(self.drone.get_zCoord())
+        self.client.publish("drone/Position", string)  # eerste argument is het topic, 2de is de message
         time.sleep(4)
         self.client.loop_stop()
         self.client.disconnect()
 
 
-
 client = Client()
-client.stuurBattery()
+client.stuurPosition()
