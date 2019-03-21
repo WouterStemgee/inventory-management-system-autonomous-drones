@@ -12,8 +12,8 @@ var RED = require('node-red');
 
 //settings voor node-red (normaal settings.js file)
 var settings = {
-    httpAdminRoot:"/red",
-    httpNodeRoot: "/random",
+    httpAdminRoot:"/editor",
+    httpNodeRoot: "/red",
     userDir:"./nodered",
     functionGlobalContext: { },    // enables global context
     credentialSecret: 'drone'
