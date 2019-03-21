@@ -481,20 +481,7 @@
     }
    },
    "menu-deploymenu-item-node": false,
-   "menu-deploymenu-item-full": true,
-   "git": {
-    "user": {
-     "name": "Jochen Laroy",
-     "email": "jochen.laroy@ugent.be"
-    }
-   }
-  }
- },
- "projects": {
-  "projects": {
-   "Drone1Nodered": {
-    "credentialSecret": false
-   }
+   "menu-deploymenu-item-full": true
   }
  }
 }
