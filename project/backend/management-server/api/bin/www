@@ -16,7 +16,12 @@ var settings = {
     httpNodeRoot: "/random",
     userDir:"./nodered",
     functionGlobalContext: { },    // enables global context
-    credentialSecret: 'drone'
+    credentialSecret: 'drone',
+    editorTheme: {
+        projects: {
+            enabled: true
+        }
+    }
 };
 
 
@@ -132,7 +137,9 @@ function onListening() {
     debug('Listening on ' + bind);
 }
 
+/**
+ * Alvorens nodered gestart wordt, moet ervoor gezorgd worden dat de geweste flows gerunt worden
+ */
 //RED.flows.setFlows("flows_JOCHENLAROYA478.json") => {}
 
 RED.start();
-//console.log(RED.runtime.flows);
