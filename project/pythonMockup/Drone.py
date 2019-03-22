@@ -6,24 +6,18 @@ import time
 #broker="test.mosquitto.org"
 
 class Drone:
-    # via mqtt vanuit python connecten naar broker (mosquitto)
     def __init__(self,id, length,width=0):
         self.length = length
         if(width==0):
             self.width = length
         self.battery = 100
-        #self.drone_id = id
         # positie array
         self.position = [1,1,1] # xcoord, ycoord en zcoord, nog geen getters en setters
-        #self.xCoord = None
-        #self.yCoord = None
-        #self.hoogte = None
         self.accel = None
         self.speed = None
-        # jaw pich roll
-        self.jaw = None # nog geen getters en setters
-        self.pitch = None # nog geen getters en setters
-        self.roll = None # nog geen getters en setters
+        self.jaw = None
+        self.pitch = None
+        self.roll = None
 
     def simuleer_vliegen(self):
         self.set_hoogte(0)
@@ -77,6 +71,24 @@ class Drone:
         }
         return json.dumps(payload)
 
+    def get_jaw(self):
+        return self.jaw
+
+    def set_jaw(self,j):
+        self.jaw = j
+
+    def  get_pitch(self):
+        return self.pitch
+
+    def set_pitch(self,p):
+        self.pitch = p
+
+    def get_roll(self):
+        return self.roll
+
+    def set_roll(self,r):
+        self.roll = r
+
     def get_xCoord(self):
         return self.position[0]
 
@@ -102,7 +114,7 @@ class Drone:
         return self.speed
 
     def get_accel(self):
-        return self.get_accel()
+        return self.accel
 
     def set_accel(self,a):
         self.accel = a
