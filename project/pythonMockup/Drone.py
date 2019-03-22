@@ -2,6 +2,7 @@ import json
 import xml.etree.ElementTree as et
 import paho.mqtt.client as mqtt
 import time
+import math
 
 #broker="test.mosquitto.org"
 
@@ -13,11 +14,72 @@ class Drone:
         self.battery = 100
         # positie array
         self.position = [1,1,1] # xcoord, ycoord en zcoord, nog geen getters en setters
-        self.accel = None
-        self.speed = None
+        self.accelH = None
+        self.accelV = None
+        # je hebt een horizontale en een verticale versnelling en snelheid
+        self.speedH = None
+        self.speedV = None
         self.jaw = None
         self.pitch = None
         self.roll = None
+
+    def berekenAfstandHorizontaal(self,x,y):
+        huidigeX = self.position[0]
+        huidigeY = self.position[1]
+        if huidigeX == x:
+            # rechte lijn naar boven
+            afstand = y - huidigeY
+        elif huidigeY == y:
+            afstand = x - huidigeX
+        else:
+            factor = ((x - huidigeX) * (x - huidigeX)) + ((y - huidigeY) * (y - huidigeY))
+            afstand = math.sqrt(factor)
+        return afstand
+
+    def berekendAfstandVerticaal(self,z):
+        huidigeZ = self.position[2]
+        return z-huidigeZ
+
+    def berekenAfstand(self,x,y,z):
+        huidigeX = self.position[0]
+        huidigeY = self.position[1]
+        huidigeZ = self.position[2]
+        afstand = None
+        if (z == None or z == huidigeZ):
+            # dan blijf je dus in hetzelfde vlak
+            afstand = self.berekenAfstandHorizontaal()
+        else:
+            factor1 = self.berekenAfstandHorizontaal(x,y)
+            factor2 = self.berekendAfstandVerticaal(z)
+            afstand = math.sqrt((factor1 * factor1) + (factor2*factor2))
+        return afstand
+
+    def berekenTijdHorizontaal(self,afstand):
+        D = (self.speedH*self.speedH)-(2*self.accelH*(-1)*math.fabs(afstand))
+        tijd = None
+        if D < 0:
+            print("error in berekening discriminant")
+            return None
+        elif D == 0:
+            tijd = ((-1)*self.speedH + math.sqrt(D))/(self.accelH)
+        else:
+            tijd1 = ((-1)*self.speedH + math.sqrt(D))/(self.accelH)
+            tijd2 = ((-1)*self.speedH - math.sqrt(D))/(self.accelH)
+            if tijd1 >= 0:
+                tijd = tijd1
+            else:
+                tijd = tijd2
+        return tijd
+
+    # deze methode gaat er van uit dat er geen obstakels liggen onderweg naar het coordinaat
+    # voorlopig wordt wordt er nog vanuit gegaan dat de drone op dezelfde hoogte ligt
+    def beweegNaarCoordinaat(self,x,y,z=None):
+        afstand = self.berekenAfstand(x,y,z) # afstand kan kleiner zijn dan 0
+        afstandHorizontaal = self.berekenAfstandHorizontaal(x,y)
+        #afstandVerticaal = self.berekendAfstandVerticaal(z)
+        # (a*t*t)/2 + v*t - abs(afstand) = 0 => hieruit de tijd halen die de drone er over gaat doen
+        # en dan zo tijdens die tijd telkens de nieuwe x,y en z waarden berekenen voor die specifieke tijd
+        tijd = self.berekenTijdHorizontaal(afstandHorizontaal)
 
     def simuleer_vliegen(self):
         self.set_hoogte(0)
@@ -107,17 +169,29 @@ class Drone:
     def set_zCoord(self,z):
         self.position[2] = z
 
-    def set_speed(self,s):
-        self.speed = s
+    def set_speedH(self,s):
+        self.speedH = s
 
-    def get_speed(self):
-        return self.speed
+    def get_speedH(self):
+        return self.speedH
 
-    def get_accel(self):
-        return self.accel
+    def set_speedV(self,s):
+        self.speedV = s
 
-    def set_accel(self,a):
-        self.accel = a
+    def get_speedV(self):
+        return self.speedV
+
+    def get_accelH(self):
+        return self.accelH
+
+    def set_accelH(self,a):
+        self.accelH = a
+
+    def get_accelV(self):
+        return self.accelV
+
+    def set_accelV(self,a):
+        self.accelV = a
 
     # getters en setters voor de variabelen van de drone
 
