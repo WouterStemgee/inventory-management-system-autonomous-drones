@@ -30,3 +30,6 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 17/03/19,15:00,19:00,Extern, Meer node red videos en documentatie voor morgen met Jochen ofzo node red te implementeren in project,,
 18/03/19,18:00,19:00,Extern, Gewoon even nog wat meer kijken,,
 19/03/19,08:15,12:30,Campus, PRUTSEN MET NODE RED MET JOCHEN - 3+u zitten zoeken waarom het niet werkt - dan nog mini aanpassingen samen doen,,
+21/03/19,13:30,17:45,Campus, node red leren gebruiken - websockets zitten uitvissen in node red - flow van mqtt client naar broker naar subscriber naar websocket,,
+22/03/19,12:00,13:00,Extern, zelf thuis alles opstellen voor volledige node red communicatie te testen met drone,,
+23/03/19,15:00,20:00,Extern, nodered mqtt flows met websocket voor project gemaakt en getest met drone en (geprobeerd met) front end website - later mongodb bug opgelost en al aan die flows begonnen - al veel bugs van node red zelf opgelost maar nog veel te gaan,,
