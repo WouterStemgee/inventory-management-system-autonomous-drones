@@ -37,4 +37,5 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 19/03/19,08:15,12:30,Campus,Socket.io toegevoegd aan leaflet voor realtime visualisatie van de drone,21,
 20/03/19,15:30,19:00,Extern,Positie en Yaw kan worden doorgestuurd via Socket.IO - drone wordt gevisualiseerd met correcte rotatie,21,
 21/03/19,13:30,17:30,Campus,Leaflet applicatie converteren naar Angular met ngx-leaflet directive,21,
+23/03/19,15:00,18:00,Extern,Research NodeRED - Socket.io vervangen door WebSockets voor connectie met NodeRED,22,
 
