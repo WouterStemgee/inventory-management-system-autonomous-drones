@@ -238,7 +238,7 @@
         }
     ).addTo(map);
 
-    var socket = io.connect('http://localhost:3000');
+    var socket = io.connect('http://localhost:3000/red/ws/data');
     socket.on('update', function (data) {
         var myData = JSON.parse(data);
         for (let i = 0; i < myData.features.length; i++) {

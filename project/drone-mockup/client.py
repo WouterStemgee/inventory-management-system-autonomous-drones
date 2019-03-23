@@ -7,7 +7,7 @@ class Client:
 
         self.drone = Drone(1,5,6)
         self.drone.set_pitch(12)
-
+        self.drone.set_speedH(9000)
         def on_log(client, userdata, level, buf):
             print("log: " + buf)
 
@@ -106,4 +106,7 @@ class Client:
         self.client.disconnect()
 
 client = Client()
-client.stuurPitch()
+# client.stuurSpeed()
+# client.stuurAcceleration()
+client.drone.set_battery(98)
+client.stuurBattery()
