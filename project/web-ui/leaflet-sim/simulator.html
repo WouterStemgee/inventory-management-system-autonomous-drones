@@ -8,7 +8,6 @@
 
 
     <script src="./libs/leaflet/leaflet.js"></script>
-    <script src="./libs/socket.io/socket.io_2.2.0_socket.io.js"></script>
     <script src="./plugins/SimpleGraticule/L.SimpleGraticule.js"></script>
     <script src="./plugins/Coordinates/Leaflet.Coordinates-0.1.3.src.js"></script>
     <script src="./plugins/Realtime/leaflet-realtime.js"></script>
@@ -220,10 +219,10 @@
                     rotationAngle: feature.properties.orientation,
                     draggable: true
                 }).bindPopup(
-                    '<p>X: ' + feature.geometry.coordinates[0].toString() + '<br />' +
-                    '<p>Y: ' + feature.geometry.coordinates[1].toString() + '<br />' +
-                    '<p>Z: ' + feature.geometry.coordinates[2].toString() + '<br />' +
-                    '<p>Yaw: ' + feature.properties.orientation.toString() + '<br />'
+                    '<p>X: ' + feature.geometry.coordinates[0] + '<br />' +
+                    '<p>Y: ' + feature.geometry.coordinates[1] + '<br />' +
+                    '<p>Z: ' + feature.geometry.coordinates[2] + '<br />' +
+                    '<p>Yaw: ' + feature.properties.orientation + '<br />'
                 );
             },
             updateFeature: function (feature, oldLayer, newLayer) {
@@ -238,13 +237,19 @@
         }
     ).addTo(map);
 
-    var socket = io.connect('http://localhost:3000/red/ws/data');
-    socket.on('update', function (data) {
-        var myData = JSON.parse(data);
+    var connection = new WebSocket('ws://localhost:3000/red/ws/data', ['soap', 'xmpp']);
+    // Log errors
+    connection.onerror = function (error) {
+        console.log('WebSocket Error ' + error);
+    };
+
+    // Log messages from the server
+    connection.onmessage = function (e) {
+        var myData = JSON.parse(e.data);
         for (let i = 0; i < myData.features.length; i++) {
             realtime.update(myData.features[i]);
         }
-    });
+    };
 
 </script>
 </body>
