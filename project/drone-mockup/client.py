@@ -5,6 +5,7 @@ from Drone import Drone
 class Client:
     def __init__(self):
 
+
         self.drone = Drone(5,6)
         self.drone.set_speedH(22)
 
@@ -126,4 +127,4 @@ class Client:
         self.client.disconnect()
 
 client = Client()
-client.stuurSpeedHorizontal()
+

@@ -75,12 +75,11 @@
     </div>
     <button>Send</button>
 </form>
-<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
     $(function () {
 
-        var socket = io.connect('http://localhost:3000');
+        var connection = new WebSocket('ws://localhost:3000/red/ws/data', ['soap', 'xmpp']);
 
         var geoJSON = {
             "type": "FeatureCollection",
@@ -97,18 +96,29 @@
             }]
         };
 
+        // When the connection is open, send some data to the server
+        connection.onopen = function () {
+            connection.send('Client connected'); // Send the message 'Ping' to the server
+        };
+
+        // Log errors
+        connection.onerror = function (error) {
+            console.log('WebSocket Error ' + error);
+        };
+
+        // Log messages from the server
+        connection.onmessage = function (e) {
+            $('#messages').append($('<li>').text(e.data));
+            window.scrollTo(0, document.body.scrollHeight);
+        };
 
         $('form').submit(function () {
             geoJSON.features[0].geometry.coordinates = [$('#x').val(), $('#y').val(), $('#z').val()];
             geoJSON.features[0].properties.orientation = $('#yaw').val();
-            socket.emit('update', JSON.stringify(geoJSON));
+            connection.send(JSON.stringify(geoJSON));
             return false;
         });
 
-        socket.on('update', function (msg) {
-            $('#messages').append($('<li>').text(msg));
-            window.scrollTo(0, document.body.scrollHeight);
-        });
     });
 </script>
 </body>
