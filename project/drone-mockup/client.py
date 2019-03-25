@@ -5,8 +5,8 @@ from Drone import Drone
 class Client:
     def __init__(self):
 
-        self.drone = Drone(1,5,6)
-        self.drone.set_pitch(12)
+        self.drone = Drone(5,6)
+        self.drone.set_speedH(22)
 
         def on_log(client, userdata, level, buf):
             print("log: " + buf)
@@ -55,22 +55,42 @@ class Client:
 
 # als de waarde nog None wordt ze gewoon niet mee gegeven
 
-    def stuurAcceleration(self):
+    def stuurAccelerationHorizontal(self):
         print("connecting to broker ", self.broker)
         self.client.connect("localhost", 1883)
         self.client.loop_start()
-        self.client.subscribe("Acceleration")
-        self.client.publish("Acceleration", self.drone.get_accel())
+        self.client.subscribe("AccelerationH")
+        self.client.publish("AccelerationH", self.drone.get_accelH())
         time.sleep(4)
         self.client.loop_stop()
         self.client.disconnect()
 
-    def stuurSpeed(self):
+    def stuurAccelerationVertical(self):
         print("connecting to broker ", self.broker)
         self.client.connect("localhost", 1883)
         self.client.loop_start()
-        self.client.subscribe("Speed")
-        self.client.publish("Speed", self.drone.get_speed())
+        self.client.subscribe("AccelerationV")
+        self.client.publish("AccelerationV", self.drone.get_accelV())
+        time.sleep(4)
+        self.client.loop_stop()
+        self.client.disconnect()
+
+    def stuurSpeedHorizontal(self):
+        print("connecting to broker ", self.broker)
+        self.client.connect("localhost", 1883)
+        self.client.loop_start()
+        self.client.subscribe("SpeedH")
+        self.client.publish("SpeedH", self.drone.get_speedH())
+        time.sleep(4)
+        self.client.loop_stop()
+        self.client.disconnect()
+
+    def stuurSpeedVertical(self):
+        print("connecting to broker ", self.broker)
+        self.client.connect("localhost", 1883)
+        self.client.loop_start()
+        self.client.subscribe("SpeedV")
+        self.client.publish("SpeedV", self.drone.get_speedV())
         time.sleep(4)
         self.client.loop_stop()
         self.client.disconnect()
@@ -106,4 +126,4 @@ class Client:
         self.client.disconnect()
 
 client = Client()
-client.stuurPitch()
+client.stuurSpeedHorizontal()
