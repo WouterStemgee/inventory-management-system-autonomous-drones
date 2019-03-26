@@ -29,6 +29,12 @@ class Client:
             topic = msg.topic
             m_decode = str(msg.payload.decode("utf-8", "ignore"))
             print("message received", m_decode)
+            if topic == "waypoint":
+                # x;y
+                coordinaten = m_decode.split(';')
+                xCoord = coordinaten[0]
+                yCoord = coordinaten[1]
+                self.drone.beweegNaarCoordinaat(xCoord,yCoord)
         self.client = mqtt.Client("python1")
         #self.broker = "test.mosquitto.org"
         self.broker = "localhost:1883"
@@ -149,6 +155,13 @@ class Client:
         vector = [self.drone.get_speedH(),self.drone.get_speedV()]
         self.client.publish("speed", str(vector))
         #time.sleep(4)
+        self.client.loop_stop()
+        self.client.disconnect()
+
+    def ontvangWaypoint(self):
+        self.client.connect("localhost",1883)
+        self.client.loop_start()
+        self.client.subscribe("waypoint")
         self.client.loop_stop()
         self.client.disconnect()
 

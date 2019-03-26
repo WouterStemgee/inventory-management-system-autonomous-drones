@@ -20,6 +20,7 @@ class Simulator:
             self.client.stuurRoll()
             self.client.stuurVersnellingsVector()
             self.client.stuurSpeedVector()
+            self.client.ontvangWaypoint()
 
 drone = Drone(5,6)
 drone.set_battery(100)

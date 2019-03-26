@@ -81,38 +81,39 @@ class Drone:
     # voorlopig wordt wordt er nog vanuit gegaan dat de drone op dezelfde hoogte ligt
     # en dat er niet schuin gevlogen kan worden
     def beweegNaarCoordinaat(self,x,y,z=None):
-        #afstand = self.berekenAfstand(x,y,z) # afstand kan kleiner zijn dan 0
-        afstandHorizontaal = self.berekenAfstandHorizontaal(x,y)
-        #afstandVerticaal = self.berekendAfstandVerticaal(z)
-        # (a*t*t)/2 + v*t - abs(afstand) = 0 => hieruit de tijd halen die de drone er over gaat doen
-        # en dan zo tijdens die tijd telkens de nieuwe x,y en z waarden berekenen voor die specifieke tijd
-        tijd = self.berekenTijdHorizontaal(afstandHorizontaal)
-        # de positie uitrekenen en printen met een frequentie van 50Hz
-        huidigTijdstip = 0
-        initieleX = self.position[0]
-        initieleY = self.position[1]
-        while huidigTijdstip <= tijd:
-            if y == self.position[1]:
-                if x>=self.position[0]:
-                    nieuwepositie = round(initieleX + (self.speedH*huidigTijdstip) + (self.accelH*huidigTijdstip*huidigTijdstip/2),2)
-                elif x <= self.position[0]:
-                    nieuwepositie = round(initieleX - (self.speedH * huidigTijdstip) - (self.accelH * huidigTijdstip * huidigTijdstip / 2), 2)
-                print("op tijdstip: ",huidigTijdstip)
-                print("is de positie: ", nieuwepositie)
-                print("")
-                self.position[0] = nieuwepositie
-                huidigTijdstip = huidigTijdstip + 0.25
-            elif x == self.position[0]:
-                if y>=self.position[1]:
-                    nieuwepositie = round(initieleY + (self.speedH*huidigTijdstip) + (self.accelH*huidigTijdstip*huidigTijdstip/2),2)
-                elif y<= self.position[1]:
-                    nieuwepositie = round(initieleY - (self.speedH*huidigTijdstip) - (self.accelH*huidigTijdstip*huidigTijdstip/2),2)
-                print("op tijdstip: ", huidigTijdstip)
-                print("is de positie: ", nieuwepositie)
-                print("")
-                self.position[1] = nieuwepositie
-                huidigTijdstip = huidigTijdstip + 0.25
-                #round(huidigTijdstip, 2)
+        if self.position[0] != x or self.position[1] != y:
+            #afstand = self.berekenAfstand(x,y,z) # afstand kan kleiner zijn dan 0
+            afstandHorizontaal = self.berekenAfstandHorizontaal(x,y)
+            #afstandVerticaal = self.berekendAfstandVerticaal(z)
+            # (a*t*t)/2 + v*t - abs(afstand) = 0 => hieruit de tijd halen die de drone er over gaat doen
+            # en dan zo tijdens die tijd telkens de nieuwe x,y en z waarden berekenen voor die specifieke tijd
+            tijd = self.berekenTijdHorizontaal(afstandHorizontaal)
+            # de positie uitrekenen en printen met een frequentie van 50Hz
+            huidigTijdstip = 0
+            initieleX = self.position[0]
+            initieleY = self.position[1]
+            while huidigTijdstip <= tijd:
+                if y == self.position[1]:
+                    if x>=self.position[0]:
+                        nieuwepositie = round(initieleX + (self.speedH*huidigTijdstip) + (self.accelH*huidigTijdstip*huidigTijdstip/2),2)
+                    elif x <= self.position[0]:
+                        nieuwepositie = round(initieleX - (self.speedH * huidigTijdstip) - (self.accelH * huidigTijdstip * huidigTijdstip / 2), 2)
+                    #print("op tijdstip: ",huidigTijdstip)
+                    #print("is de positie: ", nieuwepositie)
+                    #print("")
+                    self.position[0] = nieuwepositie
+                    huidigTijdstip = huidigTijdstip + 0.25
+                elif x == self.position[0]:
+                    if y>=self.position[1]:
+                        nieuwepositie = round(initieleY + (self.speedH*huidigTijdstip) + (self.accelH*huidigTijdstip*huidigTijdstip/2),2)
+                    elif y<= self.position[1]:
+                        nieuwepositie = round(initieleY - (self.speedH*huidigTijdstip) - (self.accelH*huidigTijdstip*huidigTijdstip/2),2)
+                    #print("op tijdstip: ", huidigTijdstip)
+                    #print("is de positie: ", nieuwepositie)
+                    #print("")
+                    self.position[1] = nieuwepositie
+                    huidigTijdstip = huidigTijdstip + 0.25
+                    #round(huidigTijdstip, 2)
 
     def giveInfoTest(self):
         payload = {
@@ -145,28 +146,43 @@ class Drone:
         return self.position[0]
 
     def set_xCoord(self,x):
-        self.position[0] = x
+        if x >= 0:
+            self.position[0] = x
+        else:
+            self.position[0] = 0
 
     def get_yCoord(self):
         return self.position[1]
 
     def set_yCoord(self,y):
-        self.position[1] = y
+        if y>=0:
+            self.position[1] = y
+        else:
+            self.position[1] = 0
 
     def get_zCoord(self):
         return self.position[2]
 
     def set_zCoord(self,z):
-        self.position[2] = z
+        if z >= 0:
+            self.position[2] = z
+        else:
+            self.position[2] = 0
 
     def set_speedH(self,s):
-        self.speedH = s
+        if s >= 0:
+            self.speedH = s
+        else:
+            self.speedH = 0
 
     def get_speedH(self):
         return self.speedH
 
     def set_speedV(self,s):
-        self.speedV = s
+        if s >= 0:
+            self.speedV = s
+        else:
+            self.speedV = 0
 
     def get_speedV(self):
         return self.speedV
@@ -175,13 +191,19 @@ class Drone:
         return self.accelH
 
     def set_accelH(self,a):
-        self.accelH = a
+        if a >= 0:
+            self.accelH = a
+        else:
+            self.accelH = 0
 
     def get_accelV(self):
         return self.accelV
 
     def set_accelV(self,a):
-        self.accelV = a
+        if a >= 0:
+            self.accelV = a
+        else:
+            self.accelV = 0
 
     # getters en setters voor de variabelen van de drone
 
@@ -189,19 +211,28 @@ class Drone:
         return self.length
 
     def set_length(self,lengte):
-        self.length = lengte
+        if lengte >= 0:
+            self.length = lengte
+        else:
+            self.length = 0
 
-    def set_width(self):
+    def get_width(self):
         return self.width
 
     def set_width(self,width):
-        self.width = width
+        if width >= 0:
+            self.width = width
+        else:
+            self.width = 0
 
     def get_battery(self):
         return self.battery
 
     def set_battery(self,battrij):
-        self.battery = battrij
+        if battrij >=0:
+            self.battery = battrij
+        else:
+            self.battery = 0
 
     def testProgramma(self):
         print("Print info drone: P")
