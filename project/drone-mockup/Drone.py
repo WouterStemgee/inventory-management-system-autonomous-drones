@@ -97,23 +97,22 @@ class Drone:
                     nieuwepositie = round(initieleX + (self.speedH*huidigTijdstip) + (self.accelH*huidigTijdstip*huidigTijdstip/2),2)
                 elif x <= self.position[0]:
                     nieuwepositie = round(initieleX - (self.speedH * huidigTijdstip) - (self.accelH * huidigTijdstip * huidigTijdstip / 2), 2)
-                print("op tijdstip: ",str(huidigTijdstip))
+                print("op tijdstip: ",huidigTijdstip)
                 print("is de positie: ", nieuwepositie)
                 print("")
                 self.position[0] = nieuwepositie
-                huidigTijdstip = huidigTijdstip + 0.02
-                round(huidigTijdstip,2)
+                huidigTijdstip = huidigTijdstip + 0.25
             elif x == self.position[0]:
                 if y>=self.position[1]:
                     nieuwepositie = round(initieleY + (self.speedH*huidigTijdstip) + (self.accelH*huidigTijdstip*huidigTijdstip/2),2)
                 elif y<= self.position[1]:
                     nieuwepositie = round(initieleY - (self.speedH*huidigTijdstip) - (self.accelH*huidigTijdstip*huidigTijdstip/2),2)
-                print("op tijdstip: ", str(huidigTijdstip))
+                print("op tijdstip: ", huidigTijdstip)
                 print("is de positie: ", nieuwepositie)
                 print("")
                 self.position[1] = nieuwepositie
-                huidigTijdstip = huidigTijdstip + 0.02
-                round(huidigTijdstip, 2)
+                huidigTijdstip = huidigTijdstip + 0.25
+                #round(huidigTijdstip, 2)
 
     def giveInfoTest(self):
         payload = {
@@ -248,6 +247,7 @@ class Drone:
                 else:
                     print("geen juiste parameters")
 
+
 class DroneSerializer:
     def serialize(self,drone,format):
         serializer = self._get_serializer(format)
@@ -281,11 +281,12 @@ class DroneSerializer:
         return et.tostring(drone_info, encoding='unicode')
 
 
-drone = Drone(5)
-drone.set_xCoord(1)
-drone.set_yCoord(0)
-drone.set_speedH(2)
-drone.set_accelH(2)
-afstand = drone.berekenAfstandHorizontaal(5,0)
-tijd = drone.berekenTijdHorizontaal(afstand)
-print("tijd: ",tijd)
+#drone = Drone(5)
+#drone.set_xCoord(1)
+#drone.set_yCoord(0)
+#drone.set_speedH(2)
+#drone.set_accelH(2)
+#afstand = drone.berekenAfstandHorizontaal(5,0)
+#tijd = drone.berekenTijdHorizontaal(afstand)
+#print("tijd: ",tijd)
+#drone.beweegNaarCoordinaat(5,0)
