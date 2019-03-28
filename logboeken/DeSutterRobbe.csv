@@ -26,3 +26,5 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 22/03/19,14:15,18:15,Extern,A* algoritme + efficientie,16,
 23/03/19,14:00,16:20,Extern,A* algoritme + node-red,16,
 25/03/19,14:00,18:30,Extern,node-red algoritme + research collision,16 + 23,
+26/03/19,08:15,12:30,Campus,A* bugfixes + research collision,16 + 23,
+28/03/19,09:00,11:30,Extern,collision,23,
