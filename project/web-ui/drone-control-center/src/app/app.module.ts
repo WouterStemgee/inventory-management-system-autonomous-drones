@@ -19,6 +19,7 @@ import {DroneSimulatorService} from './drone-simulator/presenter/drone-simulator
 import {HttpService} from './http.service';
 import {DataService} from './data.service';
 import {LeafletModule} from '@asymmetrik/ngx-leaflet';
+import {LeafletDrawModule} from '@asymmetrik/ngx-leaflet-draw';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import {LeafletModule} from '@asymmetrik/ngx-leaflet';
     BrowserAnimationsModule,
     MaterialModule,
     LeafletModule.forRoot(),
+    LeafletDrawModule.forRoot(),
     ToastrModule.forRoot({
       timeOut: 8000,
       positionClass: 'toast-bottom-right',

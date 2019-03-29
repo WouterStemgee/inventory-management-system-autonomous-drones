@@ -1,6 +1,11 @@
 import * as L from 'leaflet';
+
 declare module 'leaflet' {
-  namespace control {
-    function coordinates(v: any);
+
+  function realtime(src: any, options: any): Realtime;
+
+  interface Realtime {
+    addTo(map: L.Map): any;
+    update(geojson: any);
   }
 }
