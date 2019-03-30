@@ -332,3 +332,7 @@ project/pythonMockup/venv/Scripts/tk86t.dll
 project/pythonMockup/venv/Scripts/unicodedata.pyd
 project/pythonMockup/venv/Scripts/vcruntime140.dll
 project/pythonMockup/venv/Scripts/winsound.pyd
+*.backup
+*.backup
+project/backend/management-server/nodered/.config.json
+project/backend/management-server/nodered/.config.json.backup

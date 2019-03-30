@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import * as L from 'leaflet';
 
-import '../../../node_modules/leaflet-realtime/dist/leaflet-realtime.js';
+import 'leaflet-realtime';
+import 'leaflet-rotatedmarker';
+import circleToPolygon from 'circle-to-polygon';
 
 @Component({
   selector: 'app-leaflet',
@@ -56,23 +58,28 @@ export class LeafletComponent implements OnInit {
     attributionControl: false
   };
 
+  editableLayers = new L.FeatureGroup();
+
   drawOptions = {
     position: 'topleft',
+    edit: {
+      featureGroup: this.editableLayers
+    },
     draw: {
-      marker: {
-        icon: L.icon({
-          iconSize: [25, 41],
-          iconAnchor: [13, 41],
-          iconUrl: 'assets/images/leaflet/marker-icon.png',
-          shadowUrl: 'assets/images/leaflet/marker-shadow.png'
-        })
-      },
-      polyline: true,
-      circle: {
+      polyline: {
         shapeOptions: {
-          color: '#aaaaaa'
+          color: '#4286f4'
         }
-      }
+      },
+      rectangle: {
+        shapeOptions: {
+          color: '#a80a0a'
+        }
+      },
+      polygon: false,
+      circle: false,
+      marker: false,
+      circlemarker: false
     }
   };
 
@@ -81,72 +88,92 @@ export class LeafletComponent implements OnInit {
       'Map Image': this.mapImageLayer
     },
     overlays: {
-      'Scan Zones': L.circle([46.95, -122], {radius: 5000}),
-      'Obstacles': L.rectangle([[46.8, 122], [4600.9, 1000.55]]),
-      'Drone': L.svg()
+      'GeoJSON layer': this.editableLayers
     },
-    collapsed: false
+    collapsed: true
   };
-
-  droneIcon = L.Icon.extend({
-    options: {
-      iconUrl: './images/drone-large.png',
-      iconSize: [48, 48],
-      iconAnchor: [24, 24],
-      popupAnchor: [0, -24]
-    }
-  });
-
-  rt;
 
   onMapReady(map: L.Map) {
     L.DomUtil.addClass(map.getContainer(), 'crosshair-cursor-enabled');
-    this.rt = L.realtime(
+    map.addLayer(this.editableLayers);
+
+    const realtime = L.realtime(
       undefined, {
         start: false,
+        container: this.editableLayers,
         getFeatureId(f) {
           return f.properties.id;
         },
         pointToLayer(feature, position) {
           return L.marker(position, {
-            icon: this.droneIcon,
+            icon: L.icon({
+              iconUrl: 'assets/images/leaflet/drone-large.png',
+              iconSize: [48, 48],
+              iconAnchor: [24, 24],
+              popupAnchor: [0, -24]
+            }),
             draggable: true
           }).bindPopup(
             '<p>X: ' + feature.geometry.coordinates[0] + '<br />' +
             '<p>Y: ' + feature.geometry.coordinates[1] + '<br />' +
             '<p>Z: ' + feature.geometry.coordinates[2] + '<br />' +
             '<p>Yaw: ' + feature.properties.orientation + '<br />'
-          );
+          ).setRotationAngle(feature.properties.orientation);
         },
-        updateFeature(feature, oldLayer, newLayer) {
-          if (!newLayer) {
+        style(feature) {
+          switch (feature.properties.name) {
+            case 'obstacle':
+              console.log('obstacle');
+              return {
+/*                color: '',
+                fill: '#a80a0a'*/
+
+                // TODO: obstakels moeten niet via socket ingelezen worden, maar via json map file afkomstig uit db...
+                // Layer voor livedata gebruiken en aparte layer voor GeoJSON
+              };
+              break;
+          }
+          return {color: '#a80a0a'};
+        },
+        onEachFeature(f, l) {
+          console.log(f);
+        },
+        updateFeature(f, oldLayer, newLayer) {
+          if (!oldLayer) {
             return;
           }
-          // update properties
-          newLayer.setRotationAngle(feature.properties.orientation);
-          return L.Realtime.prototype.options.updateFeature(feature, oldLayer);
+          return newLayer;
         }
-
       }
     ).addTo(map);
 
     const connection = new WebSocket('ws://localhost:3000/red/ws/data', ['soap', 'xmpp']);
     // Log errors
-    connection.onerror = function (error) {
-      console.log('WebSocket Error ' + error);
+    connection.onerror = (err) => {
+      console.log('WebSocket Error ' + err);
     };
 
     // Log messages from the server
-    connection.onmessage = function (e) {
-      var myData = JSON.parse(e.data);
-      for (let i = 0; i < myData.features.length; i++) {
-        this.rt.update(myData.features[i]);
+    connection.onmessage = (e) => {
+      let data = JSON.parse(e.data);
+      for (let i = 0; i < data.features.length; i++) {
+        realtime.update(data.features[i]);
       }
     };
+
+    realtime.on('update', (e) => {
+      console.log('Realtime update event');
+    });
   }
 
   onDrawReady(drawControl: L.Control.Draw) {
-    console.log('Drawings are loaded');
+
+  }
+
+  onDrawCreated(e) {
+    this.editableLayers.addLayer(e.layer);
+    const shape = e.layer.toGeoJSON();
+    console.log(JSON.stringify(shape));
   }
 
   ngOnInit() {

@@ -2,6 +2,8 @@ import * as L from 'leaflet';
 
 declare module 'leaflet' {
 
+  let Realtime: any;
+
   function realtime(src: any, options: any): Realtime;
 
   interface Realtime {
