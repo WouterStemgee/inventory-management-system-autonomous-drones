@@ -40,4 +40,7 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 23/03/19,15:00,18:00,Extern,Research NodeRED - Socket.io vervangen door WebSockets voor connectie met NodeRED,22,
 26/03/19,08:15,12:30,Campus,Leaflet plugins implementeren,21,
 28/03/19,13:30,17:30,Campus,Plugins converteren naar ngx leaflet,21,
-29/03/19,16:00,18:00,Extern,Plugins converteren naar ngx leaflet,21,
+29/03/19,16:00,18:00,Extern,Leaflet realtime plugin converteren naar ngx,21,
+29/03/19,16:00,18:00,Extern,Leaflet rotation marker plugin converteren naar ngx,21,
+30/03/19,12:00,14:00,Extern,GeoJSON elementen aanpasbaar maken,21,
+
