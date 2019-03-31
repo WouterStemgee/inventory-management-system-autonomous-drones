@@ -9,6 +9,7 @@ const cors = require('cors');
 const dijkstra = require('./dijkstra/dijkstra');
 
 const mapRouter = require('./api/maps');
+const newMapRouter = require('./api/newMaps');
 const droneRouter = require('./api/drone');
 const waypointRouter = require('./api/flightpath');
 
@@ -22,7 +23,8 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use("/",express.static(path.join(__dirname, 'public')));
 
-app.use('/api/maps', mapRouter);
+//app.use('/api/maps', mapRouter);
+app.use('/api/maps', newMapRouter);
 app.use('/api/drone', droneRouter);
 app.use('/api/flightpath', waypointRouter);
 
