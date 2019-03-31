@@ -36,4 +36,5 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 25/03/19,16:00,18:00,Extern, flows aangepast ivm versturen van data van topics naar de front end,,
 26/03/19,08:15,12:30,Campus, op campus werken - flow gemaakt ivm van frontend subscriben op topics,,
 28/03/19,13:30,16:00,Campus, op campus werken - nieuwe implementatie besproken over welke data er in maps moet zitten voor aster,,
-
+30/03/19,11:45,14:00,Campus, opendeurdag,,
+31/03/19,15:30,19:00,Extern, gans de structuur van maps en express aangepast en getest met postman en node red flow wat aangepast,,
