@@ -13,8 +13,6 @@ const coordSchema = mongoose.Schema({
 
 const mapSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    sizeX: {type: Number, required: true},
-    sizeY: {type: Number, required: true},
     name: {type: String, required: true},
     obstacles: [
         {

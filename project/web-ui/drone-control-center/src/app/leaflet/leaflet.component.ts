@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import * as L from 'leaflet';
+import {GeoJSON} from 'leaflet';
 
 import 'leaflet-realtime';
 import 'leaflet-rotatedmarker';
 import {circleToPolygon} from 'circle-to-polygon';
-import {FeatureGroup, GeoJSON} from "leaflet";
+import {HttpService} from '../http.service';
 
 @Component({
   selector: 'app-leaflet',
@@ -13,7 +14,7 @@ import {FeatureGroup, GeoJSON} from "leaflet";
 })
 export class LeafletComponent implements OnInit {
 
-  constructor() {
+  constructor(private http: HttpService) {
   }
 
   mapSizeX = 30190;
@@ -188,6 +189,20 @@ export class LeafletComponent implements OnInit {
   flightpath = [];
   flightpathLayerId;
 
+  drawObstacles() {
+    let maps;
+    let obstacles = [];
+    this.http.getAllMaps().then((res) => {
+      maps = res;
+      obstacles = maps[0].obstacles;
+      console.log('Obstacles:', obstacles);
+      obstacles.forEach(o => {
+        console.log('obstacle: ', o);
+        console.log(o.positions[0], o.positions[1]);
+      });
+    });
+  }
+
   onDrawCreated(e) {
     if (e.layer.toGeoJSON().geometry.type === 'LineString') {
       this.flightpathLayerId = e.layer._leaflet_id;
@@ -200,7 +215,7 @@ export class LeafletComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.drawObstacles();
   }
 
   onDrawStart(e) {

@@ -26,8 +26,6 @@ let addMap = (map) => {
 
     let m = new newMap({
         _id: new mongoose.Types.ObjectId(),
-        sizeX: map.sizeX,
-        sizeY: map.sizeY,
         name: map.name,
         obstacles: [],
         //waypoints: map.waypoints || [],
@@ -79,8 +77,6 @@ let addMap = (map) => {
 let updateMap = (mapId, map) => {
     let m = {
         "_id": mapId,
-        "sizeX": map.sizeX,
-        "sizeY": map.sizeY,
         "name": map.name,
         "obstacles": map.obstacles || [],
         //"waypoints": map.waypoints || [],
