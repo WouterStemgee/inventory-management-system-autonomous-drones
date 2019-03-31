@@ -3,7 +3,8 @@ import * as L from 'leaflet';
 
 import 'leaflet-realtime';
 import 'leaflet-rotatedmarker';
-import circleToPolygon from 'circle-to-polygon';
+import {circleToPolygon} from 'circle-to-polygon';
+import {FeatureGroup, GeoJSON} from "leaflet";
 
 @Component({
   selector: 'app-leaflet',
@@ -61,10 +62,10 @@ export class LeafletComponent implements OnInit {
   editableLayers = new L.FeatureGroup();
 
   drawOptions = {
-    position: 'topleft',
     edit: {
       featureGroup: this.editableLayers
     },
+    position: 'topleft',
     draw: {
       polyline: {
         shapeOptions: {
@@ -125,8 +126,8 @@ export class LeafletComponent implements OnInit {
             case 'obstacle':
               console.log('obstacle');
               return {
-/*                color: '',
-                fill: '#a80a0a'*/
+                /*                color: '',
+                                fill: '#a80a0a'*/
 
                 // TODO: obstakels moeten niet via socket ingelezen worden, maar via json map file afkomstig uit db...
                 // Layer voor livedata gebruiken en aparte layer voor GeoJSON
@@ -148,6 +149,7 @@ export class LeafletComponent implements OnInit {
     ).addTo(map);
 
     const connection = new WebSocket('ws://localhost:3000/red/ws/data', ['soap', 'xmpp']);
+
     // Log errors
     connection.onerror = (err) => {
       console.log('WebSocket Error ' + err);
@@ -170,14 +172,49 @@ export class LeafletComponent implements OnInit {
 
   }
 
+  setFlightPath(geoJSON) {
+    let coords = geoJSON.geometry.coordinates;
+    let flightpath = [];
+    coords.forEach(c => {
+      flightpath.push({
+        x: Math.floor(c[0]),
+        y: Math.floor(c[1])
+      });
+    });
+    console.log(flightpath);
+    this.flightpath = flightpath;
+  }
+
+  flightpath = [];
+  flightpathLayerId;
+
   onDrawCreated(e) {
-    this.editableLayers.addLayer(e.layer);
-    const shape = e.layer.toGeoJSON();
-    console.log(JSON.stringify(shape));
+    if (e.layer.toGeoJSON().geometry.type === 'LineString') {
+      this.flightpathLayerId = e.layer._leaflet_id;
+      this.setFlightPath(e.layer.toGeoJSON());
+    }
+    e.layer.on('click', () => {
+      const geoJSON = e.layer.toGeoJSON();
+      console.log(JSON.stringify(geoJSON));
+    });
   }
 
   ngOnInit() {
 
   }
 
+  onDrawStart(e) {
+    if (e.layerType === 'polyline') {
+      if (this.flightpathLayerId) {
+        this.editableLayers.removeLayer(this.flightpathLayerId);
+      }
+    }
+  }
+
+  onDrawEdited(e) {
+    if (this.flightpathLayerId) {
+      let layer = this.editableLayers.getLayer(this.flightpathLayerId) as GeoJSON;
+      this.setFlightPath(layer.toGeoJSON());
+    }
+  }
 }

@@ -6,5 +6,7 @@
      [leafletDrawOptions]="drawOptions"
      (leafletDrawReady)="onDrawReady($event)"
      (leafletDrawCreated)="onDrawCreated($event)"
+     (leafletDrawEdited)="onDrawEdited($event)"
+     (leafletDrawStart)="onDrawStart($event)"
      [leafletLayersControl]="layersControl">
 </div>
