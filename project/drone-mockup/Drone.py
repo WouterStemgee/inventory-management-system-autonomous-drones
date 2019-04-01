@@ -12,11 +12,17 @@ class Drone:
         self.battery = 100
         # positie array
         self.position = [1,1,1] # xcoord, ycoord en zcoord, nog geen getters en setters
-        self.accelH = None
-        self.accelV = None
+        #self.accelH = None
+        #self.accelV = None
+        self.accelX = None
+        self.accelY = None
+        self.accelZ = None
         # je hebt een horizontale en een verticale versnelling en snelheid
-        self.speedH = None
-        self.speedV = None
+        #self.speedH = None
+        #self.speedV = None
+        self.speedX = None
+        self.speedY = None
+        self.speedZ = None
         self.jaw = None
         self.pitch = None
         self.roll = None
@@ -52,6 +58,7 @@ class Drone:
             afstand = math.sqrt((factor1 * factor1) + (factor2*factor2))
         return afstand
 
+    # moet nog eens aangepast
     def berekenTijdHorizontaal(self,afstand):
         tijd = None
         if self.speedH == 0 and self.accelH == 0:
@@ -80,7 +87,7 @@ class Drone:
     # deze methode gaat er van uit dat er geen obstakels liggen onderweg naar het coordinaat
     # voorlopig wordt wordt er nog vanuit gegaan dat de drone op dezelfde hoogte ligt
     # en dat er niet schuin gevlogen kan worden
-    def beweegNaarCoordinaat(self,x,y,z=None):
+    def beweegNaarCoordinaat(self,x,y,z):
         if self.position[0] != x or self.position[1] != y:
             #afstand = self.berekenAfstand(x,y,z) # afstand kan kleiner zijn dan 0
             afstandHorizontaal = self.berekenAfstandHorizontaal(x,y)
@@ -169,41 +176,59 @@ class Drone:
         else:
             self.position[2] = 0
 
-    def set_speedH(self,s):
+    def set_speedX(self,s):
         if s >= 0:
-            self.speedH = s
+            self.speedX = s
         else:
-            self.speedH = 0
+            self.speedX = 0
 
-    def get_speedH(self):
-        return self.speedH
+    def get_speedX(self):
+        return self.speedX
 
-    def set_speedV(self,s):
+    def set_speedY(self,s):
         if s >= 0:
-            self.speedV = s
+            self.speedY = s
         else:
-            self.speedV = 0
+            self.speedY = 0
 
-    def get_speedV(self):
+    def get_speedY(self):
         return self.speedV
 
-    def get_accelH(self):
-        return self.accelH
-
-    def set_accelH(self,a):
-        if a >= 0:
-            self.accelH = a
+    def set_speedZ(self,s):
+        if s >= 0:
+            self.speedZ = s
         else:
-            self.accelH = 0
+            self.speedZ = 0
 
-    def get_accelV(self):
-        return self.accelV
+    def get_speedZ(self):
+        return self.speedZ
 
-    def set_accelV(self,a):
+    def get_accelX(self):
+        return self.accelX
+
+    def set_accelX(self,a):
         if a >= 0:
-            self.accelV = a
+            self.accelX = a
         else:
-            self.accelV = 0
+            self.accelX = 0
+
+    def get_accelY(self):
+        return self.accelY
+
+    def set_accelY(self,a):
+        if a >= 0:
+            self.accelY = a
+        else:
+            self.accelY = 0
+
+    def get_accelZ(self):
+        return self.accelZ
+
+    def set_accelZ(self,a):
+        if a >= 0:
+            self.accelZ = a
+        else:
+            self.accelZ = 0
 
     # getters en setters voor de variabelen van de drone
 
@@ -278,6 +303,93 @@ class Drone:
                 else:
                     print("geen juiste parameters")
 
+    #def vliegNaar(self,x,y,z):
+    #    if not (x == self.position[0] and y == self.position[1] and z == self.position[2]):
+    #       if x != self.position[0] and self.speedX == 0:
+    #            self.speedX = 5
+    #        if y != self.position[1] and self.speedY == 0:
+    #            self.speedY = 5
+    #        if z != self.position[2] and self.speedZ == 0:
+    #            self.speedZ = 3
+    #        if z == self.position[2]: # dan zit je in een horizontaal vlak
+    #            snelheid = math.sqrt((self.speedX*self.speedX)+(self.speedY*self.speedY))
+    #            afstand = self.berekenAfstand(x,y,z)
+    #            totaleTijd = afstand/snelheid
+    #            tijd = 0
+    #            while tijd <= totaleTijd:
+
+    def vliegHorizontaal(self,x,y):
+        if self.speedX == 0:
+            self.speedX = 3
+        self.speedZ = 0  # want je beweegt niet
+        self.speedY = (math.fabs(y - self.position[1]) / math.fabs(x - self.position[0])) * self.speedX
+        # zie berekeningen op blad
+        tijd = 0.0 + (math.fabs(x - self.position[0]) / self.speedX)
+        t = 0
+        initieelX = self.position[0]
+        initieelY = self.position[1]
+        while t <= tijd:
+            # misschien ga je niet exact op tijd uit komen op het einde
+            if x > initieelX and y > initieelY:
+                self.position[0] = initieelX + (self.speedX * t)
+                self.position[1] = initieelY + (self.speedY * t)
+            elif x < initieelX and y > initieelY:
+                self.position[0] = initieelX - (self.speedX * t)
+                self.position[1] = initieelY + (self.speedY * t)
+            elif x > initieelX and y < initieelY:
+                self.position[0] = initieelX + (self.speedX * t)
+                self.position[1] = initieelY - (self.speedY * t)
+            elif x < initieelX and y < initieelY:
+                self.position[0] = initieelX - (self.speedX * t)
+                self.position[1] = initieelY - (self.speedY * t)
+            elif x == initieelX:
+                if y < initieelY:
+                    self.position[1] = initieelY - (self.speedY * t)
+                elif y > initieelY:
+                    self.position[1] = initieelY + (self.speedY * t)
+            elif y == initieelY:
+                if x < initieelX:
+                    self.position[0] = initieelX - (self.speedX * t)
+                elif x > initieelX:
+                    self.position[0] = initieelX + (self.speedX * t)
+            print("op tijdstip: ", t, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
+            t = t + 0.05
+            round(t,2)  # dit geeft een hoop slecht afgeronde komma getallen door beperkingen in de binaite voorstelling
+        self.position[0] = x
+        self.position[1] = y
+        print("op tijdstip: ", tijd, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
+        self.speedX = 0
+        self.speedX = 0
+        return tijd
+
+    def vliegVerticaal(self,z,tijd):
+        print("verticaal vliegen")
+        if(z != self.position[2]):
+            if self.speedZ == 0:
+                self.speedZ = 3
+            tijd2 = math.fabs(z-self.position[2])/self.speedZ
+            t = 0
+            initieelZ = self.position[2]
+            while t <= tijd2:
+                if (z > self.position[2]):
+                    self.position[2] = initieelZ + self.speedZ*t
+                elif z < self.position[2]:
+                    self.position[2] = initieelZ + self.speedZ*t
+                print("op tijdstip: ", t+tijd, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
+                t = t + 0.05
+                round(t,2)
+            self.position[2] = z
+            print("op tijdstip: ", tijd+tijd2, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
+            self.speedZ = 0
+
+
+    def vliegNaar(self,x,y,z):
+        if not (x == self.position[0] and y == self.position[1] and z == self.position[2]):
+            # als je op zelfde positie blijft doe je niets
+            tijd = self.vliegHorizontaal(x,y)
+            if z != self.position[2]:
+                # dan moet je ook nog verticaal vliegen
+                self.vliegVerticaal(z,tijd)
 
 class DroneSerializer:
     def serialize(self,drone,format):
@@ -312,11 +424,15 @@ class DroneSerializer:
         return et.tostring(drone_info, encoding='unicode')
 
 
-#drone = Drone(5)
-#drone.set_xCoord(1)
-#drone.set_yCoord(0)
-#drone.set_speedH(2)
-#drone.set_accelH(2)
+drone = Drone(5)
+drone.set_xCoord(1)
+drone.set_yCoord(0)
+drone.set_zCoord(10)
+drone.set_speedX(0)
+drone.set_speedY(0)
+drone.set_speedZ(0)
+drone.set_accelX(2)
+drone.vliegNaar(6,6,20)
 #afstand = drone.berekenAfstandHorizontaal(5,0)
 #tijd = drone.berekenTijdHorizontaal(afstand)
 #print("tijd: ",tijd)

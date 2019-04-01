@@ -7,6 +7,10 @@ class Simulator:
         self.client = Client(self.drone)
 
     def simuleer(self):
+        self.client.connecteer()
+        self.client.ontvangWaypoint()  # hier wordt gewoon gesubscribed op iets dat waypoints door te sturen, hoe wordt dit doorgestuurd?
+        self.client.ontvangSnelheid()
+        self.client.ontvangVersnelling()
         while True:
             self.drone.set_battery(self.drone.get_battery()-1)
             self.client.stuurBattery()
@@ -20,7 +24,9 @@ class Simulator:
             self.client.stuurRoll()
             self.client.stuurVersnellingsVector()
             self.client.stuurSpeedVector()
-            self.client.ontvangWaypoint()
+            # welke commando's moet ik nog ellemaal binnen kunnen krijgen
+
+        self.client.disconnecteer() # hier ga je nooit geraken, het programma moet in een oneindige loop lopen
 
 drone = Drone(5,6)
 drone.set_battery(100)
