@@ -15,7 +15,6 @@ export class DroneSimulatorComponent implements OnInit {
 
   ngOnInit() {
     this.simulator.initialized = false;
-    this.simulator.eventListenersRegistered = false;
     if (this.simulator.loaded) {
       this.simulator.init();
     } else {

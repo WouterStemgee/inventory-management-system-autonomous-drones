@@ -336,3 +336,4 @@ project/pythonMockup/venv/Scripts/winsound.pyd
 *.backup
 project/backend/management-server/nodered/.config.json
 project/backend/management-server/nodered/.config.json.backup
+*.pyc

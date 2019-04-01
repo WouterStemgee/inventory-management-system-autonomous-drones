@@ -5,7 +5,7 @@
  */
 L.SimpleGraticule = L.LayerGroup.extend({
   options: {
-    interval: 1000,
+    interval: 5000,
     showOriginLabel: true,
     redraw: 'move',
     hidden: false,

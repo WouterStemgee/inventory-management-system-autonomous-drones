@@ -1,6 +1,6 @@
 <div>
   <mat-toolbar *ngIf="simulator.initialized">
-    <button (click)="simulator.calculateOptimalFlightPath()" mat-button>
+    <button (click)="simulator.validateFlightPath()" mat-button>
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
            class="feather feather-loader">
@@ -14,11 +14,11 @@
         <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
       </svg>
       <span *ngIf="!shared.isHandset$">
-        Calculate Optimal Flightpath
+        Validate Flightpath
       </span>
     </button>
     <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.start()"
-            [disabled]="simulator.map.flightpath.optimalPath.length === 0" mat-button>
+            [disabled]="simulator.map.flightpath.length === 0" mat-button>
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
            class="feather feather-play">
@@ -36,7 +36,7 @@
         <line x1="6" y1="6" x2="18" y2="18"/>
       </svg>
       <span *ngIf="!shared.isHandset$">
-        Reset
+        Stop Drone
       </span>
     </button>
     <mat-divider [vertical]="true"></mat-divider>
@@ -77,23 +77,8 @@
     </button>
   </mat-toolbar>
   <div class="simulator">
-    <canvas id="simulator" width="800" height="600"></canvas>
+    <app-leaflet></app-leaflet>
     <div *ngIf="simulator.initialized">
-      <p>
-        <mat-button-toggle-group #group="matButtonToggleGroup" (click)="simulator.selectDrawable(group.value)"
-                                 value="waypoint">
-          <mat-button-toggle value="waypoint">
-            Waypoint
-          </mat-button-toggle>
-          <mat-button-toggle value="obstacle">
-            Obstacle
-          </mat-button-toggle>
-          <mat-button-toggle value="product">
-            Product
-          </mat-button-toggle>
-        </mat-button-toggle-group>
-      </p>
-      <p>MouseX: {{simulator.mouseX}}, MouseY: {{simulator.mouseY}}</p>
       <p *ngIf="simulator.map.flightpath.waypoints.length > 0">Waypoints:
         <span *ngFor="let waypoint of simulator.map.flightpath.waypoints">({{waypoint.x}}, {{waypoint.y}}) </span>
       </p>

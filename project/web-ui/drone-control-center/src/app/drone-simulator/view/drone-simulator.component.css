@@ -1,11 +1,3 @@
-#canvas {
-  border: 3px solid black;
-  max-width: 100%;
-  display: block;
-}
 .capitalize {
   text-transform: capitalize;
-}
-.simulator {
-  text-align: center;
 }

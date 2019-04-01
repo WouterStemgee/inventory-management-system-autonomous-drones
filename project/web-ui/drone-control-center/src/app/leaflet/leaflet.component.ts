@@ -8,6 +8,7 @@ import '../../../node_modules/leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5
 import './plugins/L.SimpleGraticule';
 import {circleToPolygon} from 'circle-to-polygon';
 import {HttpService} from '../http.service';
+import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
 
 @Component({
   selector: 'app-leaflet',
@@ -16,13 +17,15 @@ import {HttpService} from '../http.service';
 })
 export class LeafletComponent implements OnInit {
 
-  constructor(private http: HttpService) {
+  constructor(private http: HttpService, public simulator: DroneSimulatorService) {
   }
 
   minZoom = -5;
   maxZoom = -1;
   zoom = -5;
   img = {width: 30190, height: 10901.944444};
+
+  droneRadius = 1000;
 
   MySimple = L.Util.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0)
@@ -59,10 +62,11 @@ export class LeafletComponent implements OnInit {
     attributionControl: false
   };
 
+  livedataLayer = new L.FeatureGroup();
   editableLayers = new L.FeatureGroup();
 
   gridOptions = {
-    interval: 1000,
+    interval: 2500,
     showshowOriginLabel: true,
     redraw: 'move'
   };
@@ -97,15 +101,33 @@ export class LeafletComponent implements OnInit {
       'Map Image': this.mapImageLayer
     },
     overlays: {
-      'GeoJSON layer': this.editableLayers,
+      'Editable layer': this.editableLayers,
+      'Live Data layer': this.livedataLayer,
       'Grid layer': this.gridLayer
     },
     collapsed: true
   };
 
+  // TODO: converteer dit naar een plugin en gebruik dit dan ook voor de base map => zoom-animated transform-origin=center zetten
+  RotateImageLayer = L.ImageOverlay.extend({
+    _animateZoom: function (e) {
+      L.ImageOverlay.prototype._animateZoom.call(this, e);
+      var img = this._image;
+      img.style[L.DomUtil.TRANSFORM + 'Origin'] = 'center';
+      img.style[L.DomUtil.TRANSFORM] += ' rotate(' + this.options.rotation + 'deg)';
+    },
+    _reset: function () {
+      L.ImageOverlay.prototype._reset.call(this);
+      var img = this._image;
+      img.style[L.DomUtil.TRANSFORM + 'Origin'] = 'center';
+      img.style[L.DomUtil.TRANSFORM] += ' rotate(' + this.options.rotation + 'deg)';
+    }
+  });
+
   onMapReady(map: L.Map) {
     L.DomUtil.addClass(map.getContainer(), 'crosshair-cursor-enabled');
     map.addLayer(this.editableLayers);
+    map.addLayer(this.livedataLayer);
     // map.addLayer(new L.LayerGroup([this.gridLayer]));
 
     L.Control.Coordinates.include({
@@ -121,6 +143,14 @@ export class LeafletComponent implements OnInit {
       }
     });
 
+    const rotateImageLayer = (url, bounds, options) => {
+      return new this.RotateImageLayer(url, bounds, options);
+    };
+
+    map.on('zoomstart', (e) => {
+    });
+
+
     L.control.coordinates({
       position: 'bottomright',
       decimals: 0,
@@ -133,40 +163,21 @@ export class LeafletComponent implements OnInit {
     const realtime = L.realtime(
       undefined, {
         start: false,
-        container: this.editableLayers,
+        container: this.livedataLayer,
         getFeatureId(f) {
           return f.properties.id;
         },
         pointToLayer(feature, position) {
-          return L.marker(position, {
-            icon: L.icon({
-              iconUrl: 'assets/images/leaflet/drone-large.png',
-              iconSize: [48, 48],
-              iconAnchor: [24, 24],
-              popupAnchor: [0, -24]
-            }),
-            draggable: true
+          return rotateImageLayer('assets/images/leaflet/drone-large.png', [[position.lat - 500, position.lng - 500], [position.lat + 500, position.lng + 500]], {
+            interactive: true,
+            animate: false,
+            rotation: feature.properties.orientation
           }).bindPopup(
             '<p>X: ' + feature.geometry.coordinates[0] + '<br />' +
             '<p>Y: ' + feature.geometry.coordinates[1] + '<br />' +
             '<p>Z: ' + feature.geometry.coordinates[2] + '<br />' +
             '<p>Yaw: ' + feature.properties.orientation + '<br />'
-          ).setRotationAngle(feature.properties.orientation);
-        },
-        style(feature) {
-          switch (feature.properties.name) {
-            case 'obstacle':
-              console.log('obstacle');
-              return {
-                /*                color: '',
-                                fill: '#a80a0a'*/
-
-                // TODO: obstakels moeten niet via socket ingelezen worden, maar via json map file afkomstig uit db...
-                // Layer voor livedata gebruiken en aparte layer voor GeoJSON
-              };
-              break;
-          }
-          return {color: '#a80a0a'};
+          );
         },
         onEachFeature(f, l) {
           console.log(f);
@@ -196,7 +207,7 @@ export class LeafletComponent implements OnInit {
     };
 
     realtime.on('update', (e) => {
-      console.log('Realtime update event');
+      // console.log('Realtime update event');
     });
   }
 
@@ -206,18 +217,17 @@ export class LeafletComponent implements OnInit {
 
   setFlightPath(geoJSON) {
     let coords = geoJSON.geometry.coordinates;
-    let flightpath = [];
+    let waypoints = [];
     coords.forEach(c => {
-      flightpath.push({
+      waypoints.push({
         x: Math.floor(c[0]),
         y: Math.floor(c[1])
       });
     });
-    console.log(flightpath);
-    this.flightpath = flightpath;
+    console.log(waypoints);
+    this.simulator.map.flightpath.waypoints = waypoints;
   }
 
-  flightpath = [];
   flightpathLayerId;
 
   drawObstacles() {
@@ -253,6 +263,7 @@ export class LeafletComponent implements OnInit {
     if (e.layerType === 'polyline') {
       if (this.flightpathLayerId) {
         this.editableLayers.removeLayer(this.flightpathLayerId);
+        this.simulator.map.flightpath.waypoints = [];
       }
     }
   }
