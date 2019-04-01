@@ -44,3 +44,4 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 29/03/19,16:00,18:00,Extern,Leaflet rotation marker plugin converteren naar ngx,21,
 30/03/19,12:00,14:00,Campus,Opendeurdag - GeoJSON elementen aanpasbaar maken,21,
 31/03/19,15:00,18:00,Extern,Flightpaths kunnen aangemaakt worden op de leaflet UI,21,
+01/04/19,13:00,18:00,Extern,Angular frontend volledig geconverteerd zodat de nieuwe visualisatie correct weergegeven wordt,21,
