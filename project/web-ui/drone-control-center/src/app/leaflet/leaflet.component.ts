@@ -4,6 +4,8 @@ import {GeoJSON} from 'leaflet';
 
 import 'leaflet-realtime';
 import 'leaflet-rotatedmarker';
+import '../../../node_modules/leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.src';
+import './plugins/L.SimpleGraticule';
 import {circleToPolygon} from 'circle-to-polygon';
 import {HttpService} from '../http.service';
 
@@ -17,13 +19,10 @@ export class LeafletComponent implements OnInit {
   constructor(private http: HttpService) {
   }
 
-  mapSizeX = 30190;
-  mapSizeY = 10901.944444;
-
   minZoom = -5;
   maxZoom = -1;
   zoom = -5;
-  img = {width: this.mapSizeX, height: this.mapSizeY};
+  img = {width: 30190, height: 10901.944444};
 
   MySimple = L.Util.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0)
@@ -62,6 +61,14 @@ export class LeafletComponent implements OnInit {
 
   editableLayers = new L.FeatureGroup();
 
+  gridOptions = {
+    interval: 1000,
+    showshowOriginLabel: true,
+    redraw: 'move'
+  };
+
+  gridLayer = L.simpleGraticule(this.gridOptions);
+
   drawOptions = {
     edit: {
       featureGroup: this.editableLayers
@@ -79,7 +86,7 @@ export class LeafletComponent implements OnInit {
         }
       },
       polygon: false,
-      circle: false,
+      circle: true,
       marker: false,
       circlemarker: false
     }
@@ -90,7 +97,8 @@ export class LeafletComponent implements OnInit {
       'Map Image': this.mapImageLayer
     },
     overlays: {
-      'GeoJSON layer': this.editableLayers
+      'GeoJSON layer': this.editableLayers,
+      'Grid layer': this.gridLayer
     },
     collapsed: true
   };
@@ -98,6 +106,29 @@ export class LeafletComponent implements OnInit {
   onMapReady(map: L.Map) {
     L.DomUtil.addClass(map.getContainer(), 'crosshair-cursor-enabled');
     map.addLayer(this.editableLayers);
+    // map.addLayer(new L.LayerGroup([this.gridLayer]));
+
+    L.Control.Coordinates.include({
+      _update(evt) {
+        const pos = evt.latlng;
+        const opts = this.options;
+        if (pos) {
+          this._currentPos = pos;
+          this._inputY.value = L.NumberFormatter.round(pos.lat, opts.decimals, opts.decimalSeperator);
+          this._inputX.value = L.NumberFormatter.round(pos.lng, opts.decimals, opts.decimalSeperator);
+          this._label.innerHTML = this._createCoordinateLabel(pos);
+        }
+      }
+    });
+
+    L.control.coordinates({
+      position: 'bottomright',
+      decimals: 0,
+      decimalSeperator: '.',
+      labelTemplateLat: 'Y: {y}',
+      labelTemplateLng: 'X: {x}',
+      enableUserInput: false,
+    }).addTo(map);
 
     const realtime = L.realtime(
       undefined, {
@@ -158,7 +189,7 @@ export class LeafletComponent implements OnInit {
 
     // Log messages from the server
     connection.onmessage = (e) => {
-      let data = JSON.parse(e.data);
+      const data = JSON.parse(e.data);
       for (let i = 0; i < data.features.length; i++) {
         realtime.update(data.features[i]);
       }
@@ -231,5 +262,10 @@ export class LeafletComponent implements OnInit {
       let layer = this.editableLayers.getLayer(this.flightpathLayerId) as GeoJSON;
       this.setFlightPath(layer.toGeoJSON());
     }
+  }
+
+  onLeafletClick(e) {
+    const coord = e.latlng;
+    // console.log('X:' + coord.lng + '\nY:' + coord.lat);
   }
 }

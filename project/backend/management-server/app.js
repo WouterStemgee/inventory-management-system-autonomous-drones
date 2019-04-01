@@ -32,7 +32,7 @@ app.use('/api/flightpath', waypointRouter);
 mongoose.connect('mongodb://localhost/drone1', {useNewUrlParser: true});
 
 let Dijkstra = new dijkstra();
-Dijkstra.initializeMaps();
+//Dijkstra.initializeMaps();
 
 module.exports = app;
 exports.Dijkstra = Dijkstra;

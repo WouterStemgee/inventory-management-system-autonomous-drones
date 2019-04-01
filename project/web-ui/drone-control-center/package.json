@@ -32,6 +32,7 @@
     "leaflet-draw": "^1.0.4",
     "leaflet-realtime": "^2.1.1",
     "leaflet-rotatedmarker": "^0.2.0",
+    "leaflet-simple-graticule": "^1.0.1",
     "leaflet.coordinates": "^0.1.5",
     "ngx-toastr": "^9.1.2",
     "rxjs": "~6.3.3",

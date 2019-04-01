@@ -2,6 +2,7 @@
      leaflet
      leafletDraw
      [leafletOptions]="options"
+     (leafletClick)="onLeafletClick($event)"
      (leafletMapReady)="onMapReady($event)"
      [leafletDrawOptions]="drawOptions"
      (leafletDrawReady)="onDrawReady($event)"
