@@ -4,13 +4,6 @@ from Drone import Drone
 
 class Client:
     def __init__(self,d):
-
-        #self.drone = Drone(5,6)
-        #self.drone.set_speedH(22)
-        #self.drone.set_accelV(2)
-        #self.drone.set_accelH(3)
-        #self.drone.set_speedH(33)
-        #self.drone.set_speedV(22)
         self.drone = d
 
         def on_log(client, userdata, level, buf):
@@ -30,15 +23,30 @@ class Client:
             m_decode = str(msg.payload.decode("utf-8", "ignore"))
             print("message received", m_decode)
             if topic == "waypoint":
-                # x;y
+                # x;y;z
                 coordinaten = m_decode.split(';')
                 xCoord = coordinaten[0]
                 yCoord = coordinaten[1]
-                self.drone.beweegNaarCoordinaat(xCoord,yCoord)
+                zCoord = coordinaten[2]
+                self.drone.vliegNaar(xCoord,yCoord,zCoord)
             elif topic == "snelheid":
-                self.drone.set_speedH(m_decode)
+                # Vx;Vy;Vz
+                vector = m_decode.split(';')
+                Vx = vector[0]
+                Vy = vector[1]
+                Vz = vector[2]
+                self.drone.set_speedX(Vx)
+                self.drone.set_speedY(Vy)
+                self.drone.set_speedZ(Vz)
             elif topic == "versnelling":
-                self.drone.set_accelH(m_decode)
+                # Ax;Ay;Az
+                vector = m_decode.split(';')
+                Ax = vector[0]
+                Ay = vector[1]
+                Az = vector[2]
+                self.drone.set_accelX(Ax)
+                self.drone.set_accelY(Ay)
+                self.drone.set_accelZ(Az)
 
         self.client = mqtt.Client("python1")
         #self.broker = "test.mosquitto.org"
@@ -121,7 +129,7 @@ class Client:
         self.client.loop_stop()
         #self.client.disconnect()
 
-    def stuurSpeedY(self):
+    def stuurSpeedZ(self):
         #print("connecting to broker ", self.broker)
         #self.client.connect("localhost", 1883)
         self.client.loop_start()

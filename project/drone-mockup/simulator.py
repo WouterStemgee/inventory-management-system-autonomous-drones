@@ -1,5 +1,6 @@
 from Drone import Drone
 from client import Client
+import time
 
 class Simulator:
     def __init__(self,d):
@@ -25,6 +26,7 @@ class Simulator:
             self.client.stuurVersnellingsVector()
             self.client.stuurSpeedVector()
             # welke commando's moet ik nog ellemaal binnen kunnen krijgen
+            time.sleep(0.05)
 
         self.client.disconnecteer() # hier ga je nooit geraken, het programma moet in een oneindige loop lopen
 
