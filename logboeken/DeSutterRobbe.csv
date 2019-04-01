@@ -28,3 +28,5 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 25/03/19,14:00,18:30,Extern,node-red algoritme + research collision,16 + 23,
 26/03/19,08:15,12:30,Campus,A* bugfixes + research collision,16 + 23,
 28/03/19,09:00,11:30,Extern,collision,23,
+28/03/19,13:30,17:45,Campus,A* bugfix meerdere waypoints + auto graaf maken op basis van obstakels,23,
+30/03/19,02:00,14:00,Campus,Opendeurdag + A* bugfix meerdere waypoints + auto graaf maken op basis van obstakels,23,
