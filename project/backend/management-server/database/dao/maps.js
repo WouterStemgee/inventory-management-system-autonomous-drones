@@ -83,6 +83,7 @@ let updateMap = (mapId, map) => {
         "scanzones": [],
         "products": []
     };
+    console.log(map.obstacles);
     for (let pr of map.products) {
         const p = {
             "_id": new mongoose.Types.ObjectId(),
@@ -104,12 +105,8 @@ let updateMap = (mapId, map) => {
     for (let obstacle of map.obstacles) {
         const o = {
             "_id": new mongoose.Types.ObjectId(),
-            "positions": [
-                obstacle.positions[0],
-                obstacle.positions[1]
-            ]
+            "positions": obstacle.positions
         };
-        console.log(o);
         m.obstacles.push(o);
     }
 
