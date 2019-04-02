@@ -12,6 +12,12 @@ declare module 'leaflet' {
     let Coordinates: any;
   }
 
+  function rotateImageLayer(url: any, bounds: any, options: any): RotateImageLayer;
+
+  interface RotateImageLayer extends L.ImageOverlay {
+    addTo(map: L.Map): any;
+  }
+
   function simpleGraticule(options: any): SimpleGraticule;
 
   interface SimpleGraticule extends L.Layer {
@@ -21,6 +27,8 @@ declare module 'leaflet' {
   function realtime(src: any, options: any): Realtime;
 
   interface Realtime {
+    on(event: any, fnc: any);
+
     addTo(map: L.Map): any;
 
     update(geojson: any);

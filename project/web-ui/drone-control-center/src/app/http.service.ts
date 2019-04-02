@@ -114,4 +114,18 @@ export class HttpService {
       );
     });
   }
+
+  updateDroneConfiguration(configuration) {
+    return new Promise((resolve, reject) => {
+      console.log('Drone configuration update: ', configuration);
+      this.http.put(environment.baseAPIUrl + 'red/drone/', configuration).subscribe(
+        result => {
+          resolve(result);
+        },
+        (error: HttpErrorResponse) => {
+          reject(error);
+        }
+      );
+    });
+  }
 }

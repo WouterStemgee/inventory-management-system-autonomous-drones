@@ -16,6 +16,8 @@ import {InventoryComponent} from './inventory/inventory.component';
 import {LeafletComponent} from './leaflet/leaflet.component';
 import {SharedService} from './shared.service';
 import {DroneSimulatorService} from './drone-simulator/presenter/drone-simulator.service';
+import {DroneConfigurationComponent} from './drone-configuration/drone-configuration.component';
+
 import {HttpService} from './http.service';
 import {DataService} from './data.service';
 import {LeafletModule} from '@asymmetrik/ngx-leaflet';
@@ -28,6 +30,7 @@ import {LeafletDrawModule} from '@asymmetrik/ngx-leaflet-draw';
     DashboardComponent,
     DroneSimulatorComponent,
     DroneDataComponent,
+    DroneConfigurationComponent,
     InventoryComponent,
     LeafletComponent
   ],

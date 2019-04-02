@@ -12,7 +12,7 @@ import {SharedService} from '../shared.service';
 export class InventoryComponent implements OnInit {
   dataSource: InventoryDatasource;
 
-  displayedColumns = ['id', 'name', 'quantity', 'x', 'y', 'delete'];
+  displayedColumns = ['id', 'name', 'quantity', 'delete'];
 
   products;
 

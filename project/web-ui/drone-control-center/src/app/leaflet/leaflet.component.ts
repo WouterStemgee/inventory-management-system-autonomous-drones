@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import * as L from 'leaflet';
-import {GeoJSON} from 'leaflet';
+import * as geojson from 'geojson';
 
 import 'leaflet-realtime';
 import 'leaflet-rotatedmarker';
 import '../../../node_modules/leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.src';
 import './plugins/L.SimpleGraticule';
+import './plugins/L.RotateImageLayer';
 import {circleToPolygon} from 'circle-to-polygon';
 import {HttpService} from '../http.service';
 import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
@@ -24,8 +25,6 @@ export class LeafletComponent implements OnInit {
   maxZoom = -1;
   zoom = -5;
   img = {width: 30190, height: 10901.944444};
-
-  droneRadius = 1000;
 
   MySimple = L.Util.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0)
@@ -108,27 +107,47 @@ export class LeafletComponent implements OnInit {
     collapsed: true
   };
 
-  // TODO: converteer dit naar een plugin en gebruik dit dan ook voor de base map => zoom-animated transform-origin=center zetten
-  RotateImageLayer = L.ImageOverlay.extend({
-    _animateZoom: function (e) {
-      L.ImageOverlay.prototype._animateZoom.call(this, e);
-      var img = this._image;
-      img.style[L.DomUtil.TRANSFORM + 'Origin'] = 'center';
-      img.style[L.DomUtil.TRANSFORM] += ' rotate(' + this.options.rotation + 'deg)';
-    },
-    _reset: function () {
-      L.ImageOverlay.prototype._reset.call(this);
-      var img = this._image;
-      img.style[L.DomUtil.TRANSFORM + 'Origin'] = 'center';
-      img.style[L.DomUtil.TRANSFORM] += ' rotate(' + this.options.rotation + 'deg)';
+  realtime = L.realtime(
+    undefined, {
+      start: false,
+      container: this.livedataLayer,
+      getFeatureId(f) {
+        return f.properties.id;
+      },
+      pointToLayer(feature, position) {
+        return L.rotateImageLayer('assets/images/leaflet/drone-large.png',
+          [
+            [position.lat - feature.properties.radius / 2, position.lng - feature.properties.radius / 2],
+            [position.lat + feature.properties.radius / 2, position.lng + feature.properties.radius / 2]
+          ],
+          {
+            interactive: true,
+            animate: false,
+            rotation: feature.properties.orientation
+          }).bindPopup(
+          '<p>X: ' + feature.geometry.coordinates[0] + '<br />' +
+          '<p>Y: ' + feature.geometry.coordinates[1] + '<br />' +
+          '<p>Z: ' + feature.geometry.coordinates[2] + '<br />' +
+          '<p>Yaw: ' + feature.properties.orientation + '<br />'
+        );
+      },
+      onEachFeature(f, l) {
+        // console.log(f);
+      },
+      updateFeature(f, oldLayer, newLayer) {
+        if (!oldLayer) {
+          return;
+        }
+        return newLayer;
+      }
     }
-  });
+  );
 
   onMapReady(map: L.Map) {
     L.DomUtil.addClass(map.getContainer(), 'crosshair-cursor-enabled');
+    map.addLayer(new L.LayerGroup([this.gridLayer]));
     map.addLayer(this.editableLayers);
     map.addLayer(this.livedataLayer);
-    // map.addLayer(new L.LayerGroup([this.gridLayer]));
 
     L.Control.Coordinates.include({
       _update(evt) {
@@ -143,14 +162,6 @@ export class LeafletComponent implements OnInit {
       }
     });
 
-    const rotateImageLayer = (url, bounds, options) => {
-      return new this.RotateImageLayer(url, bounds, options);
-    };
-
-    map.on('zoomstart', (e) => {
-    });
-
-
     L.control.coordinates({
       position: 'bottomright',
       decimals: 0,
@@ -160,55 +171,20 @@ export class LeafletComponent implements OnInit {
       enableUserInput: false,
     }).addTo(map);
 
-    const realtime = L.realtime(
-      undefined, {
-        start: false,
-        container: this.livedataLayer,
-        getFeatureId(f) {
-          return f.properties.id;
-        },
-        pointToLayer(feature, position) {
-          return rotateImageLayer('assets/images/leaflet/drone-large.png', [[position.lat - 500, position.lng - 500], [position.lat + 500, position.lng + 500]], {
-            interactive: true,
-            animate: false,
-            rotation: feature.properties.orientation
-          }).bindPopup(
-            '<p>X: ' + feature.geometry.coordinates[0] + '<br />' +
-            '<p>Y: ' + feature.geometry.coordinates[1] + '<br />' +
-            '<p>Z: ' + feature.geometry.coordinates[2] + '<br />' +
-            '<p>Yaw: ' + feature.properties.orientation + '<br />'
-          );
-        },
-        onEachFeature(f, l) {
-          console.log(f);
-        },
-        updateFeature(f, oldLayer, newLayer) {
-          if (!oldLayer) {
-            return;
-          }
-          return newLayer;
-        }
-      }
-    ).addTo(map);
-
     const connection = new WebSocket('ws://localhost:3000/red/ws/data', ['soap', 'xmpp']);
 
-    // Log errors
     connection.onerror = (err) => {
       console.log('WebSocket Error ' + err);
     };
 
-    // Log messages from the server
     connection.onmessage = (e) => {
       const data = JSON.parse(e.data);
       for (let i = 0; i < data.features.length; i++) {
-        realtime.update(data.features[i]);
+        this.realtime.update(data.features[i]);
+        this.updateDroneData(data.features[i]);
       }
     };
-
-    realtime.on('update', (e) => {
-      // console.log('Realtime update event');
-    });
+    this.realtime.addTo(map);
   }
 
   onDrawReady(drawControl: L.Control.Draw) {
@@ -232,14 +208,43 @@ export class LeafletComponent implements OnInit {
 
   drawObstacles() {
     let maps;
-    let obstacles = [];
-    this.http.getAllMaps().then((res) => {
-      maps = res;
-      obstacles = maps[0].obstacles;
-      console.log('Obstacles:', obstacles);
-      obstacles.forEach(o => {
-        console.log('obstacle: ', o);
-        console.log(o.positions[0], o.positions[1]);
+    maps = this.simulator.maps;
+    const obstacles = maps[this.simulator.selectedMap].obstacles;
+
+    obstacles.forEach(o => {
+      const p1 = o.positions[0];
+      const p2 = o.positions[1];
+
+      const x1 = p1.x;
+      const y1 = p1.y;
+      const x2 = p2.x;
+      const y2 = p2.y;
+
+      const feature = L.geoJSON({
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Polygon',
+          coordinates: [[[x1, y1], [x2, y1], [x2, y2], [x1, y2], [x1, y1]]]
+        } as geojson.Polygon
+      } as geojson.Feature);
+
+      feature.eachLayer(l => {
+        const layer = l as L.GeoJSON;
+        const rect = L.rectangle(layer.getBounds());
+        rect.setStyle({
+          color: '#a80a0a',
+          stroke: true,
+          weight: 4,
+          opacity: 0.5,
+          fill: true,
+          fillColor: null,
+          fillOpacity: 0.2,
+        });
+        rect.on('click', () => {
+          console.log(JSON.stringify(layer.toGeoJSON()));
+        });
+        rect.addTo(this.editableLayers);
       });
     });
   }
@@ -248,6 +253,15 @@ export class LeafletComponent implements OnInit {
     if (e.layer.toGeoJSON().geometry.type === 'LineString') {
       this.flightpathLayerId = e.layer._leaflet_id;
       this.setFlightPath(e.layer.toGeoJSON());
+    } else if (e.layer.toGeoJSON().geometry.type === 'Polygon') {
+      console.log('polygon!');
+      // add obstacle to simulator model
+      const coordinates = e.layer.toGeoJSON().geometry.coordinates[0];
+      const p1 = coordinates[0];
+      const p2 = coordinates[2];
+      const positions = [{x: p1[0], y: p1[1]}, {x: p2[0], y: p2[1]}];
+      this.simulator.map.addObstacle(positions);
+      console.log(this.simulator.map.obstacles);
     }
     e.layer.on('click', () => {
       const geoJSON = e.layer.toGeoJSON();
@@ -256,7 +270,16 @@ export class LeafletComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.drawObstacles();
+    if (this.simulator.loaded) {
+      this.drawObstacles();
+    } else {
+      this.simulator.onSimulatorLoadedEvent.subscribe((loaded) => {
+        if (loaded) {
+          this.drawObstacles();
+          console.log(this.simulator.map.obstacles);
+        }
+      });
+    }
   }
 
   onDrawStart(e) {
@@ -270,7 +293,7 @@ export class LeafletComponent implements OnInit {
 
   onDrawEdited(e) {
     if (this.flightpathLayerId) {
-      let layer = this.editableLayers.getLayer(this.flightpathLayerId) as GeoJSON;
+      const layer = this.editableLayers.getLayer(this.flightpathLayerId) as L.GeoJSON;
       this.setFlightPath(layer.toGeoJSON());
     }
   }
@@ -278,5 +301,13 @@ export class LeafletComponent implements OnInit {
   onLeafletClick(e) {
     const coord = e.latlng;
     // console.log('X:' + coord.lng + '\nY:' + coord.lat);
+  }
+
+  updateDroneData(feature) {
+    const drone = this.simulator.drone;
+    drone.position.x = feature.properties.position[0];
+    drone.position.y = feature.properties.position[1];
+    drone.position.z = feature.properties.position[2];
+    drone.radius = feature.properties.radius;
   }
 }

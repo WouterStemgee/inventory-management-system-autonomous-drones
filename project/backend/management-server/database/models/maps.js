@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 let obstaclePositions = (val) => {
     return val.length == 2;
-}
+};
 
 const coordSchema = mongoose.Schema({
     _id: false,
@@ -18,7 +18,7 @@ const mapSchema = mongoose.Schema({
         {
             _id: mongoose.Schema.Types.ObjectId,
             positions:
-                {type: [coordSchema], validate: [obstaclePositions, '{PATH} mag maar 2 elementen bevatten'] }
+                {type: [coordSchema], validate: [obstaclePositions, '{PATH} mag maar 2 elementen bevatten']}
         }
     ],
     /*waypoints: [
@@ -45,4 +45,4 @@ const mapSchema = mongoose.Schema({
     ]
 });
 
-module.exports = mongoose.model('newMap', mapSchema);
+module.exports = mongoose.model('map', mapSchema);

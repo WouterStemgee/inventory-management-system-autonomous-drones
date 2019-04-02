@@ -24,7 +24,7 @@ export class Map {
     this.id = map._id;
     this.name = map.name;
     this.flightpath = new FlightPath(this.id);
-    map.obstacles.forEach(o => this.addObstacle(o.x, o.y));
+    map.obstacles.forEach(o => this.addObstacle(o.positions));
     map.scanzones.forEach(p => this.addScanZone(p.name, p.quantity, p.position.x, p.position.y, p.orientation, p.range));
   }
 
@@ -33,9 +33,10 @@ export class Map {
       _id: this.id,
       name: name,
       obstacles: [],
-      scanzones: []
+      scanzones: [],
+      products: []
     };
-    this.obstacles.forEach((o) => map.obstacles.push({x: o.x, y: o.y}));
+    this.obstacles.forEach((o) => map.obstacles.push({positions: o.positions}));
     this.scanzones.forEach((p) => map.scanzones.push({
         name: p.name,
         range: p.range,
