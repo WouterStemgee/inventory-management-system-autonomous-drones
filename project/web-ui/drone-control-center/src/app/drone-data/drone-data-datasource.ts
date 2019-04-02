@@ -6,10 +6,13 @@ export interface DroneData {
   id: number;
   name: string;
   battery: number;
-  position: { x: number, y: number };
+  position: { x: number, y: number, z: number};
   height: number;
   speed: number;
   acceleration: number;
+  pitch: number;
+  roll: number;
+  yaw: number;
 }
 
 export class DroneDataDataSource extends DataSource<DroneData> {

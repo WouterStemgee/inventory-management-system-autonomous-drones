@@ -1,12 +1,18 @@
 export class Drone {
   constructor() {
-    this.x = 0;
-    this.y = 0;
-    this.z = 0;
-    this.id = 1;
-    this.name = 'Mockup Drone';
-    this.battery = 100;
-    this.speed = 9000;
+    this.position = {
+      x: 0,
+      y: 0,
+      z: 0
+    };
+    this.id = 0;
+    this.radius = 0;
+    this.name = 'Drone';
+    this.battery = 0;
+    this.speed = 0;
     this.acceleration = 0;
+    this.pitch = 0;
+    this.roll = 0;
+    this.yaw = 0;
   }
 }

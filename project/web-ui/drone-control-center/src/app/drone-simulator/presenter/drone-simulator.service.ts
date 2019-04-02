@@ -75,12 +75,13 @@ export class DroneSimulatorService {
                         this.maps = newMaps;
                         resolve();
                       })
-                      .catch(err => {
+                      .catch(error => {
                         this.onAlertEvent.emit({
                           title: 'Drone Control Center',
                           message: 'Error loading maps from database.',
                           type: 'error'
                         });
+                        console.log(error);
                       });
                   })
                   .catch(error => {
@@ -89,6 +90,7 @@ export class DroneSimulatorService {
                       message: 'Error adding new maps.',
                       type: 'error'
                     });
+                    console.log(error);
                   });
               })
               .catch(error => {
@@ -97,6 +99,7 @@ export class DroneSimulatorService {
                   message: 'Error loading new map from JSON.',
                   type: 'error'
                 });
+                console.log(error);
               });
           } else {
             resolve();
@@ -108,6 +111,7 @@ export class DroneSimulatorService {
             message: 'Error loading maps from database.',
             type: 'error'
           });
+          console.log(error);
           reject();
         });
     });
@@ -129,6 +133,28 @@ export class DroneSimulatorService {
       message: 'Validating flight path...',
       type: 'info'
     });
+    this.updateMap()
+      .then(() => {
+          this.http.fetchOptimalFlightpath(flightpath)
+            .then((optimal) => {
+              console.log('Received optimal flightpath from server: ', optimal);
+              this.onAlertEvent.emit({
+                title: 'Drone Simulator',
+                message: 'Optimal flightpath calculated.',
+                type: 'success'
+              });
+              this.map.flightpath.setOptimalPath(optimal);
+            })
+            .catch((err) => {
+              this.onAlertEvent.emit({
+                title: 'Drone Simulator',
+                message: 'Error calculating optimal flightpath.',
+                type: 'error'
+              });
+            });
+        }
+      )
+    console.log(flightpath);
   }
 
   duplicateMap() {

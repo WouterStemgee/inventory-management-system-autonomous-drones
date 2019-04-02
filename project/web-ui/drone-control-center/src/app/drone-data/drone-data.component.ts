@@ -9,7 +9,7 @@ import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulato
 })
 export class DroneDataComponent implements OnInit {
   dataSource: DroneDataDataSource;
-  displayedColumns: string[] = ['id', 'name', 'battery', 'position', 'speed', 'acceleration'];
+  displayedColumns: string[] = ['id', 'name', 'battery', 'position', 'speed', 'acceleration', 'pitch', 'roll', 'yaw'];
 
   constructor(public simulator: DroneSimulatorService) {
 
