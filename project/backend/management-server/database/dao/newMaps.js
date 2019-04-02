@@ -78,7 +78,7 @@ let updateMap = (mapId, map) => {
     let m = {
         "_id": mapId,
         "name": map.name,
-        "obstacles": map.obstacles || [],
+        "obstacles": [],
         //"waypoints": map.waypoints || [],
         "scanzones":[],
         "products": []
