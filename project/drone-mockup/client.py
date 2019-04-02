@@ -47,6 +47,8 @@ class Client:
                 self.drone.set_accelX(Ax)
                 self.drone.set_accelY(Ay)
                 self.drone.set_accelZ(Az)
+            elif topic == "ScanCommando":
+                self.drone.scan()
 
         self.client = mqtt.Client("python1")
         #self.broker = "test.mosquitto.org"
@@ -54,6 +56,16 @@ class Client:
         self.client.on_connect = on_connect
         #self.client.on_disconnect = on_disconnect
         self.client.on_message = on_message
+
+    def stuurScan(self):
+        self.client.loop_start()
+        self.client.publish("Scan",self.drone.scan())
+        self.client.loop_stop()
+
+    def ontvangScanCommando(self):
+        self.client.loop_start()
+        self.client.subscribe("ScanCommando")
+        self.client.loop_stop()
 
     def stuurBattery(self):
         #print("connecting to broker ", self.broker)
@@ -66,137 +78,41 @@ class Client:
         #self.client.disconnect()
 
     def stuurPosition(self):
-        #print("connecting to broker ", self.broker)
-        #self.client.connect("localhost",1883)
         self.client.loop_start()
-        #self.client.subscribe("Position")
-        # positie opvragen en in string omzetten om door te sturen
         string = ""+str(self.drone.get_xCoord())+";"+str(self.drone.get_yCoord())+";"+str(self.drone.get_zCoord())
         self.client.publish("Position", string)
-        #time.sleep(4)
         self.client.loop_stop()
-        #self.client.disconnect()
 
-# als de waarde nog None wordt ze gewoon niet mee gegeven
-
-    def stuurAccelerationX(self):
-        #print("connecting to broker ", self.broker)
-        #self.client.connect("localhost", 1883)
+    def stuurAcceleration(self):
         self.client.loop_start()
-        #self.client.subscribe("AccelerationH")
-        self.client.publish("AccelerationX", self.drone.get_accelX())
-        #time.sleep(4)
+        string = ""+str(self.drone.get_accelX())+";"+str(self.drone.get_accelY())+";"+str(self.drone.get_accelZ())
+        self.client.publish("Acceleration",string)
         self.client.loop_stop()
-        #self.client.disconnect()
 
-    def stuurAccelerationY(self):
-        #print("connecting to broker ", self.broker)
-        #self.client.connect("localhost", 1883)
+    def stuurSpeed(self):
         self.client.loop_start()
-        #self.client.subscribe("AccelerationV")
-        self.client.publish("AccelerationY", self.drone.get_accelY())
-        #time.sleep(4)
-        self.client.loop_stop()
-        #self.client.disconnect()
-
-    def stuurAccelerationZ(self):
-        #print("connecting to broker ", self.broker)
-        #self.client.connect("localhost", 1883)
-        self.client.loop_start()
-        #self.client.subscribe("AccelerationV")
-        self.client.publish("AccelerationZ", self.drone.get_accelZ())
-        #time.sleep(4)
-        self.client.loop_stop()
-        #self.client.disconnect()
-
-    def stuurSpeedX(self):
-        #print("connecting to broker ", self.broker)
-        #self.client.connect("localhost", 1883)
-        self.client.loop_start()
-        #self.client.subscribe("SpeedH")
-        self.client.publish("SpeedX", self.drone.get_speedX())
-        #time.sleep(4)
-        self.client.loop_stop()
-        #self.client.disconnect()
-
-    def stuurSpeedY(self):
-        #print("connecting to broker ", self.broker)
-        #self.client.connect("localhost", 1883)
-        self.client.loop_start()
-        #self.client.subscribe("SpeedV")
-        self.client.publish("SpeedY", self.drone.get_speedY())
-        #time.sleep(4)
-        self.client.loop_stop()
-        #self.client.disconnect()
-
-    def stuurSpeedZ(self):
-        #print("connecting to broker ", self.broker)
-        #self.client.connect("localhost", 1883)
-        self.client.loop_start()
-        #self.client.subscribe("SpeedV")
-        self.client.publish("SpeedZ", self.drone.get_speedZ())
-        #time.sleep(4)
-        self.client.loop_stop()
-        #self.client.disconnect()
+        string = ""+str(self.drone.get_speedX())+";"+str(self.drone.get_speedY())+";"+str(self.drone.get_speedZ())
+        self.client.publish("Speed",string)
 
     def stuurJaw(self):
-        #print("connecting to broker ", self.broker)
-        #self.client.connect("localhost", 1883)
         self.client.loop_start()
-        #self.client.subscribe("Jaw")
         self.client.publish("Jaw", self.drone.get_jaw())
-        #time.sleep(4)
         self.client.loop_stop()
-        #self.client.disconnect()
 
     def stuurRoll(self):
-        #print("connecting to broker ", self.broker)
-        #self.client.connect("localhost", 1883)
         self.client.loop_start()
-        #self.client.subscribe("Roll")
         self.client.publish("Roll", self.drone.get_roll())
-        #time.sleep(4)
         self.client.loop_stop()
-        #self.client.disconnect()
 
     def stuurPitch(self):
-        #print("connecting to broker ", self.broker)
-        #self.client.connect("localhost", 1883)
         self.client.loop_start()
-        #self.client.subscribe("Pitch")
         self.client.publish("Pitch", self.drone.get_pitch())
-        #time.sleep(4)
         self.client.loop_stop()
-        #self.client.disconnect()
-
-    def stuurVersnellingsVector(self):
-        #print("connecting to broker ", self.broker)
-        #self.client.connect("localhost", 1883)
-        self.client.loop_start()
-        #self.client.subscribe("versnelling")
-        vector = [self.drone.get_accelX(),self.drone.get_accelY(),self.drone.get_accelZ()]
-        self.client.publish("versnelling", str(vector))
-        #time.sleep(4)
-        self.client.loop_stop()
-        #self.client.disconnect()
-
-    def stuurSpeedVector(self):
-        #print("connecting to broker ", self.broker)
-        #self.client.connect("localhost", 1883)
-        self.client.loop_start()
-        #self.client.subscribe("speed")
-        vector = [self.drone.get_speedX(),self.drone.get_speedY(),self.drone.get_speedZ()]
-        self.client.publish("speed", str(vector))
-        #time.sleep(4)
-        self.client.loop_stop()
-        #self.client.disconnect()
 
     def ontvangWaypoint(self):
-        #self.client.connect("localhost",1883)
         self.client.loop_start()
         self.client.subscribe("waypoint")
         self.client.loop_stop()
-        #self.client.disconnect()
 
     def ontvangSnelheid(self):
         self.client.loop_start()

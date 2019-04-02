@@ -12,6 +12,7 @@ class Simulator:
         self.client.ontvangWaypoint()  # hier wordt gewoon gesubscribed op iets dat waypoints door te sturen, hoe wordt dit doorgestuurd?
         self.client.ontvangSnelheid()
         self.client.ontvangVersnelling()
+        self.client.ontvangScanCommando()
         while True:
             self.drone.set_battery(self.drone.get_battery()-1)
             self.client.stuurBattery()

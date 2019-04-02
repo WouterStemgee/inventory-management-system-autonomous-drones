@@ -3,6 +3,7 @@ import xml.etree.ElementTree as et
 import paho.mqtt.client as mqtt
 import time
 import math
+import time
 
 class Drone:
     def __init__(self,length,width=0):
@@ -12,14 +13,9 @@ class Drone:
         self.battery = 100
         # positie array
         self.position = [1,1,1] # xcoord, ycoord en zcoord, nog geen getters en setters
-        #self.accelH = None
-        #self.accelV = None
         self.accelX = None
         self.accelY = None
         self.accelZ = None
-        # je hebt een horizontale en een verticale versnelling en snelheid
-        #self.speedH = None
-        #self.speedV = None
         self.speedX = None
         self.speedY = None
         self.speedZ = None
@@ -57,70 +53,6 @@ class Drone:
             factor2 = self.berekendAfstanVerticaal(z)
             afstand = math.sqrt((factor1 * factor1) + (factor2*factor2))
         return afstand
-
-    # moet nog eens aangepast
-    def berekenTijdHorizontaal(self,afstand):
-        tijd = None
-        if self.speedH == 0 and self.accelH == 0:
-            print("Bij het berekenen van de tijd (H) was zowel de snelheid als de versnelling 0")
-            tijd = -1
-        elif self.speedH == 0:
-            tijd = math.sqrt(2*afstand/self.accelH)
-        elif self.accelH == 0:
-            tijd = afstand/self.speedH
-        else:
-            D = (self.speedH * self.speedH) - (2 * self.accelH * (-1) * math.fabs(afstand))
-            if D < 0:
-                print("error in berekening discriminant")
-                return None
-            elif D == 0:
-                tijd = ((-1) * self.speedH + math.sqrt(D)) / (self.accelH)
-            else:
-                tijd1 = ((-1) * self.speedH + math.sqrt(D)) / (self.accelH)
-                tijd2 = ((-1) * self.speedH - math.sqrt(D)) / (self.accelH)
-                if tijd1 >= 0:
-                    tijd = tijd1
-                else:
-                    tijd = tijd2
-        return tijd
-
-    # deze methode gaat er van uit dat er geen obstakels liggen onderweg naar het coordinaat
-    # voorlopig wordt wordt er nog vanuit gegaan dat de drone op dezelfde hoogte ligt
-    # en dat er niet schuin gevlogen kan worden
-    def beweegNaarCoordinaat(self,x,y,z):
-        if self.position[0] != x or self.position[1] != y:
-            #afstand = self.berekenAfstand(x,y,z) # afstand kan kleiner zijn dan 0
-            afstandHorizontaal = self.berekenAfstandHorizontaal(x,y)
-            #afstandVerticaal = self.berekendAfstandVerticaal(z)
-            # (a*t*t)/2 + v*t - abs(afstand) = 0 => hieruit de tijd halen die de drone er over gaat doen
-            # en dan zo tijdens die tijd telkens de nieuwe x,y en z waarden berekenen voor die specifieke tijd
-            tijd = self.berekenTijdHorizontaal(afstandHorizontaal)
-            # de positie uitrekenen en printen met een frequentie van 50Hz
-            huidigTijdstip = 0
-            initieleX = self.position[0]
-            initieleY = self.position[1]
-            while huidigTijdstip <= tijd:
-                if y == self.position[1]:
-                    if x>=self.position[0]:
-                        nieuwepositie = round(initieleX + (self.speedH*huidigTijdstip) + (self.accelH*huidigTijdstip*huidigTijdstip/2),2)
-                    elif x <= self.position[0]:
-                        nieuwepositie = round(initieleX - (self.speedH * huidigTijdstip) - (self.accelH * huidigTijdstip * huidigTijdstip / 2), 2)
-                    #print("op tijdstip: ",huidigTijdstip)
-                    #print("is de positie: ", nieuwepositie)
-                    #print("")
-                    self.position[0] = nieuwepositie
-                    huidigTijdstip = huidigTijdstip + 0.25
-                elif x == self.position[0]:
-                    if y>=self.position[1]:
-                        nieuwepositie = round(initieleY + (self.speedH*huidigTijdstip) + (self.accelH*huidigTijdstip*huidigTijdstip/2),2)
-                    elif y<= self.position[1]:
-                        nieuwepositie = round(initieleY - (self.speedH*huidigTijdstip) - (self.accelH*huidigTijdstip*huidigTijdstip/2),2)
-                    #print("op tijdstip: ", huidigTijdstip)
-                    #print("is de positie: ", nieuwepositie)
-                    #print("")
-                    self.position[1] = nieuwepositie
-                    huidigTijdstip = huidigTijdstip + 0.25
-                    #round(huidigTijdstip, 2)
 
     def giveInfoTest(self):
         payload = {
@@ -230,8 +162,6 @@ class Drone:
         else:
             self.accelZ = 0
 
-    # getters en setters voor de variabelen van de drone
-
     def get_length(self):
         return self.length
 
@@ -303,21 +233,6 @@ class Drone:
                 else:
                     print("geen juiste parameters")
 
-    #def vliegNaar(self,x,y,z):
-    #    if not (x == self.position[0] and y == self.position[1] and z == self.position[2]):
-    #       if x != self.position[0] and self.speedX == 0:
-    #            self.speedX = 5
-    #        if y != self.position[1] and self.speedY == 0:
-    #            self.speedY = 5
-    #        if z != self.position[2] and self.speedZ == 0:
-    #            self.speedZ = 3
-    #        if z == self.position[2]: # dan zit je in een horizontaal vlak
-    #            snelheid = math.sqrt((self.speedX*self.speedX)+(self.speedY*self.speedY))
-    #            afstand = self.berekenAfstand(x,y,z)
-    #            totaleTijd = afstand/snelheid
-    #            tijd = 0
-    #            while tijd <= totaleTijd:
-
     def vliegHorizontaal(self,x,y):
         if self.speedX == 0:
             self.speedX = 3
@@ -355,6 +270,7 @@ class Drone:
             print("op tijdstip: ", t, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
             t = t + 0.05
             round(t,2)  # dit geeft een hoop slecht afgeronde komma getallen door beperkingen in de binaite voorstelling
+            time.sleep(0.05)
         self.position[0] = x
         self.position[1] = y
         print("op tijdstip: ", tijd, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
@@ -378,6 +294,7 @@ class Drone:
                 print("op tijdstip: ", t+tijd, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
                 t = t + 0.05
                 round(t,2)
+                time.sleep(0.05)
             self.position[2] = z
             print("op tijdstip: ", tijd+tijd2, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
             self.speedZ = 0
@@ -390,6 +307,10 @@ class Drone:
             if z != self.position[2]:
                 # dan moet je ook nog verticaal vliegen
                 self.vliegVerticaal(z,tijd)
+
+    def scan(self):
+        print("item geskand met waarde 4000")
+        return 4000
 
 class DroneSerializer:
     def serialize(self,drone,format):
@@ -412,16 +333,6 @@ class DroneSerializer:
             'battery': Drone.battery
         }
         return json.dumps(payload)
-
-    def _serialize_to_xml(self,drone):
-        drone_info = et.Element('Drone', attrib={'id': Drone.drone_id})
-        length = et.SubElement(drone_info, 'length')
-        length.text = Drone.length
-        width = et.SubElement(drone_info, 'width')
-        width.text = Drone.width
-        battery = et.SubElement(drone_info, 'battery')
-        battery.text = Drone.battery
-        return et.tostring(drone_info, encoding='unicode')
 
 
 drone = Drone(5)
