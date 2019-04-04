@@ -346,6 +346,8 @@ export class LeafletComponent implements OnInit {
     }
   }
 
+
+
   onLeafletClick(e) {
     const coord = e.latlng;
     // console.log('X:' + coord.lng + '\nY:' + coord.lat);
@@ -353,9 +355,18 @@ export class LeafletComponent implements OnInit {
 
   updateDroneData(feature) {
     const drone = this.simulator.drone;
-    drone.position.x = feature.properties.position[0];
-    drone.position.y = feature.properties.position[1];
-    drone.position.z = feature.properties.position[2];
+    console.log(feature);
+    drone.position.x = feature.properties.position.x;
+    drone.position.y = feature.properties.position.y;
+    drone.position.z = feature.properties.position.z;
     drone.radius = feature.properties.radius;
+    console.log(drone);
+  }
+
+  onDrawDeleted(e) {
+    //console.log(e.getBounds());
+
+
+    //this.simulator.map.deleteObstacle();
   }
 }

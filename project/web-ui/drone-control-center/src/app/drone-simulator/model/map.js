@@ -42,9 +42,10 @@ export class Map {
         name: p.name,
         range: p.range,
         orientation: p.orientation,
-        position: {x: p.x, y: p.y}
+        position: {x: p.position.x, y: p.position.y}
       })
     );
+    console.log(map);
     return map;
   }
 
@@ -60,6 +61,18 @@ export class Map {
     let o = new Obstacle();
     o.positions = positions;
     this.obstacles.push(o);
+  }
+
+  removeObstacle(positions) {
+    for (let i = this.obstacles.length - 1; i >= 0; i--) {
+      if (
+        this.obstacles[i].positions[0].x === positions[0].x &&
+        this.obstacles[i].positions[0].y === positions[0].y &&
+        this.obstacles[i].positions[1].x === positions[1].x &&
+        this.obstacles[i].positions[1].y === positions[1].y)  {
+        this.obstacles.splice(i, 1);
+      }
+    }
   }
 
 }

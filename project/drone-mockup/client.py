@@ -23,16 +23,17 @@ class Client:
             topic = msg.topic
             m_decode = str(msg.payload.decode("utf-8", "ignore"))
             print("message received", m_decode)
-            if topic == "moveto":
+            if topic == "drone/moveto":
                 # json {x:...,y...}
                 d = json.loads(m_decode)
+                print(d)
                 #coordinaten = m_decode.split(';')
                 #xCoord = coordinaten[0]
                 #yCoord = coordinaten[1]
                 #zCoord = coordinaten[2]
                 xCoord = d["x"]
                 yCoord = d["y"]
-                zCoord = self.drone.get_zCoord()
+                zCoord = d["z"]
                 self.drone.vliegNaar(xCoord,yCoord,zCoord)
             elif topic == "snelheid":
                 # Vx;Vy;Vz
@@ -84,21 +85,30 @@ class Client:
 
     def stuurPosition(self):
         self.client.loop_start()
-        string = ""+str(self.drone.get_xCoord())+";"+str(self.drone.get_yCoord())+";"+str(self.drone.get_zCoord())
-        array = [self.drone.get_xCoord(),self.drone.get_yCoord(),self.drone.get_zCoord()]
-        y = json.loads(array)
-        self.client.publish("drone/position", str(y))
+        x = {
+            "x": self.drone.get_xCoord(),
+            "y": self.drone.get_yCoord(),
+            "z": self.drone.get_zCoord()
+        }
+        y = json.dumps(x)
+        self.client.publish("drone/position", y)
         self.client.loop_stop()
 
     def stuurAcceleration(self):
         self.client.loop_start()
-        string = ""+str(self.drone.get_accelX())+";"+str(self.drone.get_accelY())+";"+str(self.drone.get_accelZ())
+        x = {
+            "x":self.drone.get_xCoord(),
+            "y":self.drone.get_yCoord(),
+            "z:":self.drone.get_zCoord()
+        }
+
+        string = json.dumps(x)
         self.client.publish("drone/acceleration",string)
         self.client.loop_stop()
 
     def stuurSpeed(self):
         self.client.loop_start()
-        string = ""+str(self.drone.get_speedX())+";"+str(self.drone.get_speedY())+";"+str(self.drone.get_speedZ())
+        string = "{x:"+str(self.drone.get_xCoord())+",y:"+str(self.drone.get_yCoord())+",z:"+str(self.drone.get_zCoord())+"}"
         self.client.publish("drone/speed",string)
 
     def stuurJaw(self):
