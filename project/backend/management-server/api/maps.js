@@ -21,20 +21,15 @@ mapRouter.route('/')
             });
     })
     .post((req, res) => {
-        try  {
-            mapsDAO.addMap(req.body)
-                .then((result) => {
-                    res.status(201).send(result);
-                })
-                .catch((error) => {
-                    res.status(400).send(error);
-                    console.log(error);
+        mapsDAO.addMap(req.body)
+            .then((result) => {
+                res.status(201).send(result);
+            })
+            .catch((error) => {
+                res.status(400).send(error);
+                console.log(error);
 
-                });
-        } catch (err) {
-            console.log(err);
-        }
-
+            });
     });
 
 mapRouter.route('/:mapId')

@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.use("/",express.static(path.join(__dirname, 'public')));
 
 app.use('/api/maps', mapRouter);
-app.use('/api/drone', droneRouter);
+app.use('/api/drones', droneRouter);
 app.use('/api/flightpath', waypointRouter);
 
 // je hebt MongoDB lokaal geinstalleerd, indien deze nog niet bestaat wordt dit automatisch aangemaakt
