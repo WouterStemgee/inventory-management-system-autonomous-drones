@@ -9,7 +9,7 @@ import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {DroneSimulatorComponent} from './drone-simulator/view/drone-simulator.component';
-import {ContainerComponent} from './container/container.component';
+import {NavigationComponent} from './navigation/navigation.component';
 import {MaterialModule} from './material.module';
 import {DroneDataComponent} from './drone-data/drone-data.component';
 import {InventoryComponent} from './inventory/inventory.component';
@@ -17,6 +17,10 @@ import {LeafletComponent} from './leaflet/leaflet.component';
 import {SharedService} from './shared.service';
 import {DroneSimulatorService} from './drone-simulator/presenter/drone-simulator.service';
 import {DroneConfigurationComponent} from './drone-configuration/drone-configuration.component';
+import {AdminComponent} from './admin/admin.component';
+import {MapCreateComponent} from './map-create/map-create.component';
+import {GraphDataComponent} from './graph-data/graph-data.component';
+import {SensorConfigurationComponent} from './sensor-configuration/sensor-configuration.component';
 
 import {HttpService} from './http.service';
 import {DataService} from './data.service';
@@ -26,13 +30,17 @@ import {LeafletDrawModule} from '@asymmetrik/ngx-leaflet-draw';
 @NgModule({
   declarations: [
     AppComponent,
-    ContainerComponent,
+    NavigationComponent,
     DashboardComponent,
     DroneSimulatorComponent,
     DroneDataComponent,
     DroneConfigurationComponent,
     InventoryComponent,
-    LeafletComponent
+    LeafletComponent,
+    AdminComponent,
+    MapCreateComponent,
+    GraphDataComponent,
+    SensorConfigurationComponent
   ],
   imports: [
     BrowserModule,

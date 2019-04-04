@@ -10,6 +10,7 @@ export class Map {
     this.obstacles = [];
     this.scanzones = [];
     this.flightpath = undefined;
+    this.dimensions = {};
   }
 
   reset() {
@@ -25,7 +26,7 @@ export class Map {
     this.name = map.name;
     this.flightpath = new FlightPath(this.id);
     map.obstacles.forEach(o => this.addObstacle(o.positions));
-    map.scanzones.forEach(p => this.addScanZone(p.name, p.quantity, p.position.x, p.position.y, p.orientation, p.range));
+    map.scanzones.forEach(p => this.addScanZone(p.name, p.position.x, p.position.y, p.orientation, p.range));
   }
 
   toJSON(name) {
@@ -41,19 +42,17 @@ export class Map {
         name: p.name,
         range: p.range,
         orientation: p.orientation,
-        quantity: p.quantity,
         position: {x: p.x, y: p.y}
       })
     );
     return map;
   }
 
-  addScanZone(name, quantity, x, y, orientation, range) {
+  addScanZone(name, x, y, orientation, range) {
     let p = new ScanZone(x, y);
     p.name = name;
     p.range = range;
     p.orientation = orientation;
-    p.quantity = quantity;
     this.scanzones.push(p);
   }
 

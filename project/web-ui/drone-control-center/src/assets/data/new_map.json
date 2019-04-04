@@ -38,19 +38,19 @@
   "scanzones": [
     {
       "position": {
-        "x": 450,
-        "y": 550
+        "x": 3072,
+        "y": 1024
       },
       "orientation": 0,
-      "range": 50,
+      "range": 650,
       "name": "SCANLOCATIE"
     },{
       "position": {
-        "x": 200,
-        "y": 1150
+        "x": 5120,
+        "y": 1024
       },
       "orientation": 180,
-      "range": 30,
+      "range": 650,
       "name": "test locatie"
     }
   ],

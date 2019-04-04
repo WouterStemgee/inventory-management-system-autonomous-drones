@@ -207,9 +207,7 @@ export class LeafletComponent implements OnInit {
   flightpathLayerId;
 
   drawObstacles() {
-    let maps;
-    maps = this.simulator.maps;
-    const obstacles = maps[this.simulator.selectedMap].obstacles;
+    const obstacles = this.simulator.map.obstacles;
 
     obstacles.forEach(o => {
       const p1 = o.positions[0];
@@ -249,19 +247,68 @@ export class LeafletComponent implements OnInit {
     });
   }
 
+  drawScanZones() {
+    const scanzones = this.simulator.map.scanzones;
+    scanzones.forEach(sz => {
+      const m = sz.position;
+
+      const x1 = m.x;
+      const y1 = m.y;
+
+      const r = sz.range;
+
+      const feature = L.geoJSON({
+        type: 'Feature',
+        properties: {
+          range: sz.range
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: [x1, y1]
+        } as geojson.Point
+      } as geojson.Feature);
+
+      feature.eachLayer(l => {
+        const layer = l as L.GeoJSON;
+        const circle = L.circle([y1, x1], {
+          radius: r
+        });
+        circle.setStyle({
+          stroke: true,
+          color: '#3388ff',
+          weight: 4,
+          opacity: 0.5,
+          fill: true,
+          fillColor: null,
+          fillOpacity: 0.2,
+        });
+        circle.on('click', () => {
+          console.log(JSON.stringify(layer.toGeoJSON()));
+        });
+        circle.addTo(this.editableLayers);
+      });
+    });
+
+  }
+
   onDrawCreated(e) {
     if (e.layer.toGeoJSON().geometry.type === 'LineString') {
       this.flightpathLayerId = e.layer._leaflet_id;
       this.setFlightPath(e.layer.toGeoJSON());
     } else if (e.layer.toGeoJSON().geometry.type === 'Polygon') {
-      console.log('polygon!');
       // add obstacle to simulator model
       const coordinates = e.layer.toGeoJSON().geometry.coordinates[0];
       const p1 = coordinates[0];
       const p2 = coordinates[2];
       const positions = [{x: p1[0], y: p1[1]}, {x: p2[0], y: p2[1]}];
       this.simulator.map.addObstacle(positions);
-      console.log(this.simulator.map.obstacles);
+      // console.log(this.simulator.map.obstacles);
+    } else if (e.layer.toGeoJSON().geometry.type === 'Point') {
+      // add obstacle to simulator model
+      const coordinate = e.layer.toGeoJSON().geometry.coordinates;
+      const position = {x: coordinate[0], y: coordinate[1]};
+      // this.simulator.map.addScanZone();
+      // console.log(this.simulator.map.obstacles);
     }
     e.layer.on('click', () => {
       const geoJSON = e.layer.toGeoJSON();
@@ -272,11 +319,12 @@ export class LeafletComponent implements OnInit {
   ngOnInit() {
     if (this.simulator.loaded) {
       this.drawObstacles();
+      this.drawScanZones();
     } else {
       this.simulator.onSimulatorLoadedEvent.subscribe((loaded) => {
         if (loaded) {
           this.drawObstacles();
-          console.log(this.simulator.map.obstacles);
+          this.drawScanZones();
         }
       });
     }
