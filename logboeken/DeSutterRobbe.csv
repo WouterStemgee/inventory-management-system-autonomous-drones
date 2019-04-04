@@ -30,3 +30,4 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 28/03/19,09:00,11:30,Extern,collision,23,
 28/03/19,13:30,17:45,Campus,A* bugfix meerdere waypoints + auto graaf maken op basis van obstakels,23,
 30/03/19,02:00,14:00,Campus,Opendeurdag + A* bugfix meerdere waypoints + auto graaf maken op basis van obstakels,23,
+04/04/19,08:00,12:00,Extern,collision werkt nog steeds niet correct,23,
