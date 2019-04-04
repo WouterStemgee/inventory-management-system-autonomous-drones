@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt
 import time
 from Drone import Drone
+import json
 
 class Client:
     def __init__(self,d):
@@ -23,11 +24,15 @@ class Client:
             m_decode = str(msg.payload.decode("utf-8", "ignore"))
             print("message received", m_decode)
             if topic == "waypoint":
-                # x;y;z
-                coordinaten = m_decode.split(';')
-                xCoord = coordinaten[0]
-                yCoord = coordinaten[1]
-                zCoord = coordinaten[2]
+                # json {x:...,y...}
+                d = json.loads(m_decode)
+                #coordinaten = m_decode.split(';')
+                #xCoord = coordinaten[0]
+                #yCoord = coordinaten[1]
+                #zCoord = coordinaten[2]
+                xCoord = d["x"]
+                yCoord = d["y"]
+                zCoord = self.drone.get_zCoord()
                 self.drone.vliegNaar(xCoord,yCoord,zCoord)
             elif topic == "snelheid":
                 # Vx;Vy;Vz
@@ -80,7 +85,8 @@ class Client:
     def stuurPosition(self):
         self.client.loop_start()
         string = ""+str(self.drone.get_xCoord())+";"+str(self.drone.get_yCoord())+";"+str(self.drone.get_zCoord())
-        self.client.publish("Position", string)
+        array = [self.drone.get_xCoord(),self.drone.get_yCoord(),self.drone.get_zCoord()]
+        self.client.publish("Position", array)
         self.client.loop_stop()
 
     def stuurAcceleration(self):
