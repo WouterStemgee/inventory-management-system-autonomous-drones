@@ -23,7 +23,7 @@ class Client:
             topic = msg.topic
             m_decode = str(msg.payload.decode("utf-8", "ignore"))
             print("message received", m_decode)
-            if topic == "waypoint":
+            if topic == "moveto":
                 # json {x:...,y...}
                 d = json.loads(m_decode)
                 #coordinaten = m_decode.split(';')
@@ -64,12 +64,12 @@ class Client:
 
     def stuurScan(self):
         self.client.loop_start()
-        self.client.publish("Scan",self.drone.scan())
+        self.client.publish("drone/scan",self.drone.scan())
         self.client.loop_stop()
 
     def ontvangScanCommando(self):
         self.client.loop_start()
-        self.client.subscribe("ScanCommando")
+        self.client.subscribe("drone/scanCommando")
         self.client.loop_stop()
 
     def stuurBattery(self):
@@ -77,7 +77,7 @@ class Client:
         #self.client.connect("localhost", 1883)
         self.client.loop_start()  # moet lopen om de callback functies te kunnen verbinden
         #self.client.subscribe("Battery")
-        self.client.publish("Battery", self.drone.get_battery())  # eerste argument is het topic, 2de is de message
+        self.client.publish("drone/battery", self.drone.get_battery())  # eerste argument is het topic, 2de is de message
         #time.sleep(4) # even wachten zodat je het result van het subscriben kan zien, mag als alles werkt verwijder worden
         self.client.loop_stop()
         #self.client.disconnect()
@@ -86,48 +86,49 @@ class Client:
         self.client.loop_start()
         string = ""+str(self.drone.get_xCoord())+";"+str(self.drone.get_yCoord())+";"+str(self.drone.get_zCoord())
         array = [self.drone.get_xCoord(),self.drone.get_yCoord(),self.drone.get_zCoord()]
-        self.client.publish("Position", array)
+        y = json.loads(array)
+        self.client.publish("drone/position", str(y))
         self.client.loop_stop()
 
     def stuurAcceleration(self):
         self.client.loop_start()
         string = ""+str(self.drone.get_accelX())+";"+str(self.drone.get_accelY())+";"+str(self.drone.get_accelZ())
-        self.client.publish("Acceleration",string)
+        self.client.publish("drone/acceleration",string)
         self.client.loop_stop()
 
     def stuurSpeed(self):
         self.client.loop_start()
         string = ""+str(self.drone.get_speedX())+";"+str(self.drone.get_speedY())+";"+str(self.drone.get_speedZ())
-        self.client.publish("Speed",string)
+        self.client.publish("drone/speed",string)
 
     def stuurJaw(self):
         self.client.loop_start()
-        self.client.publish("Jaw", self.drone.get_jaw())
+        self.client.publish("drone/jaw", self.drone.get_jaw())
         self.client.loop_stop()
 
     def stuurRoll(self):
         self.client.loop_start()
-        self.client.publish("Roll", self.drone.get_roll())
+        self.client.publish("drone/roll", self.drone.get_roll())
         self.client.loop_stop()
 
     def stuurPitch(self):
         self.client.loop_start()
-        self.client.publish("Pitch", self.drone.get_pitch())
+        self.client.publish("drone/pitch", self.drone.get_pitch())
         self.client.loop_stop()
 
     def ontvangWaypoint(self):
         self.client.loop_start()
-        self.client.subscribe("waypoint")
+        self.client.subscribe("drone/moveto")
         self.client.loop_stop()
 
     def ontvangSnelheid(self):
         self.client.loop_start()
-        self.client.subscribe("snelheid")
+        self.client.subscribe("drone/snelheid")
         self.client.loop_stop()
 
     def ontvangVersnelling(self):
         self.client.loop_start()
-        self.client.subscribe("versnelling")
+        self.client.subscribe("drone/versnelling")
         self.client.loop_stop()
 
     def connecteer(self):
