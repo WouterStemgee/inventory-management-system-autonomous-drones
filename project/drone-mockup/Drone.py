@@ -4,9 +4,11 @@ import paho.mqtt.client as mqtt
 import time
 import math
 import time
+from client import Client
 
 class Drone:
     def __init__(self,length,width=0):
+        self.client = Client(self)
         self.length = length
         if(width==0):
             self.width = length
@@ -269,12 +271,14 @@ class Drone:
             print("op tijdstip: ", t, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
             t = t + 0.05
             round(t,2)  # dit geeft een hoop slecht afgeronde komma getallen door beperkingen in de binaite voorstelling
+            self.client.stuurPosition() #///////////////
             time.sleep(0.05)
         self.position[0] = x
         self.position[1] = y
         print("op tijdstip: ", tijd, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
         self.speed[0] = 0
         self.speed[1] = 0
+        self.client.stuurPosition() # ///////////
         return tijd
 
     def vliegVerticaal(self,z,tijd):
@@ -293,10 +297,12 @@ class Drone:
                 print("op tijdstip: ", t+tijd, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
                 t = t + 0.05
                 round(t,2)
+                self.client.stuurPosition() #/////////
                 time.sleep(0.05)
             self.position[2] = z
             print("op tijdstip: ", tijd+tijd2, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
             self.speed[2] = 0
+            self.client.stuurPosition() #///////////
 
 
     def vliegNaar(self,x,y,z):
