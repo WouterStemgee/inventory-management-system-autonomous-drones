@@ -4,11 +4,11 @@ import paho.mqtt.client as mqtt
 import time
 import math
 import time
-from client import Client
+from client2 import Client2
 
 class Drone:
     def __init__(self,length,width=0):
-        self.client = Client(self)
+        #self.client = Client(self)
         self.length = length
         if(width==0):
             self.width = length
@@ -271,14 +271,18 @@ class Drone:
             print("op tijdstip: ", t, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
             t = t + 0.05
             round(t,2)  # dit geeft een hoop slecht afgeronde komma getallen door beperkingen in de binaite voorstelling
-            self.client.stuurPosition() #///////////////
+            #self.client.stuurPosition() #///////////////
+            cl = Client2() #/////////
+            cl.stuurPosition(self)
             time.sleep(0.05)
         self.position[0] = x
         self.position[1] = y
         print("op tijdstip: ", tijd, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
         self.speed[0] = 0
         self.speed[1] = 0
-        self.client.stuurPosition() # ///////////
+        #self.client.stuurPosition() # ///////////
+        cl = Client2()  # /////////
+        cl.stuurPosition(self)
         return tijd
 
     def vliegVerticaal(self,z,tijd):
@@ -297,12 +301,16 @@ class Drone:
                 print("op tijdstip: ", t+tijd, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
                 t = t + 0.05
                 round(t,2)
-                self.client.stuurPosition() #/////////
+                #self.client.stuurPosition() #/////////
+                cl = Client2()  # /////////
+                cl.stuurPosition(self)
                 time.sleep(0.05)
             self.position[2] = z
             print("op tijdstip: ", tijd+tijd2, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
             self.speed[2] = 0
-            self.client.stuurPosition() #///////////
+            #self.client.stuurPosition() #///////////
+            cl = Client2() #/////////
+            cl.stuurPosition(self)
 
 
     def vliegNaar(self,x,y,z):
@@ -340,16 +348,12 @@ class DroneSerializer:
         return json.dumps(payload)
 
 
-#drone = Drone(5)
-#drone.set_xCoord(1)
-#drone.set_yCoord(0)
-#drone.set_zCoord(10)
-#drone.set_speedX(0)
-#drone.set_speedY(0)
-#drone.set_speedZ(0)
-#drone.set_accelX(2)
-#drone.vliegNaar(6,6,20)
-#afstand = drone.berekenAfstandHorizontaal(5,0)
-#tijd = drone.berekenTijdHorizontaal(afstand)
-#print("tijd: ",tijd)
-#drone.beweegNaarCoordinaat(5,0)
+drone = Drone(5)
+drone.set_xCoord(1)
+drone.set_yCoord(0)
+drone.set_zCoord(10)
+drone.set_speedX(0)
+drone.set_speedY(0)
+drone.set_speedZ(0)
+drone.set_accelX(2)
+drone.vliegNaar(6,6,20)

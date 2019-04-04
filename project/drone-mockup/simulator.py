@@ -13,6 +13,7 @@ class Simulator:
         #self.client.ontvangSnelheid()
         #self.client.ontvangVersnelling()
         #self.client.ontvangScanCommando()
+        # de drone geraakt hier niet, hij voert eerst het vliegen uit
         while True:
             self.drone.set_battery(self.drone.get_battery()-1)
             self.client.stuurBattery()
