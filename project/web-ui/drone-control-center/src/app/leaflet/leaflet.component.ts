@@ -192,8 +192,8 @@ export class LeafletComponent implements OnInit {
   }
 
   setFlightPath(geoJSON) {
-    let coords = geoJSON.geometry.coordinates;
-    let waypoints = [];
+    const coords = geoJSON.geometry.coordinates;
+    const waypoints = [];
     coords.forEach(c => {
       waypoints.push({
         x: Math.floor(c[0]),
@@ -292,23 +292,22 @@ export class LeafletComponent implements OnInit {
   }
 
   onDrawCreated(e) {
-    if (e.layer.toGeoJSON().geometry.type === 'LineString') {
+    if (e.layer.toGeoJSON().geometry.type === 'LineString') { // flightpath
       this.flightpathLayerId = e.layer._leaflet_id;
       this.setFlightPath(e.layer.toGeoJSON());
-    } else if (e.layer.toGeoJSON().geometry.type === 'Polygon') {
-      // add obstacle to simulator model
+      this.simulator.validateFlightPath();
+    } else if (e.layer.toGeoJSON().geometry.type === 'Polygon') { // obstacle
       const coordinates = e.layer.toGeoJSON().geometry.coordinates[0];
       const p1 = coordinates[0];
       const p2 = coordinates[2];
       const positions = [{x: p1[0], y: p1[1]}, {x: p2[0], y: p2[1]}];
       this.simulator.map.addObstacle(positions);
-      // console.log(this.simulator.map.obstacles);
-    } else if (e.layer.toGeoJSON().geometry.type === 'Point') {
-      // add obstacle to simulator model
+      this.simulator.updateMap(false);
+    } else if (e.layer.toGeoJSON().geometry.type === 'Point') { // scanzone
       const coordinate = e.layer.toGeoJSON().geometry.coordinates;
       const position = {x: coordinate[0], y: coordinate[1]};
-      // this.simulator.map.addScanZone();
-      // console.log(this.simulator.map.obstacles);
+      this.simulator.map.addScanZone(e.layer._leaflet_id.toString(), position.x, position.y, 0, e.layer._mRadius);
+      this.simulator.updateMap(false);
     }
     e.layer.on('click', () => {
       const geoJSON = e.layer.toGeoJSON();
@@ -339,11 +338,53 @@ export class LeafletComponent implements OnInit {
     }
   }
 
+  editingLayers;
+
   onDrawEdited(e) {
+    console.log('editingLayers:', this.editingLayers);
+
     if (this.flightpathLayerId) {
       const layer = this.editableLayers.getLayer(this.flightpathLayerId) as L.GeoJSON;
       this.setFlightPath(layer.toGeoJSON());
+
     }
+    const editedLayers = e.layers._layers;
+    console.log('editedLayers:', editedLayers);
+
+    Object.keys(editedLayers).forEach(id => {
+      const oldLayer = JSON.parse(this.editingLayers[id]);
+      const newLayer = editedLayers;
+      console.log('oldLayer:', oldLayer);
+      console.log('newLayer:', newLayer);
+
+      if (oldLayer._bounds) { // obstacle
+        const bounds = oldLayer._bounds;
+        const p1 = bounds._southWest;
+        const p2 = bounds._northEast;
+        const x1 = p1.lng;
+        const y1 = p1.lat;
+        const x2 = p2.lng;
+        const y2 = p2.lat;
+        const oldPositions = [{x: x1, y: y1}, {x: x2, y: y2}];
+        this.simulator.map.removeObstacle(oldPositions);
+        // const newPositions;
+
+      } else if (oldLayer._latlng) { // scanzone
+        const p = oldLayer._latlng;
+        const x1 = p.lng;
+        const y1 = p.lat;
+        const r = oldLayer._mRadius;
+        this.simulator.map.removeScanZone(x1, y1);
+      }
+    });
+
+    this.simulator.updateMap();
+
+  }
+
+  oDrawEditStart(e) {
+    this.editingLayers = JSON.stringify(e.target._layer);
+    console.log(this.editingLayers);
   }
 
 
@@ -364,27 +405,26 @@ export class LeafletComponent implements OnInit {
 
   onDrawDeleted(e) {
     const layers = e.layers._layers;
-    console.log('removed layers', layers);
     Object.keys(layers).forEach(id => {
       const layer = layers[id];
       if (layer._bounds) { // obstacle
         const bounds = layer._bounds;
-
-        const p1 = bounds._southWest; // linksboven
-        const p2 = bounds._northEast; // rechtsonder
-
+        const p1 = bounds._southWest;
+        const p2 = bounds._northEast;
         const x1 = p1.lng;
         const y1 = p1.lat;
         const x2 = p2.lng;
-        const y2 = p2.lat;  
-
-        const position = [{x: x1, y: y1}, {x: x2, y: y2}];
-        console.log('rect deleted', layer._bounds);
+        const y2 = p2.lat;
+        const positions = [{x: x1, y: y1}, {x: x2, y: y2}];
+        this.simulator.map.removeObstacle(positions);
       } else if (layer._latlng) { // scanzone
-        console.log('circle deleted', layer._latlng, layer._mRadius);
+        const p = layer._latlng;
+        const x1 = p.lng;
+        const y1 = p.lat;
+        const r = layer._mRadius;
+        this.simulator.map.removeScanZone(x1, y1);
       }
     });
-
-    //this.simulator.map.deleteObstacle();
+    this.simulator.updateMap();
   }
 }

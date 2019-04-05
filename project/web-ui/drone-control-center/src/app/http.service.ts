@@ -63,7 +63,7 @@ export class HttpService {
     });
   }
 
-  fetchOptimalFlightpath(flightpath) {
+  validateFlightpath(flightpath) {
     return new Promise((resolve, reject) => {
       this.http.post(environment.baseAPIUrl + 'api/flightpath/', flightpath).subscribe(
         result => {

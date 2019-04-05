@@ -45,7 +45,6 @@ export class Map {
         position: {x: p.position.x, y: p.position.y}
       })
     );
-    console.log(map);
     return map;
   }
 
@@ -55,6 +54,14 @@ export class Map {
     p.range = range;
     p.orientation = orientation;
     this.scanzones.push(p);
+  }
+
+  removeScanZone(x, y) {
+    for (let i = this.scanzones.length - 1; i >= 0; i--) {
+      if (this.scanzones[i].position.x === x && this.scanzones[i].position.y === y) {
+        this.scanzones.splice(i, 1);
+      }
+    }
   }
 
   addObstacle(positions) {

@@ -135,7 +135,7 @@ export class DroneSimulatorService {
     });
     this.updateMap()
       .then(() => {
-          this.http.fetchOptimalFlightpath(flightpath)
+          this.http.validateFlightpath(flightpath)
             .then((optimal) => {
               console.log('Received optimal flightpath from server: ', optimal);
               this.onAlertEvent.emit({
@@ -153,43 +153,23 @@ export class DroneSimulatorService {
               });
             });
         }
-      )
+      );
     console.log(flightpath);
   }
 
-  duplicateMap() {
-    this.http.addMap(this.map.toJSON('New Map')).then(() => {
-      this.http.getAllMaps()
-        .then(result => {
-          this.maps = result;
-          this.selectedMap = this.maps.length - 1;
-          this.onAlertEvent.emit({
-            title: 'Drone Control Center',
-            message: 'Duplicated map.',
-            type: 'success'
-          });
-        })
-        .catch(err => {
-          this.onAlertEvent.emit({
-            title: 'Drone Control Center',
-            message: err.toString(),
-            type: 'error'
-          });
-        });
-    });
-  }
-
-  updateMap() {
+  updateMap(notification = true) {
     return new Promise(((resolve, reject) => {
       this.http.updateMap(this.map.toJSON(this.map.name)).then(() => {
         this.http.getAllMaps()
           .then(result => {
             this.maps = result;
-            this.onAlertEvent.emit({
-              title: 'Drone Control Center',
-              message: 'Saved map.',
-              type: 'success'
-            });
+            if (notification) {
+              this.onAlertEvent.emit({
+                title: 'Drone Control Center',
+                message: 'Saved map.',
+                type: 'success'
+              });
+            }
             resolve();
           })
           .catch(err => {
