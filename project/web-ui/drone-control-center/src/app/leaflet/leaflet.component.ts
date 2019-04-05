@@ -347,7 +347,6 @@ export class LeafletComponent implements OnInit {
   }
 
 
-
   onLeafletClick(e) {
     const coord = e.latlng;
     // console.log('X:' + coord.lng + '\nY:' + coord.lat);
@@ -364,8 +363,27 @@ export class LeafletComponent implements OnInit {
   }
 
   onDrawDeleted(e) {
-    //console.log(e.getBounds());
+    const layers = e.layers._layers;
+    console.log('removed layers', layers);
+    Object.keys(layers).forEach(id => {
+      const layer = layers[id];
+      if (layer._bounds) { // obstacle
+        const bounds = layer._bounds;
 
+        const p1 = bounds._southWest; // linksboven
+        const p2 = bounds._northEast; // rechtsonder
+
+        const x1 = p1.lng;
+        const y1 = p1.lat;
+        const x2 = p2.lng;
+        const y2 = p2.lat;  
+
+        const position = [{x: x1, y: y1}, {x: x2, y: y2}];
+        console.log('rect deleted', layer._bounds);
+      } else if (layer._latlng) { // scanzone
+        console.log('circle deleted', layer._latlng, layer._mRadius);
+      }
+    });
 
     //this.simulator.map.deleteObstacle();
   }
