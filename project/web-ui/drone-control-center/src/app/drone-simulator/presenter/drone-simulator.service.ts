@@ -127,34 +127,42 @@ export class DroneSimulatorService {
   }
 
   validateFlightPath() {
-    const flightpath = this.map.flightpath.toJSON();
-    this.onAlertEvent.emit({
-      title: 'Drone Control Center',
-      message: 'Validating flight path...',
-      type: 'info'
-    });
-    this.updateMap()
-      .then(() => {
-          this.http.validateFlightpath(flightpath)
-            .then((optimal) => {
-              console.log('Received optimal flightpath from server: ', optimal);
-              this.onAlertEvent.emit({
-                title: 'Drone Simulator',
-                message: 'Optimal flightpath calculated.',
-                type: 'success'
+    if (this.map.flightpath.waypoints.length > 0) {
+      const flightpath = this.map.flightpath.toJSON();
+      this.onAlertEvent.emit({
+        title: 'Drone Control Center',
+        message: 'Validating flight path...',
+        type: 'info'
+      });
+      this.updateMap(false)
+        .then(() => {
+            this.http.validateFlightpath(flightpath)
+              .then((optimal) => {
+                console.log('Received optimal flightpath from server: ', optimal);
+                this.onAlertEvent.emit({
+                  title: 'Drone Control Center',
+                  message: 'Optimal flightpath calculated.',
+                  type: 'success'
+                });
+                this.map.flightpath.setOptimalPath(optimal);
+              })
+              .catch((err) => {
+                this.onAlertEvent.emit({
+                  title: 'Drone Control Center',
+                  message: 'Error calculating optimal flightpath.',
+                  type: 'error'
+                });
               });
-              this.map.flightpath.setOptimalPath(optimal);
-            })
-            .catch((err) => {
-              this.onAlertEvent.emit({
-                title: 'Drone Simulator',
-                message: 'Error calculating optimal flightpath.',
-                type: 'error'
-              });
-            });
-        }
-      );
-    console.log(flightpath);
+          }
+        );
+      console.log(flightpath);
+    } else {
+      this.onAlertEvent.emit({
+        title: 'Drone Control Center',
+        message: 'No waypoints selected.',
+        type: 'error'
+      });
+    }
   }
 
   updateMap(notification = true) {

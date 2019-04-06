@@ -179,6 +179,7 @@ export class LeafletComponent implements OnInit {
     };
 
     connection.onmessage = (e) => {
+      console.log('WebSocket - update received');
       const data = JSON.parse(e.data);
       for (let i = 0; i < data.features.length; i++) {
         this.realtime.update(data.features[i]);
@@ -418,12 +419,16 @@ export class LeafletComponent implements OnInit {
 
   updateDroneData(feature) {
     const drone = this.simulator.drone;
-    console.log(feature);
     drone.position.x = feature.properties.position.x;
     drone.position.y = feature.properties.position.y;
     drone.position.z = feature.properties.position.z;
+    drone.yaw = feature.properties.orientation;
+    drone.pitch = feature.properties.pitch;
+    drone.roll = feature.properties.roll;
     drone.radius = feature.properties.radius;
-    console.log(drone);
+    drone.battery = feature.properties.battery;
+    drone.speed = feature.properties.speed;
+    drone.acceleration = feature.properties.acceleration;
   }
 
   onDrawDeleted(e) {
