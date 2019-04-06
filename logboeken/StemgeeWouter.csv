@@ -49,4 +49,5 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 02/04/19,13:30,19:00,Extern,Obstakels aanpasbaargemaakt - radius drone is instelbaar,21,
 03/04/19,16:00,19:30,Extern,Simulator model aangepast voor noden nieuwe visualisatie - nieuwe componenten toegevoegd,21,
 04/04/19,13:30,17:30,Campus,Testen van de dataflows tussen mockup-drone en nodered backend en visualisatie op de front-end,22,
+06/04/19,19:30,23:00,Extern,Leaflet objecten zijn volledig aanpasbaar en worden bijgehouden via API in database,21,
 
