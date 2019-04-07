@@ -43,7 +43,5 @@ userRouter.route('/login')
                 res.send(error);
             });
     });
-// userRouter.post('/register', ctrlAuth.register);
-// userRouter.post('/login', ctrlAuth.login);
 
 module.exports = userRouter;

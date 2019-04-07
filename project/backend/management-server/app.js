@@ -7,7 +7,6 @@ const logger = require('morgan');
 const cors = require('cors');
 const passport = require('passport');
 
-// [SH] Bring in the Passport config after model is defined
 require('./database/models/user');
 require('./api/config/passport');
 
@@ -20,7 +19,6 @@ const userRouter = require('./api/users');
 
 const app = express();
 
-// CORS om vanuit angular lokaal toegang te krijgen naar express
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
@@ -41,9 +39,6 @@ mongoose.connect('mongodb://localhost/drone1', {useNewUrlParser: true});
 let Dijkstra = new dijkstra();
 //Dijkstra.initializeMaps();
 
-// error handlers
-
-// [SH] Catch unauthorised errors
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
         res.status(401);
@@ -51,8 +46,6 @@ app.use(function (err, req, res, next) {
     }
 });
 
-// development error handler
-// will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
