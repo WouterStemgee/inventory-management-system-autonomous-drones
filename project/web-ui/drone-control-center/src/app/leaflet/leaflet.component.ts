@@ -198,8 +198,8 @@ export class LeafletComponent implements OnInit {
   checkScanZoneOverlap(flightpath) {
     const poly1 = flightpath;
     const poly2 = flightpath;
-    const overlapping = overlaps(poly1, poly2);
-    console.log(overlapping);
+    // const overlapping = overlaps(poly1, poly2);
+    // console.log(overlapping);
   }
 
   setFlightPath(geoJSON) {
