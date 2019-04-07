@@ -5,7 +5,6 @@ import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastrModule} from 'ngx-toastr';
 
-
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {DashboardComponent} from './dashboard/dashboard.component';
@@ -27,6 +26,12 @@ import {HttpService} from './http.service';
 import {DataService} from './data.service';
 import {LeafletModule} from '@asymmetrik/ngx-leaflet';
 import {LeafletDrawModule} from '@asymmetrik/ngx-leaflet-draw';
+import {AuthGuardService} from './auth-guard.service';
+import {AuthenticationService} from './authentication.service';
+import {ProfileComponent} from './profile/profile.component';
+import {LoginComponent} from './login/login.component';
+import {RegisterComponent} from './register/register.component';
+import {HomeComponent} from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +46,11 @@ import {LeafletDrawModule} from '@asymmetrik/ngx-leaflet-draw';
     AdminComponent,
     MapCreateComponent,
     GraphDataComponent,
-    SensorConfigurationComponent
+    SensorConfigurationComponent,
+    ProfileComponent,
+    LoginComponent,
+    RegisterComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +69,8 @@ import {LeafletDrawModule} from '@asymmetrik/ngx-leaflet-draw';
     })
   ],
   entryComponents: [DroneSimulatorComponent, DroneDataComponent],
-  providers: [SharedService, DroneSimulatorService, HttpService, DataService],
+  providers: [SharedService, DroneSimulatorService, HttpService, DataService, AuthenticationService,
+    AuthGuardService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

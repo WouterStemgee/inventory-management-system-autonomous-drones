@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
 import {map} from 'rxjs/operators';
 import {SharedService} from '../shared.service';
+import {AuthenticationService} from '../authentication.service';
 
 
 @Component({
@@ -20,7 +21,7 @@ export class NavigationComponent implements OnInit {
 
   page;
 
-  constructor(private breakpointObserver: BreakpointObserver, public simulator: DroneSimulatorService, private shared: SharedService) {
+  constructor(public auth: AuthenticationService, private breakpointObserver: BreakpointObserver, public simulator: DroneSimulatorService, private shared: SharedService) {
   }
 
   registerEvents() {

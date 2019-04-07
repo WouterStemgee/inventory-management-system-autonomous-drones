@@ -7,6 +7,7 @@
 const app = require('../../app');
 const debug = require('debug')('untitled:server');
 const http = require('http');
+const createError = require('http-errors');
 
 var RED = require('node-red');
 
@@ -43,8 +44,8 @@ app.use(settings.httpAdminRoot,RED.httpAdmin);
 app.use(settings.httpNodeRoot,RED.httpNode);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-    next(createError(404));
+app.use(function (err, req, res, next) {
+    next(createError(err.status));
 });
 
 // error handler
