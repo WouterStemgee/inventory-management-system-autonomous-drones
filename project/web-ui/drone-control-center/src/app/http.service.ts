@@ -128,4 +128,19 @@ export class HttpService {
       );
     });
   }
+
+  updateSubscriptions(topics){
+    return new Promise((resolve, reject) => {
+      console.log({subscriptions: topics});
+      console.log(environment.baseAPIUrl + 'red/data');
+      this.http.put(environment.baseAPIUrl + 'red/data/', {subscriptions: topics}).subscribe(
+        result => {
+          resolve(result);
+        },
+        (error: HttpErrorResponse) => {
+          reject(error);
+        }
+      );
+    });
+  }
 }

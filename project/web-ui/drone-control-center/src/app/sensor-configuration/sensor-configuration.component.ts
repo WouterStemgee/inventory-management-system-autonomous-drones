@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {HttpService} from "../http.service";
 
 @Component({
   selector: 'app-sensor-configuration',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SensorConfigurationComponent implements OnInit {
 
-  constructor() { }
+  subscriptions = {speed: true,
+            orientation: true,
+            acceleration: true,
+            position: false,
+            battery: true};
+  constructor(private http: HttpService) { }
 
   ngOnInit() {
+    this.http.updateSubscriptions(this.subscriptions).catch(console.log("wtf"));
   }
 
 }
