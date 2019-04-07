@@ -137,12 +137,13 @@ export class HttpService {
         })
       };
       console.log(environment.baseAPIUrl + 'red/data');
-      this.http.put(environment.baseAPIUrl + 'red/datatext/', topics, httpOptions).subscribe(
+      this.http.put(environment.baseAPIUrl + 'red/data/', topics, httpOptions).subscribe(
         result => {
           resolve(result);
         },
         (error: HttpErrorResponse) => {
-          reject(error);
+          //fy met werkt dus
+          //resolve(error);
         }
       );
     });
