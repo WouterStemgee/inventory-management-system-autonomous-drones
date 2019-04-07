@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {SharedService} from './shared.service';
 import {DroneSimulatorService} from './drone-simulator/presenter/drone-simulator.service';
 import {ToastrService} from 'ngx-toastr';
+import {AuthenticationService} from './authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,7 @@ export class AppComponent {
   title = 'Drone Control Center';
   activeTab;
 
-  constructor(private service: SharedService, public simulator: DroneSimulatorService, private toastr: ToastrService) {
+  constructor(public auth: AuthenticationService, private service: SharedService, public simulator: DroneSimulatorService, private toastr: ToastrService) {
     this.simulator.load()
       .then(() => {
         simulator.onSimulatorLoadedEvent.emit(true);
