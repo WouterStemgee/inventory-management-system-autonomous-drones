@@ -7,9 +7,11 @@ import 'leaflet-rotatedmarker';
 import '../../../node_modules/leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.src';
 import './plugins/L.SimpleGraticule';
 import './plugins/L.RotateImageLayer';
-import {circleToPolygon} from 'circle-to-polygon';
+import {circleToPolygon} from '../../../node_modules/circle-to-polygon';
+
 import {HttpService} from '../http.service';
 import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
+
 
 @Component({
   selector: 'app-leaflet',
@@ -193,8 +195,18 @@ export class LeafletComponent implements OnInit {
 
   }
 
+  checkScanZoneOverlap(flightpath) {
+    const poly1 = flightpath;
+    const poly2 = flightpath;
+    const overlapping = overlaps(poly1, poly2);
+    console.log(overlapping);
+  }
+
   setFlightPath(geoJSON) {
     const coords = geoJSON.geometry.coordinates;
+    const dronePosition = this.simulator.drone.position;
+    const startPosition = {x: dronePosition.x, y: dronePosition.y};
+    // const waypoints = [startPosition];
     const waypoints = [];
     coords.forEach(c => {
       waypoints.push({
@@ -204,6 +216,7 @@ export class LeafletComponent implements OnInit {
     });
     console.log(waypoints);
     this.simulator.map.flightpath.waypoints = waypoints;
+    this.checkScanZoneOverlap(geoJSON);
   }
 
   flightpathLayerId;
@@ -432,6 +445,7 @@ export class LeafletComponent implements OnInit {
   }
 
   onDrawDeleted(e) {
+    console.log(e);
     const layers = e.layers._layers;
     Object.keys(layers).forEach(id => {
       const layer = layers[id];
@@ -451,6 +465,9 @@ export class LeafletComponent implements OnInit {
         const y1 = p.lat;
         const r = layer._mRadius;
         this.simulator.map.removeScanZone(x1, y1);
+      }
+      if (layer._latlngs) { // flightpath
+        this.simulator.map.flightpath.waypoints = [];
       }
     });
     this.simulator.updateMap();
