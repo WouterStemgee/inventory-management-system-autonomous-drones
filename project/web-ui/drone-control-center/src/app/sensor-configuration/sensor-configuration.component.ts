@@ -16,6 +16,10 @@ export class SensorConfigurationComponent implements OnInit {
   constructor(private http: HttpService) { }
 
   ngOnInit() {
+    this.subChanged();
+  }
+
+  subChanged(){
     this.http.updateSubscriptions(this.subscriptions);
   }
 

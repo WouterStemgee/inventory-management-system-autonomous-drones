@@ -136,13 +136,12 @@ export class HttpService {
           'Content-Type':  'application/json'
         })
       };
-      console.log(environment.baseAPIUrl + 'red/data');
       this.http.put(environment.baseAPIUrl + 'red/data/', topics, httpOptions).subscribe(
         result => {
           resolve(result);
         },
         (error: HttpErrorResponse) => {
-          //fy met werkt dus
+          //fuck deze shit het werkt dus
           //resolve(error);
         }
       );
