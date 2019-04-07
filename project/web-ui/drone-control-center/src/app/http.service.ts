@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {environment} from '../environments/environment';
 
 @Injectable({
@@ -131,9 +131,13 @@ export class HttpService {
 
   updateSubscriptions(topics){
     return new Promise((resolve, reject) => {
-      console.log({subscriptions: topics});
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type':  'application/json'
+        })
+      };
       console.log(environment.baseAPIUrl + 'red/data');
-      this.http.put(environment.baseAPIUrl + 'red/data/', {subscriptions: topics}).subscribe(
+      this.http.put(environment.baseAPIUrl + 'red/data/', topics, httpOptions).subscribe(
         result => {
           resolve(result);
         },

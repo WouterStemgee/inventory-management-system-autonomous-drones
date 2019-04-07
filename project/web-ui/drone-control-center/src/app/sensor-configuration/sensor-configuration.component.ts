@@ -11,12 +11,12 @@ export class SensorConfigurationComponent implements OnInit {
   subscriptions = {speed: true,
             orientation: true,
             acceleration: true,
-            position: false,
+            position: true,
             battery: true};
   constructor(private http: HttpService) { }
 
   ngOnInit() {
-    this.http.updateSubscriptions(this.subscriptions).catch(console.log("wtf"));
+    this.http.updateSubscriptions(this.subscriptions);
   }
 
 }
