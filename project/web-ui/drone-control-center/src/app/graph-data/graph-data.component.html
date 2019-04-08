@@ -1,3 +1,24 @@
-<p>
-  graph-data works!
-</p>
+<!--standard chart (eventueel ngfor werken)-->
+
+<div>
+  <mat-grid-list [cols]="4">
+    <mat-grid-tile>
+      <canvas baseChart
+              [chartType]="'line'"
+              [datasets]="boundedDataSet"
+              [labels]="boundedLabels"
+              [options]="boundedOptions"
+              [legend]="boundedLegend">
+      </canvas>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <canvas baseChart
+              [chartType]="'line'"
+              [datasets]="boundedDataSet"
+              [labels]="boundedLabels"
+              [options]="boundedOptions"
+              [legend]="boundedLegend">
+      </canvas>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>
