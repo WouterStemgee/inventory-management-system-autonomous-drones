@@ -41,3 +41,6 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 31/03/19,16:00,19:45,Extern,scanner integreren + D3js,,
 01/03/19,15:15,16:15,Extern,D3js,,
 02/03/19,08:30,12:30,Campus,Bedrijfsbezoek,,
+04/03/19,13:30,17:45,Campus,Alles proberen integreren met elkaar,,
+06/03/19,11:15,12:30,Extern,Overweging gemaakt tussen D3js en chartjs (al dan niet in nodered) => ga voor chartjs omdat er niet zo een ingewikkelde diagramma moeten gevormd worden,,
+07/03/19,15:00,17:00,Extern,Frontend grondig bekijken + aan de charts werken,,

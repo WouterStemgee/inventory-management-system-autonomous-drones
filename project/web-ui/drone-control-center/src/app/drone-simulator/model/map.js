@@ -42,7 +42,7 @@ export class Map {
         name: p.name,
         range: p.range,
         orientation: p.orientation,
-        position: {x: p.x, y: p.y}
+        position: {x: p.position.x, y: p.position.y}
       })
     );
     return map;
@@ -56,10 +56,30 @@ export class Map {
     this.scanzones.push(p);
   }
 
+  removeScanZone(x, y) {
+    for (let i = this.scanzones.length - 1; i >= 0; i--) {
+      if (this.scanzones[i].position.x === x && this.scanzones[i].position.y === y) {
+        this.scanzones.splice(i, 1);
+      }
+    }
+  }
+
   addObstacle(positions) {
     let o = new Obstacle();
     o.positions = positions;
     this.obstacles.push(o);
+  }
+
+  removeObstacle(positions) {
+    for (let i = this.obstacles.length - 1; i >= 0; i--) {
+      if (
+        this.obstacles[i].positions[0].x === positions[0].x &&
+        this.obstacles[i].positions[0].y === positions[0].y &&
+        this.obstacles[i].positions[1].x === positions[1].x &&
+        this.obstacles[i].positions[1].y === positions[1].y)  {
+        this.obstacles.splice(i, 1);
+      }
+    }
   }
 
 }

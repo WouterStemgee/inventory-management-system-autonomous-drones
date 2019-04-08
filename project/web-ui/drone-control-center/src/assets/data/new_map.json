@@ -35,29 +35,150 @@
       ]
     }
   ],
+  "products": [
+    {
+      "name": "badeendjes",
+      "quantity": 500
+    }
+  ],
   "scanzones": [
     {
       "position": {
         "x": 3072,
         "y": 1024
       },
-      "orientation": 0,
-      "range": 650,
+      "orientation": 180,
+      "range": 450,
       "name": "SCANLOCATIE"
     },{
       "position": {
         "x": 5120,
-        "y": 1024
+        "y": 1124
       },
       "orientation": 180,
+      "range": 450,
+      "name": "test locatie"
+    }, {
+      "position": {
+        "x": 8000,
+        "y": 3000
+      },
+      "orientation": 0,
+      "range": 500,
+      "name": "test locatie"
+    },{
+      "position": {
+        "x": 10500,
+        "y": 3100
+      },
+      "orientation": 0,
       "range": 650,
       "name": "test locatie"
-    }
-  ],
-  "products": [
+    },{
+      "position": {
+        "x": 17250,
+        "y": 2100
+      },
+      "orientation": 270,
+      "range": 550,
+      "name": "test locatie"
+    },
     {
-      "name": "badeendjes",
-      "quantity": 500
+      "position": {
+        "x": 17250,
+        "y": 7700
+      },
+      "orientation": 270,
+      "range": 450,
+      "name": "test locatie"
+    },{
+      "position": {
+        "x": 1800,
+        "y": 2150
+      },
+      "orientation": 90,
+      "range": 350,
+      "name": "test locatie"
+    },{
+      "position": {
+        "x": 1800,
+        "y": 7700
+      },
+      "orientation": 90,
+      "range": 400,
+      "name": "test locatie"
+    },
+    {
+      "position": {
+        "x": 5500,
+        "y": 5800
+      },
+      "orientation": 0,
+      "range": 500,
+      "name": "test locatie"
+    },
+    {
+      "position": {
+        "x": 15000,
+        "y": 5800
+      },
+      "orientation": 0,
+      "range": 450,
+      "name": "test locatie"
+    },
+    {
+      "position": {
+        "x": 22500,
+        "y": 600
+      },
+      "orientation": 0,
+      "range": 600,
+      "name": "test locatie"
+    },
+    {
+      "position": {
+        "x": 22800,
+        "y": 10000
+      },
+      "orientation": 180,
+      "range": 450,
+      "name": "test locatie"
+    },
+    {
+      "position": {
+        "x": 12500,
+        "y": 8600
+      },
+      "orientation": 0,
+      "range": 500,
+      "name": "test locatie"
+    },
+    {
+      "position": {
+        "x": 10500,
+        "y": 8600
+      },
+      "orientation": 0,
+      "range": 500,
+      "name": "test locatie"
+    },
+    {
+      "position": {
+        "x": 8500,
+        "y": 8600
+      },
+      "orientation": 0,
+      "range": 500,
+      "name": "test locatie"
+    },
+    {
+      "position": {
+        "x": 6500,
+        "y": 8600
+      },
+      "orientation": 0,
+      "range": 500,
+      "name": "test locatiee"
     }
   ]
 }

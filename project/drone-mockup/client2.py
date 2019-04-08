@@ -9,8 +9,11 @@ class Client2:
 
     def stuurPosition(self,drone):
         self.client.loop_start()
-        string = ""+str(drone.get_xCoord())+";"+str(drone.get_yCoord())+";"+str(drone.get_zCoord())
-        array = [drone.get_xCoord(),drone.get_yCoord(),drone.get_zCoord()]
-        y = json.dumps(array)
-        self.client.publish("drone/position", str(y))
+        x = {
+            "x":self.drone.get_xCoord(),
+            "y": self.drone.get_yCoord(),
+            "z":self.drone.get_zCoord()
+        }
+        y = json.dumps(x)
+        self.client.publish("drone/position", y)
         self.client.loop_stop()

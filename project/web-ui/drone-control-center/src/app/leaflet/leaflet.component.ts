@@ -7,9 +7,11 @@ import 'leaflet-rotatedmarker';
 import '../../../node_modules/leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.src';
 import './plugins/L.SimpleGraticule';
 import './plugins/L.RotateImageLayer';
-import {circleToPolygon} from 'circle-to-polygon';
+import {circleToPolygon} from '../../../node_modules/circle-to-polygon';
+
 import {HttpService} from '../http.service';
 import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
+
 
 @Component({
   selector: 'app-leaflet',
@@ -19,6 +21,7 @@ import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulato
 export class LeafletComponent implements OnInit {
 
   constructor(private http: HttpService, public simulator: DroneSimulatorService) {
+
   }
 
   minZoom = -5;
@@ -178,6 +181,7 @@ export class LeafletComponent implements OnInit {
     };
 
     connection.onmessage = (e) => {
+      console.log('WebSocket - update received');
       const data = JSON.parse(e.data);
       for (let i = 0; i < data.features.length; i++) {
         this.realtime.update(data.features[i]);
@@ -191,9 +195,19 @@ export class LeafletComponent implements OnInit {
 
   }
 
+  checkScanZoneOverlap(flightpath) {
+    const poly1 = flightpath;
+    const poly2 = flightpath;
+    // const overlapping = overlaps(poly1, poly2);
+    // console.log(overlapping);
+  }
+
   setFlightPath(geoJSON) {
-    let coords = geoJSON.geometry.coordinates;
-    let waypoints = [];
+    const coords = geoJSON.geometry.coordinates;
+    const dronePosition = this.simulator.drone.position;
+    const startPosition = {x: dronePosition.x, y: dronePosition.y};
+    // const waypoints = [startPosition];
+    const waypoints = [];
     coords.forEach(c => {
       waypoints.push({
         x: Math.floor(c[0]),
@@ -202,6 +216,7 @@ export class LeafletComponent implements OnInit {
     });
     console.log(waypoints);
     this.simulator.map.flightpath.waypoints = waypoints;
+    this.checkScanZoneOverlap(geoJSON);
   }
 
   flightpathLayerId;
@@ -292,28 +307,25 @@ export class LeafletComponent implements OnInit {
   }
 
   onDrawCreated(e) {
-    if (e.layer.toGeoJSON().geometry.type === 'LineString') {
+    if (e.layer.toGeoJSON().geometry.type === 'LineString') { // flightpath
       this.flightpathLayerId = e.layer._leaflet_id;
       this.setFlightPath(e.layer.toGeoJSON());
-    } else if (e.layer.toGeoJSON().geometry.type === 'Polygon') {
-      // add obstacle to simulator model
+    } else if (e.layer.toGeoJSON().geometry.type === 'Polygon') { // obstacle
       const coordinates = e.layer.toGeoJSON().geometry.coordinates[0];
       const p1 = coordinates[0];
       const p2 = coordinates[2];
       const positions = [{x: p1[0], y: p1[1]}, {x: p2[0], y: p2[1]}];
       this.simulator.map.addObstacle(positions);
-      // console.log(this.simulator.map.obstacles);
-    } else if (e.layer.toGeoJSON().geometry.type === 'Point') {
-      // add obstacle to simulator model
+    } else if (e.layer.toGeoJSON().geometry.type === 'Point') { // scanzone
       const coordinate = e.layer.toGeoJSON().geometry.coordinates;
       const position = {x: coordinate[0], y: coordinate[1]};
-      // this.simulator.map.addScanZone();
-      // console.log(this.simulator.map.obstacles);
+      this.simulator.map.addScanZone(e.layer._leaflet_id.toString(), position.x, position.y, 0, e.layer._mRadius);
     }
     e.layer.on('click', () => {
       const geoJSON = e.layer.toGeoJSON();
       console.log(JSON.stringify(geoJSON));
     });
+    this.simulator.updateMap(false);
   }
 
   ngOnInit() {
@@ -339,23 +351,125 @@ export class LeafletComponent implements OnInit {
     }
   }
 
+  editingLayers = [];
+
   onDrawEdited(e) {
     if (this.flightpathLayerId) {
       const layer = this.editableLayers.getLayer(this.flightpathLayerId) as L.GeoJSON;
       this.setFlightPath(layer.toGeoJSON());
     }
+
+    Object.keys(e.layers._layers).forEach(id => {
+      const newLayer = e.layers._layers[id];
+      const oldLayer = this.editingLayers.find((layer, index) => {
+        return layer.id === newLayer._leaflet_id;
+      });
+
+      if (oldLayer.bounds) { // obstacle
+        const bounds = oldLayer.bounds;
+        const p1 = bounds._southWest;
+        const p2 = bounds._northEast;
+        const x1 = p1.lng;
+        const y1 = p1.lat;
+        const x2 = p2.lng;
+        const y2 = p2.lat;
+        const oldPositions = [{x: x1, y: y1}, {x: x2, y: y2}];
+
+        this.simulator.map.removeObstacle(oldPositions);
+
+        const newBounds = newLayer._bounds;
+        const newP1 = newBounds._southWest;
+        const newP2 = newBounds._northEast;
+        const newX1 = newP1.lng;
+        const newY1 = newP1.lat;
+        const newX2 = newP2.lng;
+        const newY2 = newP2.lat;
+        const newPositions = [{x: newX1, y: newY1}, {x: newX2, y: newY2}];
+
+        this.simulator.map.addObstacle(newPositions);
+      } else if (oldLayer.position) { // scanzone
+        const p = oldLayer.position;
+        const x1 = p.lng;
+        const y1 = p.lat;
+
+        this.simulator.map.removeScanZone(x1, y1);
+
+        const newP = newLayer._latlng;
+        const newX1 = newP.lng;
+        const newY1 = newP.lat;
+        const newR = newLayer._mRadius;
+
+        this.simulator.map.addScanZone('scanzone', newX1, newY1, 0, newR);
+      }
+    });
+
+    this.simulator.updateMap();
   }
+
+  oDrawEditStart(e) {
+    const layers = [];
+    Object.keys(e.target._layers).forEach(id => {
+      if (e.target._layers[id]._bounds) {
+        layers.push({
+          id: e.target._layers[id]._leaflet_id,
+          bounds: e.target._layers[id]._bounds
+        });
+      } else if (e.target._layers[id]._mRadius) {
+        layers.push({
+          id: e.target._layers[id]._leaflet_id,
+          position: e.target._layers[id]._latlng,
+          range: e.target._layers[id]._mRadius
+        });
+      }
+    });
+    this.editingLayers = layers;
+  }
+
 
   onLeafletClick(e) {
     const coord = e.latlng;
-    // console.log('X:' + coord.lng + '\nY:' + coord.lat);
   }
 
   updateDroneData(feature) {
     const drone = this.simulator.drone;
-    drone.position.x = feature.properties.position[0];
-    drone.position.y = feature.properties.position[1];
-    drone.position.z = feature.properties.position[2];
+    drone.position.x = feature.properties.position.x;
+    drone.position.y = feature.properties.position.y;
+    drone.position.z = feature.properties.position.z;
+    drone.yaw = feature.properties.orientation;
+    drone.pitch = feature.properties.pitch;
+    drone.roll = feature.properties.roll;
     drone.radius = feature.properties.radius;
+    drone.battery = feature.properties.battery;
+    drone.speed = feature.properties.speed;
+    drone.acceleration = feature.properties.acceleration;
+  }
+
+  onDrawDeleted(e) {
+    console.log(e);
+    const layers = e.layers._layers;
+    Object.keys(layers).forEach(id => {
+      const layer = layers[id];
+      if (layer._bounds) { // obstacle
+        const bounds = layer._bounds;
+        const p1 = bounds._southWest;
+        const p2 = bounds._northEast;
+        const x1 = p1.lng;
+        const y1 = p1.lat;
+        const x2 = p2.lng;
+        const y2 = p2.lat;
+        const positions = [{x: x1, y: y1}, {x: x2, y: y2}];
+        this.simulator.map.removeObstacle(positions);
+      } else if (layer._latlng) { // scanzone
+        const p = layer._latlng;
+        const x1 = p.lng;
+        const y1 = p.lat;
+        const r = layer._mRadius;
+        this.simulator.map.removeScanZone(x1, y1);
+      }
+      if (layer._latlngs) { // flightpath
+        this.simulator.map.flightpath.waypoints = [];
+      }
+    });
+    this.simulator.updateMap();
   }
 }

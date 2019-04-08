@@ -1,0 +1,10 @@
+.checkbox {
+  margin: 0 10px;
+  font-size: 15px;
+}
+
+.card {
+  display: flow;
+  align-content: center;
+  align-items: center;
+}

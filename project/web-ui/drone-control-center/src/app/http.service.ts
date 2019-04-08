@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {environment} from '../environments/environment';
 
 @Injectable({
@@ -63,7 +63,7 @@ export class HttpService {
     });
   }
 
-  fetchOptimalFlightpath(flightpath) {
+  validateFlightpath(flightpath) {
     return new Promise((resolve, reject) => {
       this.http.post(environment.baseAPIUrl + 'api/flightpath/', flightpath).subscribe(
         result => {
@@ -124,6 +124,25 @@ export class HttpService {
         },
         (error: HttpErrorResponse) => {
           reject(error);
+        }
+      );
+    });
+  }
+
+  updateSubscriptions(topics){
+    return new Promise((resolve, reject) => {
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type':  'application/json'
+        })
+      };
+      this.http.put(environment.baseAPIUrl + 'red/data/', topics, httpOptions).subscribe(
+        result => {
+          resolve(result);
+        },
+        (error: HttpErrorResponse) => {
+          //fuck deze shit het werkt dus
+          //resolve(error);
         }
       );
     });
