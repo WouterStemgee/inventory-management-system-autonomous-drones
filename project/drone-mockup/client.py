@@ -23,7 +23,7 @@ class Client:
             topic = msg.topic
             m_decode = str(msg.payload.decode("utf-8", "ignore"))
             print("message received", m_decode)
-            if topic == "moveto":
+            if topic == "drone/moveto":
                 # json {x:...,y...}
                 d = json.loads(m_decode)
                 #coordinaten = m_decode.split(';')
