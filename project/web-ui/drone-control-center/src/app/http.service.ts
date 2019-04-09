@@ -129,7 +129,7 @@ export class HttpService {
     });
   }
 
-  updateSubscriptions(topics){
+  updateSubscriptions(topics) {
     return new Promise((resolve, reject) => {
       const httpOptions = {
         headers: new HttpHeaders({
@@ -141,8 +141,7 @@ export class HttpService {
           resolve(result);
         },
         (error: HttpErrorResponse) => {
-          //fuck deze shit het werkt dus
-          //resolve(error);
+          reject(error);
         }
       );
     });
