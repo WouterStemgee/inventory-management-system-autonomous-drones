@@ -127,12 +127,7 @@ export class LeafletComponent implements OnInit {
             interactive: true,
             animate: false,
             rotation: feature.properties.orientation
-          }).bindPopup(
-          '<p>X: ' + feature.geometry.coordinates[0] + '<br />' +
-          '<p>Y: ' + feature.geometry.coordinates[1] + '<br />' +
-          '<p>Z: ' + feature.geometry.coordinates[2] + '<br />' +
-          '<p>Yaw: ' + feature.properties.orientation + '<br />'
-        );
+          })
       },
       onEachFeature(f, l) {
         // console.log(f);
@@ -432,9 +427,9 @@ export class LeafletComponent implements OnInit {
 
   updateDroneData(feature) {
     const drone = this.simulator.drone;
-    drone.position.x = feature.properties.position.x;
-    drone.position.y = feature.properties.position.y;
-    drone.position.z = feature.properties.position.z;
+    drone.position.x = feature.properties.position ? feature.properties.position.x : 0;
+    drone.position.y = feature.properties.position ? feature.properties.position.y : 0;
+    drone.position.z = feature.properties.position ? feature.properties.position.z : 0;
     drone.yaw = feature.properties.orientation;
     drone.pitch = feature.properties.pitch;
     drone.roll = feature.properties.roll;

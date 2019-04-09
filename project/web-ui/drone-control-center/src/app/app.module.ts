@@ -33,7 +33,6 @@ import {AuthenticationService} from './authentication.service';
 import {ProfileComponent} from './profile/profile.component';
 import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
-import {HomeComponent} from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -51,8 +50,7 @@ import {HomeComponent} from './home/home.component';
     SensorConfigurationComponent,
     ProfileComponent,
     LoginComponent,
-    RegisterComponent,
-    HomeComponent
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
