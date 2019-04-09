@@ -12,6 +12,9 @@ export class LoginComponent {
   };
 
   constructor(private auth: AuthenticationService, private router: Router) {
+    if (auth.isLoggedIn()) {
+      this.router.navigateByUrl('/dashboard');
+    }
   }
 
   login() {
