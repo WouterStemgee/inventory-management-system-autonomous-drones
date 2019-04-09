@@ -5,7 +5,8 @@ import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastrModule} from 'ngx-toastr';
 import {AppRoutingModule} from './app-routing.module';
-import {ChartsModule} from "ng2-charts";
+import {ChartsModule} from 'ng2-charts';
+import {NgxChartsModule} from '@swimlane/ngx-charts';
 
 import {AppComponent} from './app.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
@@ -68,7 +69,8 @@ import {HomeComponent} from './home/home.component';
       preventDuplicates: true,
       closeButton: true
     }),
-    ChartsModule
+    ChartsModule,
+    NgxChartsModule
   ],
   entryComponents: [DroneSimulatorComponent, DroneDataComponent],
   providers: [SharedService, DroneSimulatorService, HttpService, DataService, AuthenticationService,
