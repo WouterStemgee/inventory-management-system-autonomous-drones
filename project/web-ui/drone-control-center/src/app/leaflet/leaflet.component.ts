@@ -176,7 +176,7 @@ export class LeafletComponent implements OnInit {
     };
 
     connection.onmessage = (e) => {
-      console.log('WebSocket - update received');
+      // console.log('WebSocket - update received');
       const data = JSON.parse(e.data);
       for (let i = 0; i < data.features.length; i++) {
         this.realtime.update(data.features[i]);
