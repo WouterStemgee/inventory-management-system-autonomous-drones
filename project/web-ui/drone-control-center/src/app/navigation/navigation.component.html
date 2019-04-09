@@ -32,7 +32,7 @@
       <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="admin">Admin</a>
       <a mat-list-item *ngIf="!auth.isLoggedIn()" routerLink="login">Sign in</a>
       <a mat-list-item *ngIf="!auth.isLoggedIn()" routerLink="register">Register</a>
-      <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="profile">{{ auth.getUserDetails()?.name }}</a>
+      <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="profile">Profile</a>
       <a mat-list-item *ngIf="auth.isLoggedIn()" (click)="auth.logout()">Logout</a>
     </mat-nav-list>
   </mat-sidenav>
