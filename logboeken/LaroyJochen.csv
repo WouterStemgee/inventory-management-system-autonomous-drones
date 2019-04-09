@@ -43,4 +43,7 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 02/03/19,08:30,12:30,Campus,Bedrijfsbezoek,,
 04/03/19,13:30,17:45,Campus,Alles proberen integreren met elkaar,,
 06/03/19,11:15,12:30,Extern,Overweging gemaakt tussen D3js en chartjs (al dan niet in nodered) => ga voor chartjs omdat er niet zo een ingewikkelde diagramma moeten gevormd worden,,
-07/03/19,15:00,17:00,Extern,Frontend grondig bekijken + aan de charts werken,,
+06/03/19,15:00,17:00,Extern,Frontend grondig bekijken + aan de charts werken,,
+07/03/19,11:30,14:00,Extern,Aan de charts werken,,
+07/03/19,16:00,20:30,Extern,Frontend verder bekeken + routing aangepast + angular material bekeken + aan de charts gewerkt,,
+08/03/19,11:00,15:00,Extern,Basischarts geïmplementeerd + deze proberen manipuleren,,
