@@ -1,6 +1,6 @@
 import paho.mqtt.client as mqtt
 import time
-from Drone import Drone
+#from Drone import Drone
 import json
 
 class Client:
@@ -33,8 +33,8 @@ class Client:
                 #zCoord = coordinaten[2]
                 xCoord = d["x"]
                 yCoord = d["y"]
-                zCoord = d["z"]
-                self.drone.vliegNaar(xCoord,yCoord,zCoord)
+                #zCoord = d["z"] # er zit nog geen z-coord in
+                self.drone.vliegNaar(xCoord,yCoord,zCoord=-1)
             elif topic == "snelheid":
                 # Vx;Vy;Vz
                 vector = m_decode.split(';')
@@ -63,14 +63,20 @@ class Client:
         #self.client.on_disconnect = on_disconnect
         self.client.on_message = on_message
 
+    def stuurPosition(self):
+        self.client.loop_start()
+        x = {
+            "x":self.drone.get_xCoord(),
+            "y": self.drone.get_yCoord(),
+            "z":self.drone.get_zCoord()
+        }
+        y = json.dumps(x)
+        self.client.publish("drone/position", y)
+        self.client.loop_stop()
+
     def stuurScan(self):
         self.client.loop_start()
         self.client.publish("drone/scan",self.drone.scan())
-        self.client.loop_stop()
-
-    def ontvangScanCommando(self):
-        self.client.loop_start()
-        self.client.subscribe("drone/scanCommando")
         self.client.loop_stop()
 
     def stuurBattery(self):
@@ -83,17 +89,6 @@ class Client:
         self.client.loop_stop()
         #self.client.disconnect()
 
-    def stuurPosition(self):
-        self.client.loop_start()
-        x = {
-            "x": self.drone.get_xCoord(),
-            "y": self.drone.get_yCoord(),
-            "z": self.drone.get_zCoord()
-        }
-        y = json.dumps(x)
-        self.client.publish("drone/position", y)
-        self.client.loop_stop()
-
     def stuurAcceleration(self):
         self.client.loop_start()
         x = {
@@ -101,7 +96,6 @@ class Client:
             "y":self.drone.get_yCoord(),
             "z:":self.drone.get_zCoord()
         }
-
         string = json.dumps(x)
         self.client.publish("drone/acceleration",string)
         self.client.loop_stop()
@@ -124,6 +118,12 @@ class Client:
     def stuurPitch(self):
         self.client.loop_start()
         self.client.publish("drone/pitch", self.drone.get_pitch())
+        self.client.loop_stop()
+
+
+    def ontvangScanCommando(self):
+        self.client.loop_start()
+        self.client.subscribe("drone/scanCommando")
         self.client.loop_stop()
 
     def ontvangWaypoint(self):

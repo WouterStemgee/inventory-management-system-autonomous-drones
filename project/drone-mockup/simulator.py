@@ -6,6 +6,7 @@ class Simulator:
     def __init__(self,d):
         self.drone = d
         self.client = Client(self.drone)
+        self.drone.set_client(self.client)
 
     def simuleer(self):
         self.client.connecteer()
@@ -32,7 +33,7 @@ class Simulator:
 
         self.client.disconnecteer() # hier ga je nooit geraken, het programma moet in een oneindige loop lopen
 
-drone = Drone(5,6)
+drone = Drone()
 drone.set_battery(100)
 drone.set_xCoord(2)
 drone.set_yCoord(22)

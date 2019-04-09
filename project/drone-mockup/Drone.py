@@ -4,14 +4,12 @@ import paho.mqtt.client as mqtt
 import time
 import math
 import time
-from client2 import Client2
 
 class Drone:
-    def __init__(self,length,width=0):
-        #self.client = Client(self)
-        self.length = length
-        if(width==0):
-            self.width = length
+    def __init__(self):
+        self.client = None
+        self.length = None
+        self.width = None
         self.battery = 100
         # positie array
         self.position = [1,1,1] # xcoord, ycoord en zcoord, nog geen getters en setters
@@ -63,6 +61,9 @@ class Drone:
             'battery': self.battery
         }
         return json.dumps(payload)
+
+    def set_client(self,c):
+        self.client = c
 
     def get_jaw(self):
         return self.jaw
@@ -269,20 +270,16 @@ class Drone:
                 elif x > initieelX:
                     self.position[0] = initieelX + (self.speed[0] * t)
             print("op tijdstip: ", t, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
+            self.client.stuurPosition() #////////////////
             t = t + 0.05
             round(t,2)  # dit geeft een hoop slecht afgeronde komma getallen door beperkingen in de binaite voorstelling
-            #self.client.stuurPosition() #///////////////
-            cl = Client2() #/////////
-            cl.stuurPosition(self)
             time.sleep(0.05)
         self.position[0] = x
         self.position[1] = y
         print("op tijdstip: ", tijd, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
+        self.client.stuurPosition() #///////////////////
         self.speed[0] = 0
         self.speed[1] = 0
-        #self.client.stuurPosition() # ///////////
-        cl = Client2()  # /////////
-        cl.stuurPosition(self)
         return tijd
 
     def vliegVerticaal(self,z,tijd):
@@ -299,21 +296,18 @@ class Drone:
                 elif z < self.position[2]:
                     self.position[2] = initieelZ - self.speed[2]*t
                 print("op tijdstip: ", t+tijd, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
+                self.client.stuurPosition()  # ///////////////////
                 t = t + 0.05
                 round(t,2)
-                #self.client.stuurPosition() #/////////
-                cl = Client2()  # /////////
-                cl.stuurPosition(self)
                 time.sleep(0.05)
             self.position[2] = z
             print("op tijdstip: ", tijd+tijd2, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
+            self.client.stuurPosition()  # ///////////////////
             self.speed[2] = 0
-            #self.client.stuurPosition() #///////////
-            cl = Client2() #/////////
-            cl.stuurPosition(self)
-
 
     def vliegNaar(self,x,y,z):
+        if z == -1:
+            z = self.position[2]
         if not (x == self.position[0] and y == self.position[1] and z == self.position[2]):
             # als je op zelfde positie blijft doe je niets
             tijd = self.vliegHorizontaal(x,y)
@@ -322,7 +316,7 @@ class Drone:
                 self.vliegVerticaal(z,tijd)
 
     def scan(self):
-        print("item geskand met waarde 4000")
+        print("item gescand met waarde 4000")
         return 4000
 
 class DroneSerializer:
