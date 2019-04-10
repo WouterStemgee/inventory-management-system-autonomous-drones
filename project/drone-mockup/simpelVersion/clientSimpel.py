@@ -3,14 +3,10 @@ import time
 # from Drone import Drone
 import json
 
+class ClientSimpel:
 
-class Client:
     def __init__(self, d):
         self.drone = d
-
-        def on_log(client, userdata, level, buf):
-            print("log: " + buf)
-
         def on_connect(client, userdata, flags, rc):
             if rc == 0:
                 print("connected oke")
@@ -34,28 +30,8 @@ class Client:
                 # zCoord = coordinaten[2]
                 xCoord = d["x"]
                 yCoord = d["y"]
-                # zCoord = d["z"] # er zit nog geen z-coord in
-                self.drone.vliegNaar(xCoord, yCoord, 0)
-            elif topic == "snelheid":
-                # Vx;Vy;Vz
-                vector = m_decode.split(';')
-                Vx = vector[0]
-                Vy = vector[1]
-                Vz = vector[2]
-                self.drone.set_speedX(Vx)
-                self.drone.set_speedY(Vy)
-                self.drone.set_speedZ(Vz)
-            elif topic == "versnelling":
-                # Ax;Ay;Az
-                vector = m_decode.split(';')
-                Ax = vector[0]
-                Ay = vector[1]
-                Az = vector[2]
-                self.drone.set_accelX(Ax)
-                self.drone.set_accelY(Ay)
-                self.drone.set_accelZ(Az)
-            elif topic == "ScanCommando":
-                self.drone.scan()
+                zCoord = d["z"] # er zit nog geen z-coord in
+                self.drone.vliegNaar(xCoord, yCoord, zCoord)
 
         self.client = mqtt.Client("python1")
         # self.broker = "test.mosquitto.org"
@@ -91,56 +67,9 @@ class Client:
         self.client.loop_stop()
         # self.client.disconnect()
 
-    def stuurAcceleration(self):
-        self.client.loop_start()
-        x = {
-            "x": self.drone.get_xCoord(),
-            "y": self.drone.get_yCoord(),
-            "z:": self.drone.get_zCoord()
-        }
-        string = json.dumps(x)
-        self.client.publish("drone/acceleration", string)
-        self.client.loop_stop()
-
-    def stuurSpeed(self):
-        self.client.loop_start()
-        string = "{x:" + str(self.drone.get_xCoord()) + ",y:" + str(self.drone.get_yCoord()) + ",z:" + str(
-            self.drone.get_zCoord()) + "}"
-        self.client.publish("drone/speed", string)
-
-    def stuurJaw(self):
-        self.client.loop_start()
-        self.client.publish("drone/jaw", self.drone.get_jaw())
-        self.client.loop_stop()
-
-    def stuurRoll(self):
-        self.client.loop_start()
-        self.client.publish("drone/roll", self.drone.get_roll())
-        self.client.loop_stop()
-
-    def stuurPitch(self):
-        self.client.loop_start()
-        self.client.publish("drone/pitch", self.drone.get_pitch())
-        self.client.loop_stop()
-
-    def ontvangScanCommando(self):
-        self.client.loop_start()
-        self.client.subscribe("drone/scanCommando")
-        self.client.loop_stop()
-
     def ontvangWaypoint(self):
         self.client.loop_start()
         self.client.subscribe("drone/moveto")
-        self.client.loop_stop()
-
-    def ontvangSnelheid(self):
-        self.client.loop_start()
-        self.client.subscribe("drone/snelheid")
-        self.client.loop_stop()
-
-    def ontvangVersnelling(self):
-        self.client.loop_start()
-        self.client.subscribe("drone/versnelling")
         self.client.loop_stop()
 
     def connecteer(self):
@@ -148,6 +77,3 @@ class Client:
 
     def disconnecteer(self):
         self.client.disconnect()
-
-# client = Client()
-# client.stuurSpeedVector()
