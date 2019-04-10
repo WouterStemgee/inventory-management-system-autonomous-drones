@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import * as L from 'leaflet';
 import * as geojson from 'geojson';
 
@@ -20,9 +20,13 @@ import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulato
 })
 export class LeafletComponent implements OnInit {
 
+  @Input() height;
+
   constructor(private http: HttpService, public simulator: DroneSimulatorService) {
 
   }
+
+  show = false;
 
   minZoom = -5;
   maxZoom = -1;
@@ -127,7 +131,7 @@ export class LeafletComponent implements OnInit {
             interactive: true,
             animate: false,
             rotation: feature.properties.orientation
-          })
+          });
       },
       onEachFeature(f, l) {
         // console.log(f);
@@ -143,6 +147,11 @@ export class LeafletComponent implements OnInit {
 
   onMapReady(map: L.Map) {
     L.DomUtil.addClass(map.getContainer(), 'crosshair-cursor-enabled');
+
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 0);
+
     map.addLayer(new L.LayerGroup([this.gridLayer]));
     map.addLayer(this.editableLayers);
     map.addLayer(this.livedataLayer);
@@ -324,6 +333,8 @@ export class LeafletComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.show = true;
+
     if (this.simulator.loaded) {
       this.drawObstacles();
       this.drawScanZones();

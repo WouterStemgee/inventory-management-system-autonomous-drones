@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 import {DroneSimulatorService} from '../presenter/drone-simulator.service';
 import {SharedService} from '../../shared.service';
@@ -9,6 +9,8 @@ import {SharedService} from '../../shared.service';
   styleUrls: ['./drone-simulator.component.css']
 })
 export class DroneSimulatorComponent implements OnInit {
+
+  @Input() height;
 
   constructor(public simulator: DroneSimulatorService, public shared: SharedService) {
   }

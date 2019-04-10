@@ -33,6 +33,7 @@ import {AuthenticationService} from './authentication.service';
 import {ProfileComponent} from './profile/profile.component';
 import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
+import {AngularDraggableModule} from 'angular2-draggable';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,7 @@ import {RegisterComponent} from './register/register.component';
     SensorConfigurationComponent,
     ProfileComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -68,7 +69,8 @@ import {RegisterComponent} from './register/register.component';
       closeButton: true
     }),
     ChartsModule,
-    NgxChartsModule
+    NgxChartsModule,
+    AngularDraggableModule
   ],
   entryComponents: [DroneSimulatorComponent, DroneDataComponent],
   providers: [SharedService, DroneSimulatorService, HttpService, DataService, AuthenticationService,

@@ -11,13 +11,36 @@
 </span>
   <span routerLink="dashboard">Drone Control Center</span>
   <span class="fill-remaining-space"></span>
-  <span><mat-icon aria-label="map icon">map</mat-icon></span>
-  <span *ngIf="simulator.loaded">
-    <mat-select>
-      <mat-option *ngFor="let map of simulator.maps; index as i" (click)="simulator.selectMap(i)">
-        {{map.name}}
-      </mat-option>
-    </mat-select>
+  <span *ngIf="simulator.loaded && auth.isLoggedIn()">
+    <button mat-icon-button [matMenuTriggerFor]="map">
+        <mat-icon>layers</mat-icon>
+    </button>
+    <mat-menu #map="matMenu">
+      <button mat-menu-item *ngFor="let map of simulator.maps; index as i" (click)="simulator.selectMap(i)">
+          <mat-icon>map</mat-icon>
+          <span>{{map.name}} - {{map._id}}</span>
+      </button>
+    </mat-menu>
+  </span>
+  <span *ngIf="auth.isLoggedIn()">
+    <button mat-icon-button [matMenuTriggerFor]="profile">
+        <mat-icon>account_box</mat-icon>
+    </button>
+    <mat-menu #profile="matMenu">
+      <button mat-menu-item routerLink="profile">
+          <mat-icon>person</mat-icon>
+          <span>Profile</span>
+      </button>
+      <button mat-menu-item routerlink="">
+          <mat-icon>settings</mat-icon>
+          <span>Settings</span>
+      </button>
+    </mat-menu>
+  </span>
+  <span>
+    <button *ngIf="auth.isLoggedIn()" mat-icon-button (click)="auth.logout()">
+      <mat-icon>exit_to_app</mat-icon>
+    </button>
   </span>
 </mat-toolbar>
 
@@ -27,13 +50,21 @@
                [mode]="(isHandset$ | async) ? 'over' : 'side'"
                [opened]="!(isHandset$ | async)">
     <mat-nav-list>
-      <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="dashboard">Dashboard</a>
-      <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="inventory">Inventory</a>
-      <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="admin">Admin</a>
-      <a mat-list-item *ngIf="!auth.isLoggedIn()" routerLink="login">Sign in</a>
-      <a mat-list-item *ngIf="!auth.isLoggedIn()" routerLink="register">Register</a>
-      <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="profile">Profile</a>
-      <a mat-list-item *ngIf="auth.isLoggedIn()" (click)="auth.logout()">Logout</a>
+      <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="dashboard">
+        <mat-icon class="sidenav-icon">widgets</mat-icon>
+        Dashboard</a>
+      <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="inventory">
+        <mat-icon class="sidenav-icon">inbox</mat-icon>
+        Inventory</a>
+      <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="admin">
+        <mat-icon class="sidenav-icon">security</mat-icon>
+        Admin</a>
+      <a mat-list-item *ngIf="!auth.isLoggedIn()" routerLink="login">
+        <mat-icon class="sidenav-icon">vpn_key</mat-icon>
+        Sign in</a>
+      <a mat-list-item *ngIf="!auth.isLoggedIn()" routerLink="register">
+        <mat-icon class="sidenav-icon">create</mat-icon>
+        Register</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content class="mat-sidenav-content">
