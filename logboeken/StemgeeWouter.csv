@@ -53,3 +53,5 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 07/04/19,13:30,19:00,Extern,API authenticatie toegevoegd op backend en frontend,20,
 08/04/19,15:00,16:00,Extern,Opkuisen van aanpassingen in frontend en overbodige flows verwijderd,21,
 09/04/19,11:00,12:30,Extern,Bugs opgelost met de sensor configuratie en routing aanpassingen,21,
+10/04/19,11:00,12:00,Extern,Daily standup en overleg met het team via discord,,
+10/04/19,16:00,19:30,Extern,UI aanpassingen,21,
