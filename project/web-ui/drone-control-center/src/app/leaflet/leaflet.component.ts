@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import * as L from 'leaflet';
 import * as geojson from 'geojson';
 
@@ -11,6 +11,8 @@ import {circleToPolygon} from '../../../node_modules/circle-to-polygon';
 
 import {HttpService} from '../http.service';
 import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
+
+import {environment} from '../../environments/environment';
 
 
 @Component({
@@ -27,6 +29,9 @@ export class LeafletComponent implements OnInit {
   }
 
   show = false;
+  map;
+
+  followDrone = true;
 
   minZoom = -5;
   maxZoom = -1;
@@ -60,7 +65,7 @@ export class LeafletComponent implements OnInit {
   options = {
     layers: this.mapImageLayer,
     crs: this.MySimple,
-    center: [0, 0],
+    center: [this.img.height / 2, this.img.width / 2],
     zoom: this.zoom,
     minZoom: this.minZoom,
     maxZoom: this.maxZoom,
@@ -145,7 +150,43 @@ export class LeafletComponent implements OnInit {
     }
   );
 
+  customControl = L.Control.extend({
+
+    options: {
+      position: 'topleft'
+    },
+
+    onAdd(map) {
+      const container = L.DomUtil.create('button', 'leaflet-bar leaflet-control leaflet-control-custom');
+
+      container.style.backgroundColor = 'white';
+      container.style.backgroundImage = 'url(assets/images/leaflet/drone-small.png)';
+      container.style.backgroundSize = '28px 28px';
+      container.style.width = '32px';
+      container.style.height = '32px';
+
+      return container;
+    }
+  });
+
   onMapReady(map: L.Map) {
+    this.map = map;
+
+    const droneFollowControl = new this.customControl();
+    map.addControl(droneFollowControl);
+
+    droneFollowControl.getContainer().onclick = (container) => {
+      if (this.followDrone) {
+        this.followDrone = false;
+        droneFollowControl.getContainer().style.backgroundColor = '#b71c1c';
+      } else {
+        this.followDrone = true;
+        droneFollowControl.getContainer().style.backgroundColor = 'white';
+      }
+      const msg = this.followDrone ? 'enabled' : 'disabled';
+      this.simulator.onAlertEvent.emit({title: 'Drone Control Center', message: 'Follow drone ' + msg, type: 'info'});
+    };
+
     L.DomUtil.addClass(map.getContainer(), 'crosshair-cursor-enabled');
 
     setTimeout(() => {
@@ -178,10 +219,10 @@ export class LeafletComponent implements OnInit {
       enableUserInput: false,
     }).addTo(map);
 
-    const connection = new WebSocket('ws://localhost:3000/red/ws/data', ['soap', 'xmpp']);
+    const connection = new WebSocket(environment.baseWSUrl + 'red/ws/data', ['soap', 'xmpp']);
 
     connection.onerror = (err) => {
-      console.log('WebSocket Error ' + err);
+      console.log('WebSocket Error', err);
     };
 
     connection.onmessage = (e) => {
@@ -192,6 +233,13 @@ export class LeafletComponent implements OnInit {
         this.updateDroneData(data.features[i]);
       }
     };
+
+    this.realtime.on('update', () => {
+      if (this.followDrone) {
+        map.fitBounds(this.realtime.getBounds(), {maxZoom: this.zoom});
+      }
+    });
+
     this.realtime.addTo(map);
   }
 

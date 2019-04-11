@@ -1,7 +1,7 @@
 <div ngResizable rzHandles="s" rzMinHeight="350" (rzResizing)="onResize($event)">
   <app-drone-simulator [height]="leafletHeight"></app-drone-simulator>
 </div>
-<mat-tab-group [color]="primary" [backgroundColor]="primary">
+<mat-tab-group>
   <mat-tab label="Drone Data">
     <app-drone-data *ngIf="simulator.initialized"></app-drone-data>
   </mat-tab>

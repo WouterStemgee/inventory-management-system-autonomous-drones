@@ -3,7 +3,9 @@ import {AuthenticationService, TokenPayload} from '../authentication.service';
 import {Router} from '@angular/router';
 
 @Component({
-  templateUrl: './login.component.html'
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   credentials: TokenPayload = {

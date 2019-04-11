@@ -2,7 +2,7 @@
 
 @include mat-core();
 
-$anms-black-primary: mat-palette($mat-grey, 700, 300, 900);
+$anms-black-primary: mat-palette($mat-red, 900, 300, 900);
 $anms-black-accent: mat-palette($mat-blue-grey, 400);
 $anms-black-warn: mat-palette($mat-red, 500);
 

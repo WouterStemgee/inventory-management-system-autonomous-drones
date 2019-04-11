@@ -5,6 +5,7 @@ import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulato
 import {map} from 'rxjs/operators';
 import {SharedService} from '../shared.service';
 import {AuthenticationService} from '../authentication.service';
+import {environment} from '../../environments/environment';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class NavigationComponent implements OnInit {
     );
 
   page;
+  environment = environment;
 
   constructor(public auth: AuthenticationService, private breakpointObserver: BreakpointObserver, public simulator: DroneSimulatorService, private shared: SharedService) {
   }

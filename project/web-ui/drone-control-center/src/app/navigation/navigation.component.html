@@ -59,6 +59,9 @@
       <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="admin">
         <mat-icon class="sidenav-icon">security</mat-icon>
         Admin</a>
+      <a mat-list-item *ngIf="auth.isLoggedIn()" [href]="environment.baseAPIUrl + 'editor'" [target]="_blank">
+        <mat-icon class="sidenav-icon">open_in_new</mat-icon>
+        Node-RED</a>
       <a mat-list-item *ngIf="!auth.isLoggedIn()" routerLink="login">
         <mat-icon class="sidenav-icon">vpn_key</mat-icon>
         Sign in</a>
