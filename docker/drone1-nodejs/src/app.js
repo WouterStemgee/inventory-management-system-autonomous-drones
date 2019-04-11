@@ -34,6 +34,8 @@ app.use('/api/users', userRouter);
 
 
 // je hebt MongoDB lokaal geinstalleerd, indien deze nog niet bestaat wordt dit automatisch aangemaakt
+// mongoose.connect('mongodb://localhost/drone1', {useNewUrlParser: true});
+// Production environment
 mongoose.connect('mongodb://mongo/drone1', {useNewUrlParser: true});
 
 let Dijkstra = new dijkstra();
