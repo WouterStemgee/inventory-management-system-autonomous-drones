@@ -33,6 +33,7 @@ import {AuthenticationService} from './authentication.service';
 import {ProfileComponent} from './profile/profile.component';
 import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
+import { GraphTestComponent } from './graph-test/graph-test.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import {RegisterComponent} from './register/register.component';
     SensorConfigurationComponent,
     ProfileComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    GraphTestComponent
   ],
   imports: [
     BrowserModule,

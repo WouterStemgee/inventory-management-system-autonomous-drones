@@ -7,6 +7,7 @@ import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
 import {ProfileComponent} from './profile/profile.component';
 import {AuthGuardService} from './auth-guard.service';
+import {GraphTestComponent} from "./graph-test/graph-test.component";
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -15,7 +16,8 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'inventory', component: InventoryComponent, canActivate: [AuthGuardService]},
   {path: 'admin', component: AdminComponent, canActivate: [AuthGuardService]},
-  {path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService]}
+  {path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService]},
+  {path: 'monitor', component: GraphTestComponent, canActivate: [AuthGuardService]}
 ];
 
 @NgModule({
