@@ -49,3 +49,5 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 08/03/19,11:00,15:00,Extern,Basischarts geïmplementeerd + deze proberen manipuleren,,
 09/03/19,08:00,10:00,Extern,Charts,,
 09/03/19,14:30,16:15,Extern,datasets proberen realtime maken,,
+10/03/19,08:00,11:50,Extern,Charts + standup,,
+11/03/19,08:15,12:00,Extern,Charts (animations ontcijferen om de grafieken smooth te laten verlopen),,
