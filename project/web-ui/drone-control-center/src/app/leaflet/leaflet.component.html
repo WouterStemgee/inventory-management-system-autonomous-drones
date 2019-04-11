@@ -1,4 +1,4 @@
-<div class="map"
+<div *ngIf="show" class="map" [style.height]="height"
      leaflet
      leafletDraw
      [leafletOptions]="options"

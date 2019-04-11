@@ -21,6 +21,8 @@
   flex: 1 1 auto;
 }
 
-.mat-sidenav-content {
-  height: 1000px;
+.sidenav-icon {
+  text-decoration: none;
+  padding: 0 10px;
 }
+

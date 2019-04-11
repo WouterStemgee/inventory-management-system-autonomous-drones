@@ -13,4 +13,10 @@ export class DashboardComponent {
     this.shared.onNavigateEvent.emit('dashboard');
   }
 
+  leafletHeight;
+
+  onResize(e) {
+    const height = e.size.height - 64;
+    this.leafletHeight = height + 'px';
+  }
 }

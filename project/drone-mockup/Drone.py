@@ -12,7 +12,7 @@ class Drone:
         self.width = None
         self.battery = 100
         # positie array
-        self.position = [1,1,1] # xcoord, ycoord en zcoord, nog geen getters en setters
+        self.position = [1,1,1] # xcoord, ycoord en zcoord
         self.acceleration = [None, None, None]
         #self.speedX = None
         #self.speedY = None
