@@ -50,6 +50,9 @@
                [mode]="(isHandset$ | async) ? 'over' : 'side'"
                [opened]="!(isHandset$ | async)">
     <mat-nav-list>
+        <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="monitor">
+            <mat-icon class="sidenav-icon">monitor</mat-icon>
+            Dashboard</a>
       <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="dashboard">
         <mat-icon class="sidenav-icon">widgets</mat-icon>
         Dashboard</a>

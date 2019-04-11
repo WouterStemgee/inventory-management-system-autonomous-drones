@@ -1,29 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-graph-data',
-  templateUrl: './graph-data.component.html',
-  styleUrls: ['./graph-data.component.css']
+  selector: 'app-graph-test',
+  templateUrl: './graph-test.component.html',
+  styleUrls: ['./graph-test.component.css']
 })
-export class GraphDataComponent implements OnInit {
-  //algemene variabelen
+export class GraphTestComponent implements OnInit {
 
-  //ng2-charts
-  boundedOptions = {
-    responsive: true
-  };
-
-  boundedDataSet = [
-    { data: [330, 600, 260, 700, 400, 500, 600], label: 'Account A' },
-    { data: [120, 455, 100, 340, 400, 500, 600], label: 'Account B' },
-    { data: [45, 67, 800, 500, 400, 500, 600], label: 'Account C' }
-  ];
-
-  boundedLabels = ['January', 'February', 'Mars', 'April','Mei', 'juni', 'juli'];
-
-  boundedLegend = false;
-
-  //ngx-charts
   D3Dataset : any[] = [
     {
       name: 'remaining',
@@ -48,15 +31,19 @@ export class GraphDataComponent implements OnInit {
     }
   ];
 
+  dimensions = [400, 300];
   showXAxis = true;
   showYAxis = true;
   gradient = false;
-  showLegend = true;
+  showLegend = false;
   showXAxisLabel = true;
   xAxisLabel = 'Number';
   showYAxisLabel = false;
   yAxisLabel = 'Color Value';
-  timeline = true;
+  timeline = false;
+  time : number = 20;
+  batteryState : number = 84;
+  entries : any[] = this.D3Dataset;
 
   colorScheme = {
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
@@ -67,24 +54,32 @@ export class GraphDataComponent implements OnInit {
   ngOnInit() {
   }
 
-  onSelect(event) {
-    this.pushValue();
-  }
+  /*onSelect(event) {
+    console.log(event);
+  }*/
+
+
 
   /** Data toevoegen: eerste waarde is een timestamp, voorlopig veronderstel ik enkel de batterij met een timestamp
    * en waarde van 0 tot 1 hoeveel de batterij nog bedraagt. **/
 
   pushValue() {
-    let batteryState = 84;
-    let time = 20;
-
     if(!Date.now()) {
       Date.now = function() { return new Date().getTime(); }
     }
-    this.D3Dataset[0].series.push({name: time, value: batteryState--});
+    this.D3Dataset[0].series.push({name: this.time, value: this.batteryState--});
+    if(this.D3Dataset[0].series.length > 10) {
+      this.D3Dataset[0].series.shift();
+      this.entries = this.D3Dataset[0].series.slice(this.D3Dataset[0].length-10, this.D3Dataset[0].length);
+    }
+    //dit triggerded de grafiek en re-rendered hem
     this.D3Dataset = this.D3Dataset.slice();
-    time += 5;
-    console.log(this.D3Dataset);
+    this.time += 5;
+  }
+
+  onClick() {
+    this.pushValue();
+
   }
 
 }
