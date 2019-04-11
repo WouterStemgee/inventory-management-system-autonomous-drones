@@ -31,7 +31,7 @@ export class LeafletComponent implements OnInit {
   show = false;
   map;
 
-  followDrone = true;
+  followDrone = false;
 
   minZoom = -5;
   maxZoom = -1;
@@ -159,7 +159,7 @@ export class LeafletComponent implements OnInit {
     onAdd(map) {
       const container = L.DomUtil.create('button', 'leaflet-bar leaflet-control leaflet-control-custom');
 
-      container.style.backgroundColor = 'white';
+      container.style.backgroundColor = '#b71c1c';
       container.style.backgroundImage = 'url(assets/images/leaflet/drone-small.png)';
       container.style.backgroundSize = '28px 28px';
       container.style.width = '32px';
