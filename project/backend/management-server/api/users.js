@@ -2,7 +2,7 @@ const express = require('express');
 const userRouter = express.Router();
 const jwt = require('express-jwt');
 const auth = jwt({
-    secret: 'MY_SECRET',
+    secret: 'DRONE1',
     userProperty: 'payload'
 });
 

@@ -11,13 +11,15 @@ export class RegisterComponent {
   credentials: TokenPayload = {
     email: '',
     name: '',
-    password: ''
+    password: '',
+    role: ''
   };
 
   constructor(private auth: AuthenticationService, private router: Router) {
   }
 
   register() {
+    console.log(this.credentials);
     this.auth.register(this.credentials).subscribe(() => {
       this.router.navigateByUrl('/');
     }, (err) => {

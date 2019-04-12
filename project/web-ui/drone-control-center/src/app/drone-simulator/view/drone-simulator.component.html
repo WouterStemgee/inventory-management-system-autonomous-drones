@@ -1,9 +1,9 @@
 <div>
-  <mat-toolbar *ngIf="simulator.initialized">
+  <mat-toolbar *ngIf="simulator.initialized && auth.isAdmin()">
     <button (click)="simulator.validateFlightPath()" mat-flat-button class="toolbar-button">
       <mat-icon>done</mat-icon>
       <span *ngIf="!shared.isHandset$">
-         Validate Flightpath
+        Validate Flightpath
       </span>
     </button>
     <button mat-flat-button class="toolbar-button">

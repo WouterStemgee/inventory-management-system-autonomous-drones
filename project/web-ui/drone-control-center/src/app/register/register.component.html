@@ -1,18 +1,24 @@
 <div class="form-container">
   <h1>Register</h1>
-  <p>Already registered? Please <a routerLink="/login">log in</a> instead.</p>
   <form (submit)="register()">
     <mat-form-field>
       <input type="text" matInput name="name" id="name" placeholder="Enter your name"
-             [(ngModel)]="credentials.name">
+             [(ngModel)]="credentials.name" required>
     </mat-form-field>
     <mat-form-field>
       <input type="email" matInput name="email" id="email" placeholder="Enter email"
-             [(ngModel)]="credentials.email">
+             [(ngModel)]="credentials.email" required>
     </mat-form-field>
     <mat-form-field>
-      <input type="password" matInput class="form-control" name="password" id="password" placeholder="Password"
-             [(ngModel)]="credentials.password">
+      <input type="password" matInput name="password" id="password" placeholder="Password"
+             [(ngModel)]="credentials.password" required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Role</mat-label>
+      <mat-select name="role" id="role" [(ngModel)]="credentials.role" required>
+        <mat-option value="admin">Administrator</mat-option>
+        <mat-option value="user">Regular user</mat-option>
+      </mat-select>
     </mat-form-field>
     <button mat-flat-button color="primary" type="submit">Register</button>
   </form>

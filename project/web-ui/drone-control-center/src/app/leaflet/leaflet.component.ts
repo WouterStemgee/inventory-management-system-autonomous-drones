@@ -9,8 +9,8 @@ import './plugins/L.SimpleGraticule';
 import './plugins/L.RotateImageLayer';
 import {circleToPolygon} from '../../../node_modules/circle-to-polygon';
 
-import {HttpService} from '../http.service';
 import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
+import {AuthenticationService} from '../authentication.service';
 
 import {environment} from '../../environments/environment';
 
@@ -24,12 +24,14 @@ export class LeafletComponent implements OnInit {
 
   @Input() height;
 
-  constructor(private http: HttpService, public simulator: DroneSimulatorService) {
+  constructor(public auth: AuthenticationService, public simulator: DroneSimulatorService) {
 
   }
 
   show = false;
+
   map;
+  drawControl;
 
   followDrone = false;
 
@@ -88,7 +90,7 @@ export class LeafletComponent implements OnInit {
     edit: {
       featureGroup: this.editableLayers
     },
-    position: 'topleft',
+    position: 'bottomleft',
     draw: {
       polyline: {
         shapeOptions: {
@@ -153,7 +155,7 @@ export class LeafletComponent implements OnInit {
   customControl = L.Control.extend({
 
     options: {
-      position: 'topleft'
+      position: 'bottomleft'
     },
 
     onAdd(map) {
@@ -178,9 +180,29 @@ export class LeafletComponent implements OnInit {
     droneFollowControl.getContainer().onclick = (container) => {
       if (this.followDrone) {
         this.followDrone = false;
+        map.dragging.enable();
+        map.touchZoom.enable();
+        map.doubleClickZoom.enable();
+        map.scrollWheelZoom.enable();
+        map.boxZoom.enable();
+        map.keyboard.enable();
+        map.addControl(map.zoomControl);
+        if (this.auth.isAdmin()) {
+          map.addControl(this.drawControl);
+        }
         droneFollowControl.getContainer().style.backgroundColor = '#b71c1c';
       } else {
         this.followDrone = true;
+        map.dragging.disable();
+        map.touchZoom.disable();
+        map.doubleClickZoom.disable();
+        map.scrollWheelZoom.disable();
+        map.boxZoom.disable();
+        map.keyboard.disable();
+        map.removeControl(map.zoomControl);
+        if (this.auth.isAdmin()) {
+          map.removeControl(this.drawControl);
+        }
         droneFollowControl.getContainer().style.backgroundColor = 'white';
       }
       const msg = this.followDrone ? 'enabled' : 'disabled';
@@ -244,7 +266,10 @@ export class LeafletComponent implements OnInit {
   }
 
   onDrawReady(drawControl: L.Control.Draw) {
-
+    this.drawControl = drawControl;
+    if (!this.auth.isAdmin()) {
+      this.map.removeControl(drawControl);
+    }
   }
 
   checkScanZoneOverlap(flightpath) {

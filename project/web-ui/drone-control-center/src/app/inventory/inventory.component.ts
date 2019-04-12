@@ -3,6 +3,7 @@ import {InventoryDatasource} from './inventory-datasource';
 import {HttpService} from '../http.service';
 import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
 import {SharedService} from '../shared.service';
+import {AuthenticationService} from '../authentication.service';
 
 @Component({
   selector: 'app-inventory-data',
@@ -16,7 +17,7 @@ export class InventoryComponent implements OnInit {
 
   products;
 
-  constructor(private sharedService: SharedService, private http: HttpService, public simulator: DroneSimulatorService) {
+  constructor(public auth: AuthenticationService, private sharedService: SharedService, private http: HttpService, public simulator: DroneSimulatorService) {
     sharedService.onNavigateEvent.emit('inventory');
   }
 

@@ -2,35 +2,35 @@ var passport = require('passport');
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 
-var sendJSONresponse = function(res, status, content) {
+var sendJSONresponse = function (res, status, content) {
     res.status(status);
     res.json(content);
 };
 
-module.exports.register = function(req, res) {
+module.exports.register = function (req, res) {
 
     var user = new User();
 
     user.name = req.body.name;
     user.email = req.body.email;
+    user.role = req.body.role;
 
     user.setPassword(req.body.password);
 
-    if (user.email === 'drone1@ugent.be') {
-        user.save(function(err) {
-            var token;
-            token = user.generateJwt();
-            res.status(200);
-            res.json({
-                "token" : token
-            });
+    user.save(function (err) {
+        var token;
+        token = user.generateJwt();
+        res.status(200);
+        res.json({
+            "token": token
         });
-    }
+    });
+
 };
 
-module.exports.login = function(req, res) {
+module.exports.login = function (req, res) {
 
-    passport.authenticate('local', function(err, user, info){
+    passport.authenticate('local', function (err, user, info) {
         var token;
 
         if (err) {
@@ -38,11 +38,11 @@ module.exports.login = function(req, res) {
             return;
         }
 
-        if(user){
+        if (user) {
             token = user.generateJwt();
             res.status(200);
             res.json({
-                "token" : token
+                "token": token
             });
         } else {
             res.status(401).json(info);
