@@ -32,18 +32,24 @@ export class GraphTestComponent implements OnInit {
   ];
 
   dimensions = [400, 300];
-  showXAxis = true;
-  showYAxis = true;
-  gradient = false;
-  showLegend = false;
-  showXAxisLabel = true;
+  //X-axis
+  showXAxis = false;
+  showXAxisLabel = false;
   xAxisLabel = 'Number';
+  //Y-axis
+  showYAxis = true;
   showYAxisLabel = false;
   yAxisLabel = 'Color Value';
+  yScaleMax : number = 100;
+  yScaleMin : number = 0;
+  //style + data
+  gradient = false;
+  showLegend = false;
   timeline = false;
   time : number = 20;
   batteryState : number = 84;
   entries : any[] = this.D3Dataset;
+  //animations = Data
 
   colorScheme = {
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
@@ -68,7 +74,7 @@ export class GraphTestComponent implements OnInit {
       Date.now = function() { return new Date().getTime(); }
     }
     this.D3Dataset[0].series.push({name: this.time, value: this.batteryState--});
-    if(this.D3Dataset[0].series.length > 10) {
+    if(this.D3Dataset[0].series.length > 1000) {
       this.D3Dataset[0].series.shift();
       this.entries = this.D3Dataset[0].series.slice(this.D3Dataset[0].length-10, this.D3Dataset[0].length);
     }
