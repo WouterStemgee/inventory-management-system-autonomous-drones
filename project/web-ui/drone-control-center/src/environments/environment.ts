@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  baseAPIUrl: 'http://localhost:3000/'
+  baseAPIUrl: 'http://localhost:3000/',
+  baseWSUrl: 'ws://localhost:3000/'
 };
 
 /*

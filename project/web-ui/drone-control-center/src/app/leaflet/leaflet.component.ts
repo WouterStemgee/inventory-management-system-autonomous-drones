@@ -1,16 +1,20 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import * as L from 'leaflet';
 import * as geojson from 'geojson';
 
 import 'leaflet-realtime';
 import 'leaflet-rotatedmarker';
 import '../../../node_modules/leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.src';
+import 'node_modules/leaflet.heat/dist/leaflet-heat.js';
+
 import './plugins/L.SimpleGraticule';
 import './plugins/L.RotateImageLayer';
 import {circleToPolygon} from '../../../node_modules/circle-to-polygon';
 
-import {HttpService} from '../http.service';
 import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
+import {AuthenticationService} from '../authentication.service';
+
+import {environment} from '../../environments/environment';
 
 
 @Component({
@@ -22,16 +26,22 @@ export class LeafletComponent implements OnInit {
 
   @Input() height;
 
-  constructor(private http: HttpService, public simulator: DroneSimulatorService) {
-
+  constructor(public auth: AuthenticationService, public simulator: DroneSimulatorService) {
   }
 
   show = false;
+
+  map;
+  drawControl;
+
+  followDrone = false;
 
   minZoom = -5;
   maxZoom = -1;
   zoom = -5;
   img = {width: 30190, height: 10901.944444};
+
+  heatPoints = [];
 
   MySimple = L.Util.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0)
@@ -60,7 +70,7 @@ export class LeafletComponent implements OnInit {
   options = {
     layers: this.mapImageLayer,
     crs: this.MySimple,
-    center: [0, 0],
+    center: [this.img.height / 2, this.img.width / 2],
     zoom: this.zoom,
     minZoom: this.minZoom,
     maxZoom: this.maxZoom,
@@ -79,11 +89,16 @@ export class LeafletComponent implements OnInit {
 
   gridLayer = L.simpleGraticule(this.gridOptions);
 
+  heatLayer = L.heatLayer(this.heatPoints, {
+    radius: 10
+  });
+
+
   drawOptions = {
     edit: {
       featureGroup: this.editableLayers
     },
-    position: 'topleft',
+    position: 'bottomleft',
     draw: {
       polyline: {
         shapeOptions: {
@@ -108,6 +123,7 @@ export class LeafletComponent implements OnInit {
     },
     overlays: {
       'Editable layer': this.editableLayers,
+      'Heat layer': this.heatLayer,
       'Live Data layer': this.livedataLayer,
       'Grid layer': this.gridLayer
     },
@@ -145,7 +161,63 @@ export class LeafletComponent implements OnInit {
     }
   );
 
+  customControl = L.Control.extend({
+
+    options: {
+      position: 'bottomleft'
+    },
+
+    onAdd(map) {
+      const container = L.DomUtil.create('button', 'leaflet-bar leaflet-control leaflet-control-custom');
+
+      container.style.backgroundColor = '#b71c1c';
+      container.style.backgroundImage = 'url(assets/images/leaflet/drone-small.png)';
+      container.style.backgroundSize = '28px 28px';
+      container.style.width = '32px';
+      container.style.height = '32px';
+
+      return container;
+    }
+  });
+
   onMapReady(map: L.Map) {
+    this.map = map;
+
+    const droneFollowControl = new this.customControl();
+    map.addControl(droneFollowControl);
+
+    droneFollowControl.getContainer().onclick = () => {
+      if (this.followDrone) {
+        this.followDrone = false;
+        map.dragging.enable();
+        map.touchZoom.enable();
+        map.doubleClickZoom.enable();
+        map.scrollWheelZoom.enable();
+        map.boxZoom.enable();
+        map.keyboard.enable();
+        map.addControl(map.zoomControl);
+        if (this.auth.isAdmin()) {
+          map.addControl(this.drawControl);
+        }
+        droneFollowControl.getContainer().style.backgroundColor = '#b71c1c';
+      } else {
+        this.followDrone = true;
+        map.dragging.disable();
+        map.touchZoom.disable();
+        map.doubleClickZoom.disable();
+        map.scrollWheelZoom.disable();
+        map.boxZoom.disable();
+        map.keyboard.disable();
+        map.removeControl(map.zoomControl);
+        if (this.auth.isAdmin()) {
+          map.removeControl(this.drawControl);
+        }
+        droneFollowControl.getContainer().style.backgroundColor = 'white';
+      }
+      const msg = this.followDrone ? 'enabled' : 'disabled';
+      this.simulator.onAlertEvent.emit({title: 'Drone Control Center', message: 'Follow drone ' + msg, type: 'info'});
+    };
+
     L.DomUtil.addClass(map.getContainer(), 'crosshair-cursor-enabled');
 
     setTimeout(() => {
@@ -153,8 +225,9 @@ export class LeafletComponent implements OnInit {
     }, 0);
 
     map.addLayer(new L.LayerGroup([this.gridLayer]));
-    map.addLayer(this.editableLayers);
-    map.addLayer(this.livedataLayer);
+    // map.addLayer(this.heatLayer);
+    map.addLayer(this.editableLayers.bringToFront());
+    map.addLayer(this.livedataLayer.bringToFront());
 
     L.Control.Coordinates.include({
       _update(evt) {
@@ -178,10 +251,10 @@ export class LeafletComponent implements OnInit {
       enableUserInput: false,
     }).addTo(map);
 
-    const connection = new WebSocket('ws://localhost:3000/red/ws/data', ['soap', 'xmpp']);
+    const connection = new WebSocket(environment.baseWSUrl + 'red/ws/data', ['soap', 'xmpp']);
 
     connection.onerror = (err) => {
-      console.log('WebSocket Error ' + err);
+      console.log('WebSocket Error', err);
     };
 
     connection.onmessage = (e) => {
@@ -192,11 +265,21 @@ export class LeafletComponent implements OnInit {
         this.updateDroneData(data.features[i]);
       }
     };
+
+    this.realtime.on('update', () => {
+      if (this.followDrone) {
+        map.fitBounds(this.realtime.getBounds(), {maxZoom: this.zoom});
+      }
+    });
+
     this.realtime.addTo(map);
   }
 
   onDrawReady(drawControl: L.Control.Draw) {
-
+    this.drawControl = drawControl;
+    if (!this.auth.isAdmin()) {
+      this.map.removeControl(drawControl);
+    }
   }
 
   checkScanZoneOverlap(flightpath) {
@@ -448,6 +531,10 @@ export class LeafletComponent implements OnInit {
     drone.battery = feature.properties.battery;
     drone.speed = feature.properties.speed;
     drone.acceleration = feature.properties.acceleration;
+    if (this.heatPoints.length >= 6000) { // elke 5 minuten de heatmap resetten (voorlopig)
+      this.heatPoints = [];
+    }
+    this.heatPoints.push(this.xy(drone.position.x, drone.position.y));
   }
 
   onDrawDeleted(e) {

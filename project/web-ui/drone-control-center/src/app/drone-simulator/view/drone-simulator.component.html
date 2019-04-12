@@ -1,19 +1,25 @@
 <div>
-  <mat-toolbar *ngIf="simulator.initialized">
-    <button (click)="simulator.validateFlightPath()" mat-button>
+  <mat-toolbar *ngIf="simulator.initialized && auth.isAdmin()">
+    <button (click)="simulator.validateFlightPath()" mat-flat-button class="toolbar-button">
       <mat-icon>done</mat-icon>
       <span *ngIf="!shared.isHandset$">
         Validate Flightpath
       </span>
     </button>
-    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.start()"
-            [disabled]="simulator.map.flightpath.length === 0" mat-button>
+    <button mat-flat-button class="toolbar-button">
+      <mat-icon>present_to_all</mat-icon>
+      <span *ngIf="!shared.isHandset$">
+        Send Flightpath
+      </span>
+    </button>
+    <button type="button" (click)="simulator.start()"
+            [disabled]="simulator.map.flightpath.length === 0" mat-flat-button class="toolbar-button">
       <mat-icon>play_arrow</mat-icon>
       <span *ngIf="!shared.isHandset$">
         Start Flight
       </span>
     </button>
-    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="simulator.reset()" mat-button>
+    <button type="button" (click)="simulator.reset()" mat-flat-button class="toolbar-button">
       <mat-icon>stop</mat-icon>
       <span *ngIf="!shared.isHandset$">
         Stop Flight

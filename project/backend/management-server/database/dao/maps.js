@@ -12,6 +12,15 @@ let getAllMaps = () => {
         });
 };
 
+let deleteAllMaps = () => {
+    mongoose.connection.dropCollection('maps', (err, result) => {
+        if (err) {
+            return Promise.reject({error: err});
+        }
+        return Promise.resolve(result);
+    });
+};
+
 let getMap = (id) => {
     return Map.findById(id).exec()
         .then(doc => {
@@ -309,6 +318,7 @@ let removeProduct = (mapId, prodId) => {
 };
 
 module.exports.getAllMaps = getAllMaps;
+module.exports.deleteAllMaps = deleteAllMaps;
 module.exports.getMap = getMap;
 module.exports.addMap = addMap;
 module.exports.updateMap = updateMap;

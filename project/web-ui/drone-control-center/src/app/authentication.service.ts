@@ -3,12 +3,13 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Router} from '@angular/router';
-import {environment} from "../environments/environment";
+import {environment} from '../environments/environment';
 
 export interface UserDetails {
   _id: string;
   email: string;
   name: string;
+  role: string;
   exp: number;
   iat: number;
 }
@@ -21,6 +22,7 @@ export interface TokenPayload {
   email: string;
   password: string;
   name?: string;
+  role?: string;
 }
 
 @Injectable()
@@ -58,6 +60,15 @@ export class AuthenticationService {
     const user = this.getUserDetails();
     if (user) {
       return user.exp > Date.now() / 1000;
+    } else {
+      return false;
+    }
+  }
+
+  public isAdmin(): boolean {
+    const user = this.getUserDetails();
+    if (user) {
+      return user.role === 'admin';
     } else {
       return false;
     }

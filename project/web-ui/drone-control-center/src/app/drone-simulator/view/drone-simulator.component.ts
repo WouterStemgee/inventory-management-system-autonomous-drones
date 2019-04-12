@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import {DroneSimulatorService} from '../presenter/drone-simulator.service';
 import {SharedService} from '../../shared.service';
+import {AuthenticationService} from '../../authentication.service';
 
 @Component({
   selector: 'app-drone-simulator',
@@ -12,7 +13,7 @@ export class DroneSimulatorComponent implements OnInit {
 
   @Input() height;
 
-  constructor(public simulator: DroneSimulatorService, public shared: SharedService) {
+  constructor(public auth: AuthenticationService, public simulator: DroneSimulatorService, public shared: SharedService) {
   }
 
   ngOnInit() {

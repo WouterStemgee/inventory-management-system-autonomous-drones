@@ -33,7 +33,7 @@ import {AuthenticationService} from './authentication.service';
 import {ProfileComponent} from './profile/profile.component';
 import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
-import { GraphTestComponent } from './graph-test/graph-test.component';
+import {GraphTestComponent} from './graph-test/graph-test.component';
 import {AngularDraggableModule} from 'angular2-draggable';
 
 @NgModule({

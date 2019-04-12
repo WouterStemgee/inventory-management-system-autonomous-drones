@@ -50,18 +50,21 @@
                [mode]="(isHandset$ | async) ? 'over' : 'side'"
                [opened]="!(isHandset$ | async)">
     <mat-nav-list>
-      <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="monitor">
-        <mat-icon class="sidenav-icon">monitor</mat-icon>
-        Monitor</a>
       <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="dashboard">
         <mat-icon class="sidenav-icon">widgets</mat-icon>
         Dashboard</a>
       <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="inventory">
         <mat-icon class="sidenav-icon">inbox</mat-icon>
         Inventory</a>
-      <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="admin">
+      <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="monitor">
+        <mat-icon class="sidenav-icon">timeline</mat-icon>
+        Monitor</a>
+      <a mat-list-item *ngIf="auth.isLoggedIn() && auth.isAdmin()" routerLink="admin">
         <mat-icon class="sidenav-icon">security</mat-icon>
         Admin</a>
+      <a mat-list-item *ngIf="auth.isLoggedIn() && auth.isAdmin()" [href]="environment.baseAPIUrl + 'editor'" [target]="_blank">
+        <mat-icon class="sidenav-icon">open_in_new</mat-icon>
+        Node-RED</a>
       <a mat-list-item *ngIf="!auth.isLoggedIn()" routerLink="login">
         <mat-icon class="sidenav-icon">vpn_key</mat-icon>
         Sign in</a>

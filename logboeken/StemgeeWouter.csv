@@ -55,3 +55,8 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 09/04/19,11:00,12:30,Extern,Bugs opgelost met de sensor configuratie en routing aanpassingen,21,
 10/04/19,11:00,12:00,Extern,Daily standup en overleg met het team via discord,,
 10/04/19,16:00,19:30,Extern,UI aanpassingen,21,
+11/04/19,13:30,18:00,Extern,UI aanpassingen - mosquitto en nodered werkend gekregen op docker,21,
+12/04/19,10:00,12:30,Extern,Admin rol toegevoegd aan authenticatie,20,
+12/04/19,14:00,18:00,Extern,Heatmaps toegevoegd aan visualisatie,21,
+
+

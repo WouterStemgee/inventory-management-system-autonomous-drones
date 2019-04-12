@@ -28,7 +28,16 @@ mapRouter.route('/')
             .catch((error) => {
                 res.status(400).send(error);
                 console.log(error);
-
+            });
+    })
+    .delete((req, res) => {
+        mapsDAO.deleteAllMaps()
+            .then((result) => {
+                res.send(result);
+            })
+            .catch((error) => {
+                res.send(error);
+                console.log(error);
             });
     });
 

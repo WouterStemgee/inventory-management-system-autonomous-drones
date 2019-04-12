@@ -23,6 +23,19 @@ export class HttpService {
     });
   }
 
+  deleteAllMaps() {
+    return new Promise((resolve, reject) => {
+      this.http.delete(environment.baseAPIUrl + 'api/maps').subscribe(
+        result => {
+          resolve(result);
+        },
+        (error: HttpErrorResponse) => {
+          reject(error);
+        }
+      );
+    });
+  }
+
   getMap(mapId) {
     return new Promise((resolve, reject) => {
       this.http.get(environment.baseAPIUrl + 'api/maps/' + mapId).subscribe(

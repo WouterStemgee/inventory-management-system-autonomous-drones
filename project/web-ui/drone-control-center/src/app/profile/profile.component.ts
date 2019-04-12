@@ -2,12 +2,14 @@ import {Component} from '@angular/core';
 import {AuthenticationService, UserDetails} from '../authentication.service';
 
 @Component({
-  templateUrl: './profile.component.html'
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent {
   details: UserDetails;
 
-  constructor(private auth: AuthenticationService) {
+  constructor(public auth: AuthenticationService) {
   }
 
   OnInit() {

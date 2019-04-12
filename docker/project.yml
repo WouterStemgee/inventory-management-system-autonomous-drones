@@ -19,6 +19,14 @@ services:
      - ./data:/data/db
   # ports:
   #  - '27017:27017'   
+  drone1-mosquitto:
+    container_name: moquitto
+    build:
+      context: drone1-mosquitto/
+      dockerfile: Dockerfile
+    #ports:
+     # - "1883:1883"
+     # - "9001:9001" 
   # NodeJS container
   drone1-nodejs:
     container_name: node
@@ -29,12 +37,5 @@ services:
     ports:                           
      - '8082:3000'     
     links:
-     - drone1-mongodb                        
-  drone1-mosquitto:
-    container_name: moquitto
-    build:
-      context: drone1-mosquitto/
-      dockerfile: Dockerfile
-    #ports:
-     # - "1883:1883"
-     # - "9001:9001" 
+     - drone1-mongodb   
+     - drone1-mosquitto
