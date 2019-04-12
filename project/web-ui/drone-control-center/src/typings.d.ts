@@ -35,4 +35,12 @@ declare module 'leaflet' {
 
     update(geojson: any);
   }
+
+  function heatLayer(latlngs: any, options: any): HeatLayer;
+
+  interface HeatLayer extends L.Layer {
+    addTo(map: L.Map): any;
+    addLatLng(latlng: any): any;
+    redraw();
+  }
 }

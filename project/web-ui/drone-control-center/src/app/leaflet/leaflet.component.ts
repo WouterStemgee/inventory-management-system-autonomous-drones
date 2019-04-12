@@ -5,6 +5,8 @@ import * as geojson from 'geojson';
 import 'leaflet-realtime';
 import 'leaflet-rotatedmarker';
 import '../../../node_modules/leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.src';
+import 'node_modules/leaflet.heat/dist/leaflet-heat.js';
+
 import './plugins/L.SimpleGraticule';
 import './plugins/L.RotateImageLayer';
 import {circleToPolygon} from '../../../node_modules/circle-to-polygon';
@@ -25,7 +27,6 @@ export class LeafletComponent implements OnInit {
   @Input() height;
 
   constructor(public auth: AuthenticationService, public simulator: DroneSimulatorService) {
-
   }
 
   show = false;
@@ -39,6 +40,8 @@ export class LeafletComponent implements OnInit {
   maxZoom = -1;
   zoom = -5;
   img = {width: 30190, height: 10901.944444};
+
+  heatPoints = [];
 
   MySimple = L.Util.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0)
@@ -86,6 +89,11 @@ export class LeafletComponent implements OnInit {
 
   gridLayer = L.simpleGraticule(this.gridOptions);
 
+  heatLayer = L.heatLayer(this.heatPoints, {
+    radius: 10
+  });
+
+
   drawOptions = {
     edit: {
       featureGroup: this.editableLayers
@@ -115,6 +123,7 @@ export class LeafletComponent implements OnInit {
     },
     overlays: {
       'Editable layer': this.editableLayers,
+      'Heat layer': this.heatLayer,
       'Live Data layer': this.livedataLayer,
       'Grid layer': this.gridLayer
     },
@@ -177,7 +186,7 @@ export class LeafletComponent implements OnInit {
     const droneFollowControl = new this.customControl();
     map.addControl(droneFollowControl);
 
-    droneFollowControl.getContainer().onclick = (container) => {
+    droneFollowControl.getContainer().onclick = () => {
       if (this.followDrone) {
         this.followDrone = false;
         map.dragging.enable();
@@ -216,8 +225,9 @@ export class LeafletComponent implements OnInit {
     }, 0);
 
     map.addLayer(new L.LayerGroup([this.gridLayer]));
-    map.addLayer(this.editableLayers);
-    map.addLayer(this.livedataLayer);
+    // map.addLayer(this.heatLayer);
+    map.addLayer(this.editableLayers.bringToFront());
+    map.addLayer(this.livedataLayer.bringToFront());
 
     L.Control.Coordinates.include({
       _update(evt) {
@@ -521,6 +531,10 @@ export class LeafletComponent implements OnInit {
     drone.battery = feature.properties.battery;
     drone.speed = feature.properties.speed;
     drone.acceleration = feature.properties.acceleration;
+    if (this.heatPoints.length >= 6000) { // elke 5 minuten de heatmap resetten (voorlopig)
+      this.heatPoints = [];
+    }
+    this.heatPoints.push(this.xy(drone.position.x, drone.position.y));
   }
 
   onDrawDeleted(e) {

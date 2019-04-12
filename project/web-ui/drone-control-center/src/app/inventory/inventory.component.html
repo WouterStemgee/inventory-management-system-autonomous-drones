@@ -1,29 +1,29 @@
 <div *ngIf="simulator.loaded">
-  <div class="form-container">
+  <div class="form-container" *ngIf="auth.isAdmin()">
     <h1>Inventory</h1>
-    <div *ngIf="auth.isAdmin()">
-      <h2>Add products</h2>
-      <form #productForm="ngForm" (submit)="onSubmit(productForm)">
-        <mat-form-field>
-          <label for="name">Name</label>
-          <input matNativeControl type="text" id="name" name="name" #nameField="ngModel" ngModel required>
-        </mat-form-field>
-        <mat-form-field>
-          <label for="quantity">Quantity</label>
-          <input matNativeControl id="quantity" type="number" min="0" name="quantity" #quantityField="ngModel" ngModel required>
-        </mat-form-field>
-        <mat-form-field>
-          <label for="mapId">MapId</label>
-          <input matNativeControl type="text" id="mapId" name="mapId" #mapField="ngModel" ngModel
-                 [(ngModel)]="simulator.maps[simulator.selectedMap]._id" required readonly>
-        </mat-form-field>
-        <button mat-flat-button color="primary" type="submit">Submit</button>
-      </form>
-    </div>
+    <h2>Add products</h2>
+    <form #productForm="ngForm" (submit)="onSubmit(productForm)">
+      <mat-form-field>
+        <label for="name">Name</label>
+        <input matNativeControl type="text" id="name" name="name" #nameField="ngModel" ngModel required>
+      </mat-form-field>
+      <mat-form-field>
+        <label for="quantity">Quantity</label>
+        <input matNativeControl id="quantity" type="number" min="0" name="quantity" #quantityField="ngModel" ngModel
+               required>
+      </mat-form-field>
+      <mat-form-field>
+        <label for="mapId">MapId</label>
+        <input matNativeControl type="text" id="mapId" name="mapId" #mapField="ngModel" ngModel
+               [(ngModel)]="simulator.maps[simulator.selectedMap]._id" required readonly>
+      </mat-form-field>
+      <button mat-flat-button color="primary" type="submit">Submit</button>
+    </form>
     <h2>Products in {{simulator.maps[simulator.selectedMap].name}}</h2>
   </div>
   <div class="mat-elevation-z8">
-    <table mat-table class="full-width-table" [dataSource]="simulator.maps[simulator.selectedMap].products" matSort aria-label="Products">
+    <table mat-table class="full-width-table" [dataSource]="simulator.maps[simulator.selectedMap].products" matSort
+           aria-label="Products">
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef>Id</th>
         <td mat-cell *matCellDef="let row">{{row._id}}</td>
