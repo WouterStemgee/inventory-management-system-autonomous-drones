@@ -48,4 +48,4 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 11/04/19,19:00,21:10,Extern, node red van project gescheiden en testen op performantiewinst - meer testen nodig hoe performant de flows zelf zijn zo tov geembedded,,
 12/04/19,10:00,12:15,Campus, op campus verder testen van performatie - mockup voor mezelf aangepast - ontdekt dat het probleem niet echt ligt aan geembedded zijn maar aan de broker zelf die dat naar node red moet versturen,,
 12/04/19,19:00,20:00,Extern, mosquitto wat opgezocht gewoon en gekeken voor mss eens een alternatief te testen,,
-13/04/19,13:30,16:30,Extern, frontend droneconfiguratie aangepast - wordt nu uit de db van de backend gehaald en weer opgeslagen - vermijdt dat we steeds in node red bij opstart nog iets manueels steeds moesten doen
+13/04/19,13:30,16:30,Extern, frontend droneconfiguratie aangepast - wordt nu uit de db van de backend gehaald en weer opgeslagen - vermijdt dat we steeds in node red bij opstart nog iets manueels steeds moesten doen,,
