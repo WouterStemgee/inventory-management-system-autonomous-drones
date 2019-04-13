@@ -41,21 +41,21 @@ class PriorityQueue {
         if (this.knopen.length == 0){
             throw 'Queue is leeg'
         }
-        return this.knopen[0];
+        return this.knopen[0].knoop;
     }
 
     geefLaatsteKnoop(){
         if (this.knopen.length == 0){
             throw 'Queue is leeg'
         }
-        return this.knopen[this.knopen.length - 1];
+        return this.knopen[this.knopen.length - 1].knoop;
     }
 
     verminderPrioriteit(knoop, prioriteit){
         let gevonden = false;
         let i = 0;
         while (!gevonden && i < this.knopen.length){
-            if (this.knopen[i].knoop == knoop){
+            if ((this.knopen[i].knoop.x === knoop.x) && (this.knopen[i].knoop.y === knoop.y)){
                 this.knopen.splice(i,1);
                 this.voegKnoopToeMetPrioriteit(knoop, prioriteit);
                 gevonden = true;

@@ -1,4 +1,4 @@
-const PriorityQueue = require('./priorityQueue');
+const PriorityQueue = require('../priorityQueue');
 class Graaf {
     constructor() {
         this.knopen = [];
@@ -101,6 +101,68 @@ class Graaf {
         }
     }
 
+    //verwijder knopen op basis van linker bovenhoek tot rechter onderhoek
+    verwijderKnopenV2(knoopLB, knoopRO, droneValue){
+        let graaf = this;
+        //knopen in no fly zone verwijderen
+        for (let x = knoopLB.x; x <= knoopRO.x; x++){
+            for (let y = knoopLB.y; y <= knoopRO.y; y++){
+                let knoop = x+'X'+y+'Y';
+                graaf.verbindingen.forEach(function (verbinding) {
+                    if (verbinding[0] === knoop || verbinding[1] === knoop) {
+                        graaf.verbindingen.splice(graaf.verbindingen.indexOf(verbinding), 1);
+                    }
+                });
+            }
+        }
+        //dangerzone maken rond de objecten boven ˅
+        for (let value = droneValue; value > 1; value--){
+            for (let x = knoopLB.x-(droneValue-value)-1; x <= knoopRO.x+(droneValue-value)+1; x++){
+                graaf.verbindingen.forEach(function (verbinding) {
+                    let knoop = x+'X'+knoopLB.y-(droneValue-value)-1+'Y';
+                    if (verbinding[0] === knoop || verbinding[1] === knoop) {
+                        verbinding[2] = value;
+                    }
+                });
+            }
+        }
+        //dangerzone maken rond de objecten links >
+        for (let value = droneValue; value > 1; value--){
+            for (let y = knoopLB.y-(droneValue-value)-1; y <= knoopRO.y+(droneValue-value)+1; y++){
+                graaf.verbindingen.forEach(function (verbinding) {
+                    let knoop = knoopLB.x-(droneValue-value)-1+'X'+y+'Y';
+                    if (verbinding[0] === knoop || verbinding[1] === knoop) {
+                        verbinding[2] = value;
+                    }
+                });
+            }
+        }
+        //dangerzone maken rond de objecten rechts <
+        for (let value = droneValue; value > 1; value--){
+            for (let y = knoopLB.y-(droneValue-value)-1; y <= knoopRO.y+(droneValue-value)+1; y++){
+                graaf.verbindingen.forEach(function (verbinding) {
+                    let knoop = knoopRO.x+(droneValue-value)+1+'X'+y+'Y';
+                    if (verbinding[0] === knoop || verbinding[1] === knoop) {
+                        verbinding[2] = value;
+                    }
+                });
+            }
+        }
+        //dangerzone maken rond de objecten onder ^
+        for (let value = droneValue; value > 1; value--){
+            for (let x = knoopRO.x-(droneValue-value)-1; x <= knoopRO.x+(droneValue-value)+1; x++){
+                graaf.verbindingen.forEach(function (verbinding) {
+                    let knoop = x+'X'+knoopRO.y+(droneValue-value)+1+'Y';
+                    if (verbinding[0] === knoop || verbinding[1] === knoop) {
+                        verbinding[2] = value;
+                    }
+                });
+            }
+        }
+    }
+
+
+
     //kortste pad zoeken nummer komen overeen met uitleg wikipedia Dijkstra's algorithm 2.Algoritm
     zoekKortstePad(begin, eind) {
         let bezocht = {},
@@ -124,7 +186,7 @@ class Graaf {
         });
         //selecteer de knoop met de kleinste afstand als de huidige knoop, bekijk alle knopen met wie deze verbonden is en kijk wat het kortste pad is naar deze knoop (3)
         while (!pQueue.isLeeg()) {
-            huidige = pQueue.geefEersteKnoop().knoop;//de knoop met de kleinste afstand wordt als eerste geselecteerd, meest prioriteit
+            huidige = pQueue.geefEersteKnoop();//de knoop met de kleinste afstand wordt als eerste geselecteerd, meest prioriteit
             bezocht[huidige] = true;
             //bekijk alle knopen die een verbinding bevatten met de geselecteerde knoop
             this.verbindingen.filter(function(verbinding){

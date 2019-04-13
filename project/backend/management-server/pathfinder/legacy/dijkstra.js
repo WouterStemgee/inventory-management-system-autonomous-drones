@@ -1,9 +1,12 @@
 const Graaf = require('./graaf');
-const mapsDAO = require('../database/dao/maps');
+const mapsDAO = require('../../database/dao/maps');
 
 class Dijkstra {
     constructor() {
         this.grafen = [];
+        this.id = 0;
+        this.huidigeGraaf;
+        this.droneValue;
     }
 
     initializeMaps() {
@@ -25,12 +28,21 @@ class Dijkstra {
         });
     };
 
-    recalculateGraaf(id) {
+    setID(id){
+        this.id = id;
+        this.huidigeGraaf = this.grafen.find(g => g.mapId == id);
+    }
+
+    setDroneValue(droneValue){
+        this.droneValue = dronevalue;
+    }
+
+    recalculateGraaf() {
         // Wanneer een nieuwe map toegevoegd wordt of een bestaande map aangepast werd, moet de graaf herberekend worden
-        console.log('recalculating graph for id: ' + id);
+        console.log('recalculating graph for id: ' + this.id);
         let dijkstra = this;
         return new Promise((resolve, reject) => {
-            mapsDAO.getMap(id)
+            mapsDAO.getMap(this.id)
                 .then(res => {
                     let mapIndex = this.grafen.findIndex(g => g.mapId == id);
                     if (mapIndex > -1) {
@@ -47,9 +59,13 @@ class Dijkstra {
         });
     };
 
-    zoekPad(id, waypointsJSON) {
-        console.log('calculating path for id: ' + id);
-        let graaf = this.grafen.find(g => g.mapId == id);
+    verwijderknopen(knoopLB, knoopRO){
+        this.huidigeGraaf.verwijderKnopenV2(knoopLB, knoopRO, this.droneValue);
+    }
+
+    zoekPad(waypointsJSON) {
+        console.log('calculating path for id: ' + this.id);
+        let graaf = this.grafen.find(g => g.mapId == this.id);
         //console.log(graaf);
         let waypoints = this.jsonWaypointsNaarPad(waypointsJSON);
         //console.log(waypoints);
