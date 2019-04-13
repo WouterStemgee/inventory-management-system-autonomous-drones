@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
 import {HttpService} from '../http.service';
+import {AuthenticationService} from '../authentication.service';
 
 @Component({
   selector: 'app-drone-configuration',
@@ -9,7 +10,7 @@ import {HttpService} from '../http.service';
 })
 export class DroneConfigurationComponent implements OnInit {
 
-  constructor(private http: HttpService, public simulator: DroneSimulatorService) {
+  constructor(private http: HttpService, public simulator: DroneSimulatorService, private auth: AuthenticationService) {
   }
 
   loadedConfig;
@@ -29,4 +30,6 @@ export class DroneConfigurationComponent implements OnInit {
     this.http.storeDroneDbInformation(this.loadedConfig);
     this.http.updateDroneConfiguration(this.loadedConfig.properties.radius.toString());
   }
+
+
 }
