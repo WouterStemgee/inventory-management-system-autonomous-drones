@@ -75,6 +75,9 @@ class DroneSimpel:
         else:
             self.battery = 0
 
+    def set_client(self,c):
+        self.client = c
+
 #///////////////////////////////////////////////////
 
     def vliegHorizontaal(self,x,y):
