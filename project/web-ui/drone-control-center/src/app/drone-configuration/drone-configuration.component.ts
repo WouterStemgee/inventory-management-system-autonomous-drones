@@ -12,16 +12,21 @@ export class DroneConfigurationComponent implements OnInit {
   constructor(private http: HttpService, public simulator: DroneSimulatorService) {
   }
 
+  loadedConfig;
+  draftConfig;
+
   ngOnInit() {
+    this.http.getDroneDbInformation().then(
+      res => {
+        this.loadedConfig = res;
+        this.draftConfig = res;
+        this.http.updateDroneConfiguration(this.loadedConfig.properties.radius.toString());
+      });
   }
 
-  setRadius() {
-    const droneConfiguration = {
-      droneId: 0,
-      radius: this.simulator.drone.radius
-    };
-
-    this.http.updateDroneConfiguration(droneConfiguration.radius.toString());
+  setProperties() {
+    this.loadedConfig = this.draftConfig;
+    this.http.storeDroneDbInformation(this.loadedConfig);
+    this.http.updateDroneConfiguration(this.loadedConfig.properties.radius.toString());
   }
-
 }

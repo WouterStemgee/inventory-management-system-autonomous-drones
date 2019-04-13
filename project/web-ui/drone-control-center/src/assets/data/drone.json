@@ -1,0 +1,6 @@
+{
+  "name": "drone",
+  "properties": {
+    "radius" : 750
+  }
+}

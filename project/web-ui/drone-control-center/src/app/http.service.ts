@@ -128,6 +128,46 @@ export class HttpService {
     });
   }
 
+  getDroneDbInformation(droneId = 0){
+    return new Promise((resolve, reject) => {
+      if (droneId) {
+        this.http.get(environment.baseAPIUrl + 'api/drones/' + droneId).subscribe(
+          result => {
+            resolve(result);
+          },
+          (error: HttpErrorResponse) => {
+            reject(error);
+          }
+        );
+      }
+      else {
+        // nog voor nu, omdat er geen rekening wordt gehouden met droneid's in de db, die per user zouden moeten opgeslagen worden
+        // => alle drones opvragen en de eerste selecteren (er zit ook maar in config in de db normaal bij testing)
+        this.http.get(environment.baseAPIUrl + 'api/drones/').subscribe(
+          result => {
+            resolve(result[0]);
+          },
+          (error: HttpErrorResponse) => {
+            reject(error[0]);
+          }
+        );
+      }
+    });
+  }
+
+  storeDroneDbInformation(droneConfig){
+    return new Promise((resolve, reject) => {
+      this.http.put(environment.baseAPIUrl + 'api/drones/' + droneConfig._id, droneConfig).subscribe(
+        result => {
+          resolve(result);
+        },
+        (error: HttpErrorResponse) => {
+          reject(error);
+        }
+      );
+    });
+  }
+
   updateDroneConfiguration(configuration) {
     return new Promise((resolve, reject) => {
       console.log('Drone configuration update: ', configuration);
