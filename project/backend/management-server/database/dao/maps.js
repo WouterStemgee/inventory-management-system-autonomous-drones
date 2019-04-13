@@ -1,5 +1,5 @@
 const Map = require('../models/map');
-const dijkstra = require('../../app');
+const ASter = require('../../app');
 const mongoose = require('mongoose');
 
 let getAllMaps = () => {
@@ -74,7 +74,7 @@ let addMap = (map) => {
 
     return m.save()
         .then(result => {
-            //dijkstra.Dijkstra.recalculateGraaf(m._id.toString());
+            ASter.ASter.recalculateGraaf(m._id.toString());
             return Promise.resolve(result);
         })
         .catch(err => {
@@ -120,7 +120,7 @@ let updateMap = (mapId, map) => {
 
     return Map.updateOne({_id: mapId}, {$set: m}).exec()
         .then(result => {
-            //dijkstra.Dijkstra.recalculateGraaf(m._id.toString());
+            ASter.ASter.recalculateGraaf(m._id.toString());
             return Promise.resolve(result);
         })
         .catch(err => {

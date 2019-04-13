@@ -10,7 +10,7 @@ const passport = require('passport');
 require('./database/models/user');
 require('./api/config/passport');
 
-const dijkstra = require('./dijkstra/dijkstra');
+const aster = require('./pathfinder/ASter');
 
 const mapRouter = require('./api/maps');
 const droneRouter = require('./api/drone');
@@ -38,8 +38,8 @@ mongoose.connect('mongodb://localhost/drone1', {useNewUrlParser: true});
 // Production environment
 // mongoose.connect('mongodb://mongo/drone1', {useNewUrlParser: true});
 
-let Dijkstra = new dijkstra();
-//Dijkstra.initializeMaps();
+let ASter = new aster();
+ASter.initializeMaps();
 
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
@@ -59,4 +59,4 @@ if (app.get('env') === 'development') {
 }
 
 module.exports = app;
-exports.Dijkstra = Dijkstra;
+exports.ASter = ASter;
