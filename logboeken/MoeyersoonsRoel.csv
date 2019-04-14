@@ -49,3 +49,5 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 12/04/19,10:00,12:15,Campus, op campus verder testen van performatie - mockup voor mezelf aangepast - ontdekt dat het probleem niet echt ligt aan geembedded zijn maar aan de broker zelf die dat naar node red moet versturen,,
 12/04/19,19:00,20:00,Extern, mosquitto wat opgezocht gewoon en gekeken voor mss eens een alternatief te testen,,
 13/04/19,13:30,16:30,Extern, frontend droneconfiguratie aangepast - wordt nu uit de db van de backend gehaald en weer opgeslagen - vermijdt dat we steeds in node red bij opstart nog iets manueels steeds moesten doen,,
+13/04/19,21:00,23:00,Extern, testen loskoppelen python - node red - enkel node red die broker gebruikt - geen resultaten pfff - bekijken hiveMQ,,
+14/04/19,15:00,17:15,Extern, wat minidingetjes aan de front end aanpassen voor sommige dingen wat mooier te maken - flow aangepast,,

@@ -1,7 +1,8 @@
-<div>
-  <mat-checkbox class="checkbox" [(ngModel)]="subscriptions.acceleration" (change)="subChanged()">Acceleration</mat-checkbox><br>
-  <mat-checkbox class="checkbox" [(ngModel)]="subscriptions.speed" (change)="subChanged()">Speed</mat-checkbox><br>
-  <mat-checkbox class="checkbox" [(ngModel)]="subscriptions.battery" (change)="subChanged()">Battery</mat-checkbox><br>
-  <mat-checkbox class="checkbox" [(ngModel)]="subscriptions.position" (change)="subChanged()">Position</mat-checkbox><br>
-  <mat-checkbox class="checkbox" [(ngModel)]="subscriptions.orientation" (change)="subChanged()">Orientation</mat-checkbox><br>
+<div class="cb-group">
+  <h4>Received data</h4>
+  <mat-checkbox [(ngModel)]="subscriptions.acceleration" (change)="subChanged()">Acceleration</mat-checkbox><br>
+  <mat-checkbox [(ngModel)]="subscriptions.speed" (change)="subChanged()">Speed</mat-checkbox><br>
+  <mat-checkbox [(ngModel)]="subscriptions.battery" (change)="subChanged()">Battery</mat-checkbox><br>
+  <mat-checkbox [(ngModel)]="subscriptions.position" (change)="subChanged()">Position</mat-checkbox><br>
+  <mat-checkbox [(ngModel)]="subscriptions.orientation" (change)="subChanged()">Orientation</mat-checkbox><br>
 </div>

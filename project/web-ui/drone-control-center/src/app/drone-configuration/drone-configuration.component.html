@@ -1,11 +1,19 @@
-<div class="form">
+<div class="form fieldcontainer">
+  <mat-form-field>
+    <input matInput disabled placeholder="Id" *ngIf="simulator.drone" [(ngModel)]="draftConfig._id">
+  </mat-form-field><br>
   <mat-form-field>
     <input matInput [disabled]="!auth.isAdmin()" placeholder="Name" *ngIf="simulator.drone" [(ngModel)]="draftConfig.name">
   </mat-form-field><br>
   <mat-form-field>
     <input matInput [disabled]="!auth.isAdmin()" type="number" placeholder="Radius"*ngIf="simulator.drone" [(ngModel)]="draftConfig.properties.radius">
-  </mat-form-field>
+  </mat-form-field><br>
 </div>
-<button mat-flat-button color="primary" type="submit" [disabled]="!auth.isAdmin()" (click)="setProperties()">Set drone</button>
+<div class="form">
+  <button mat-flat-button color="primary" type="submit" [disabled]="!auth.isAdmin()" (click)="setProperties()">Update drone configuration</button>
+</div>
+
+
+
 
 

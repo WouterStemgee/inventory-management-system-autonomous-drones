@@ -1,5 +1,14 @@
 .form {
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 15px;
+}
+
+.fieldcontainer{
   display: flex;
   align-content: center;
   align-items: center;
+}
+mat-form-field {
+  padding-right: 10px;
 }

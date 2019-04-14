@@ -1,10 +1,7 @@
-.checkbox {
-  margin: 0 10px;
+mat-checkbox {
   font-size: 15px;
 }
 
-.card {
-  display: flow;
-  align-content: center;
-  align-items: center;
+.cb-group {
+  padding: 0px 15px 15px 15px;
 }
