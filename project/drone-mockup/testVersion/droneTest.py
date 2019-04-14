@@ -3,9 +3,8 @@ import time
 import math
 import time
 
-class DroneSimpel:
+class DroneTest:
     def __init__(self):
-        #self.client = None
         self.battery = 100
         self.position = [1, 1, 1]  # xcoord, ycoord en zcoord
         self.speed = [None, None, None]
@@ -115,14 +114,12 @@ class DroneSimpel:
                 elif x > initieelX:
                     self.position[0] = initieelX + (self.speed[0] * t)
             print("op tijdstip: ", t, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
-            #self.client.stuurPosition() #////////////////
             t = t + 0.05
             round(t,2)  # dit geeft een hoop slecht afgeronde komma getallen door beperkingen in de binaite voorstelling
             time.sleep(0.05)
         self.position[0] = x
         self.position[1] = y
         print("op tijdstip: ", tijd, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
-        #self.client.stuurPosition() #///////////////////
         self.speed[0] = 0
         self.speed[1] = 0
         return tijd
@@ -141,13 +138,11 @@ class DroneSimpel:
                 elif z < self.position[2]:
                     self.position[2] = initieelZ - self.speed[2]*t
                 print("op tijdstip: ", t+tijd, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
-                #self.client.stuurPosition()  # ///////////////////
                 t = t + 0.05
                 round(t,2)
                 time.sleep(0.05)
             self.position[2] = z
             print("op tijdstip: ", tijd+tijd2, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
-            #self.client.stuurPosition()  # ///////////////////
             self.speed[2] = 0
 
     def vliegNaar(self,x,y,z):
