@@ -47,6 +47,7 @@ export class DroneSimulatorService {
     if (this.map === undefined) {
       this.map = new Map();
       this.drone = new Drone();
+      this.fillDroneObject();
       this.map.loadMap(this.maps[this.selectedMap]);
     }
     this.initialized = true;
@@ -109,8 +110,8 @@ export class DroneSimulatorService {
             .then(
             res => {
               this.droneDbinfo = res;
-              console.log(res);
-              this.fillDroneObject();
+              this.http.updateDroneConfiguration(this.droneDbinfo.properties.radius.toString())
+                .then( ress => {resolve(); } );
               resolve();
             }).catch(
               error => {
@@ -118,19 +119,19 @@ export class DroneSimulatorService {
                 this.data.getNewDrone().then(res => {
                   console.log('nieuwe standaard drone inladen...');
                   this.droneDbinfo = res;
-                  console.log(res);
                   this.http.postDroneDbInformation(res)
                     .then( ress => {
-                      this.fillDroneObject();
-                      console.log(ress);
-                      resolve();
-                    });
+                      this.http.updateDroneConfiguration(this.droneDbinfo.properties.radius.toString()).then( ress => {
+                        resolve(); }
+                      );
+                    }).catch(error => {
+                    console.log('can\'t add new drone config');
+                  });
+
+
                 });
               }
           );
-        })
-        .then(lol => {
-          this.http.updateDroneConfiguration(this.droneDbinfo.properties.radius.toString());
         })
         .catch(error => {
           this.onAlertEvent.emit({
@@ -225,14 +226,7 @@ export class DroneSimulatorService {
   }
 
   updateDrone() {
-    const d = {
-      _id: this.droneDbinfo.id,
-      name: this.droneDbinfo.name,
-      properties: {
-        radius: this.droneDbinfo.radius
-      }
-    };
-    this.http.putDroneDbInformation(d).then(
+    this.http.putDroneDbInformation(this.droneDbinfo).then(
       res => {
         this.fillDroneObject();
         this.http.updateDroneConfiguration(this.droneDbinfo.properties.radius.toString());

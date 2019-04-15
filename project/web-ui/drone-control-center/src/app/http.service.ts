@@ -172,11 +172,9 @@ export class HttpService {
     return new Promise((resolve, reject) => {
       this.http.post(environment.baseAPIUrl + 'api/drones', droneConfig).subscribe(
         result => {
-          console.log(result);
           resolve(result);
         },
         (error: HttpErrorResponse) => {
-          console.log(error);
           reject(error);
         }
       );
