@@ -14,6 +14,7 @@ export class DroneSimulatorService {
 
   map;
   drone;
+  droneDbinfo;
 
   loaded;
   initialized;
@@ -73,7 +74,6 @@ export class DroneSimulatorService {
                     this.http.getAllMaps()
                       .then(newMaps => {
                         this.maps = newMaps;
-                        resolve();
                       })
                       .catch(error => {
                         this.onAlertEvent.emit({
@@ -101,9 +101,33 @@ export class DroneSimulatorService {
                 });
                 console.log(error);
               });
-          } else {
-            resolve();
           }
+        })
+        .then(lol => {
+          console.log('Loading drone information...');
+          this.http.getDroneDbInformation()
+            .then(
+            res => {
+              this.droneDbinfo = res;
+              console.log(res);
+              this.fillDroneObject();
+              resolve();
+            }).catch(
+              error => {
+                console.log('geen drone gevonden in database');
+                this.data.getNewDrone().then(res => {
+                  console.log('nieuwe standaard drone inladen...');
+                  this.droneDbinfo = res;
+                  console.log(res);
+                  this.http.postDroneDbInformation(res)
+                    .then( ress => {
+                      this.fillDroneObject();
+                      console.log(ress);
+                      resolve();
+                    });
+                });
+              }
+          );
         })
         .catch(error => {
           this.onAlertEvent.emit({
@@ -189,6 +213,23 @@ export class DroneSimulatorService {
           });
       });
     }));
+  }
+
+  fillDroneObject() {
+    this.drone.id = this.droneDbinfo._id;
+    this.drone.name = this.droneDbinfo.name;
+    this.drone.radius = this.droneDbinfo.properties.radius;
+  }
+
+  updateDrone() {
+    const d = {
+      _id: this.droneDbinfo.id,
+      name: this.droneDbinfo.name,
+      properties: {
+        radius: this.droneDbinfo.radius
+      }
+    };
+    this.http.putDroneDbInformation(d).then(res => {this.fillDroneObject(); } );
   }
 
   exportMap() {

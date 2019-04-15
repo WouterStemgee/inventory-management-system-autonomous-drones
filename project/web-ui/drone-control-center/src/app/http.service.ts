@@ -130,7 +130,7 @@ export class HttpService {
 
   getDroneDbInformation(droneId = 0){
     return new Promise((resolve, reject) => {
-      if (droneId) {
+      if (droneId != 0) {
         this.http.get(environment.baseAPIUrl + 'api/drones/' + droneId).subscribe(
           result => {
             resolve(result);
@@ -155,13 +155,28 @@ export class HttpService {
     });
   }
 
-  storeDroneDbInformation(droneConfig){
+  putDroneDbInformation(droneConfig){
     return new Promise((resolve, reject) => {
       this.http.put(environment.baseAPIUrl + 'api/drones/' + droneConfig._id, droneConfig).subscribe(
         result => {
           resolve(result);
         },
         (error: HttpErrorResponse) => {
+          reject(error);
+        }
+      );
+    });
+  }
+
+  postDroneDbInformation(droneConfig){
+    return new Promise((resolve, reject) => {
+      this.http.post(environment.baseAPIUrl + 'api/drones', droneConfig).subscribe(
+        result => {
+          console.log(result);
+          resolve(result);
+        },
+        (error: HttpErrorResponse) => {
+          console.log(error);
           reject(error);
         }
       );

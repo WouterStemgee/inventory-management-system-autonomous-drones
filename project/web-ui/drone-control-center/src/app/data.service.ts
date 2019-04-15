@@ -12,4 +12,8 @@ export class DataService {
   getNewMap(): Promise<any> {
     return this.http.get<any>('../assets/data/new_map.json').toPromise();
   }
+
+  getNewDrone(): Promise<any> {
+    return this.http.get<any>('../assets/data/drone.json').toPromise();
+  }
 }
