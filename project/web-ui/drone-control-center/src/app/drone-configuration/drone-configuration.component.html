@@ -12,7 +12,6 @@
 <div class="form">
   <button mat-flat-button color="primary" type="submit" [disabled]="!auth.isAdmin()" (click)="setProperties()">Update drone configuration</button>
 </div>
-<input matInput [disabled]="!auth.isAdmin()" type="number" placeholder="Radius"*ngIf="simulator.loaded" [(ngModel)]="simulator.drone.radius">
 
 
 
