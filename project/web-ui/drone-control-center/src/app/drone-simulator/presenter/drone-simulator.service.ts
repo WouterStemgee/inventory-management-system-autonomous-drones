@@ -129,6 +129,9 @@ export class DroneSimulatorService {
               }
           );
         })
+        .then(lol => {
+          this.http.updateDroneConfiguration(this.droneDbinfo.properties.radius.toString());
+        })
         .catch(error => {
           this.onAlertEvent.emit({
             title: 'Drone Control Center',
@@ -229,7 +232,11 @@ export class DroneSimulatorService {
         radius: this.droneDbinfo.radius
       }
     };
-    this.http.putDroneDbInformation(d).then(res => {this.fillDroneObject(); } );
+    this.http.putDroneDbInformation(d).then(
+      res => {
+        this.fillDroneObject();
+        this.http.updateDroneConfiguration(this.droneDbinfo.properties.radius.toString());
+      });
   }
 
   exportMap() {
