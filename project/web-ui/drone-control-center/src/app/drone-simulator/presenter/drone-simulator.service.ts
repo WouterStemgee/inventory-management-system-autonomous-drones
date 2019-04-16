@@ -55,7 +55,7 @@ export class DroneSimulatorService {
     this.initialized = true;
   }
 
-  load() {
+  loadMaps() {
     return new Promise((resolve, reject) => {
       console.log('Loading map data...');
       this.http.getAllMaps()
@@ -77,6 +77,7 @@ export class DroneSimulatorService {
                     this.http.getAllMaps()
                       .then(newMaps => {
                         this.maps = newMaps;
+                        resolve();
                       })
                       .catch(error => {
                         this.onAlertEvent.emit({
@@ -104,62 +105,10 @@ export class DroneSimulatorService {
                 });
                 console.log(error);
               });
+
+          } else {
+            resolve();
           }
-        })
-        .then(() => {
-          console.log('Loading drone data...');
-          this.http.getAllDrones()
-            .then(result => {
-                this.drones = result;
-                if (this.drones.length === 0) {
-                  this.onAlertEvent.emit({
-                    title: 'Drone Control Center',
-                    message: 'No drones found in database, initializing new drone...',
-                    type: 'warning'
-                  });
-                  this.data.getNewDrone()
-                    .then((res) => {
-                      this.http.addDrone(res)
-                        .then(() => {
-                          this.onAlertEvent.emit({
-                            title: 'Drone Control Center', message: 'New drone added.', type: 'success'
-                          });
-                          this.http.getAllDrones()
-                            .then(newDrones => {
-                              this.drones = newDrones;
-                              resolve();
-                            })
-                            .catch(error => {
-                              this.onAlertEvent.emit({
-                                title: 'Drone Control Center',
-                                message: 'Error loading drones from database.',
-                                type: 'error'
-                              });
-                              console.log(error);
-                            });
-                        })
-                        .catch(error => {
-                          this.onAlertEvent.emit({
-                            title: 'Drone Control Center',
-                            message: 'Error adding new drones.',
-                            type: 'error'
-                          });
-                          console.log(error);
-                        });
-                    })
-                    .catch(error => {
-                      this.onAlertEvent.emit({
-                        title: 'Drone Control Center',
-                        message: 'Error loading new drone from JSON.',
-                        type: 'error'
-                      });
-                      console.log(error);
-                    });
-                } else {
-                  resolve();
-                }
-              }
-            );
         })
         .catch(error => {
           this.onAlertEvent.emit({
@@ -170,6 +119,99 @@ export class DroneSimulatorService {
           console.log(error);
           reject();
         });
+    });
+  }
+
+  loadDrones() {
+    return new Promise((resolve, reject) => {
+      console.log('Loading drone data...');
+      this.http.getAllDrones()
+        .then(result => {
+          this.drones = result;
+          if (this.drones.length === 0) {
+            this.onAlertEvent.emit({
+              title: 'Drone Control Center',
+              message: 'No drones found in database, initializing new drone...',
+              type: 'warning'
+            });
+            this.data.getNewDrone()
+              .then((res) => {
+                this.http.addDrone(res)
+                  .then(() => {
+                    this.onAlertEvent.emit({
+                      title: 'Drone Control Center', message: 'New drone added.', type: 'success'
+                    });
+                    this.http.getAllDrones()
+                      .then(newDrones => {
+                        this.drones = newDrones;
+                        resolve();
+                        this.http.updateDrone(this.drones[this.selectedDrone])
+                          .catch((err) => {
+                            this.onAlertEvent.emit({
+                              title: 'Drone Control Center',
+                              message: 'Error setting new drone configuration.',
+                              type: 'error'
+                            });
+                            console.log(err);
+                          });
+
+                      })
+                      .catch(error => {
+                        this.onAlertEvent.emit({
+                          title: 'Drone Control Center',
+                          message: 'Error loading drones from database.',
+                          type: 'error'
+                        });
+                        console.log(error);
+                      });
+                  })
+                  .catch(error => {
+                    this.onAlertEvent.emit({
+                      title: 'Drone Control Center',
+                      message: 'Error adding new drones.',
+                      type: 'error'
+                    });
+                    console.log(error);
+                  });
+              })
+              .catch(error => {
+                this.onAlertEvent.emit({
+                  title: 'Drone Control Center',
+                  message: 'Error loading new drone from JSON.',
+                  type: 'error'
+                });
+                console.log(error);
+              });
+          } else {
+            resolve();
+          }
+        })
+        .catch(error => {
+          this.onAlertEvent.emit({
+            title: 'Drone Control Center',
+            message: 'Error loading drones from database.',
+            type: 'error'
+          });
+          console.log(error);
+          reject();
+        });
+    });
+  }
+
+  load() {
+    return new Promise((resolve, reject) => {
+      this.loadMaps()
+        .then(() => {
+          this.loadDrones()
+            .then(() => {
+              resolve();
+            })
+            .catch(() => {
+              reject();
+            });
+        }).catch(() => {
+        reject();
+      });
     });
   }
 

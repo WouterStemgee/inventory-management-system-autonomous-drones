@@ -1,6 +1,6 @@
 {
-  "name": "drone",
+  "name": "Mockup Drone",
   "properties": {
-    "radius" : 750
+    "radius": 500
   }
 }
