@@ -16,7 +16,7 @@ export class DroneConfigurationComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.simulator.updateDrone()
+    this.simulator.updateDrone(false)
       .catch((err) => {
         console.log(err);
       });
