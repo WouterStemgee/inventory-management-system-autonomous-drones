@@ -145,6 +145,15 @@ export class DroneSimulatorService {
                       .then(newDrones => {
                         this.drones = newDrones;
                         resolve();
+                        this.http.updateDrone(this.drones[this.selectedDrone])
+                          .catch((err) => {
+                            this.onAlertEvent.emit({
+                              title: 'Drone Control Center',
+                              message: 'Error setting new drone configuration',
+                              type: 'error'
+                            });
+                            console.log(err);
+                          });
                       })
                       .catch(error => {
                         this.onAlertEvent.emit({
