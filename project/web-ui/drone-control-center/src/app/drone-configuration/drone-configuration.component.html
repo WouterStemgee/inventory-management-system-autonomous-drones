@@ -1,12 +1,15 @@
 <form #configForm="ngForm" class="form field-container" (submit)="setProperties(configForm)">
   <mat-form-field>
+    <label for="id">Id</label>
     <input matInput disabled [(ngModel)]="simulator.drones[simulator.selectedDrone]._id" name="id" id="id" ngModel>
   </mat-form-field>
   <mat-form-field>
+    <label for="name">Name</label>
     <input matInput [disabled]="!auth.isAdmin()" [(ngModel)]="simulator.drones[simulator.selectedDrone].name" name="name" id="name"
            ngModel>
   </mat-form-field>
   <mat-form-field>
+    <label for="radius">Radius</label>
     <input matInput [disabled]="!auth.isAdmin()" type="number" [(ngModel)]="simulator.drones[simulator.selectedDrone].properties.radius" name="radius"
            id="radius"
            ngModel>

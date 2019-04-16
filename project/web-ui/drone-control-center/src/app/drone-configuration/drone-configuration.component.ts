@@ -16,6 +16,10 @@ export class DroneConfigurationComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.simulator.updateDrone()
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   setProperties(form) {

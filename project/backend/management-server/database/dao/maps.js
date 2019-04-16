@@ -13,12 +13,13 @@ let getAllMaps = () => {
 };
 
 let deleteAllMaps = () => {
-    mongoose.connection.dropCollection('maps', (err, result) => {
-        if (err) {
+    mongoose.connection.dropCollection('maps')
+        .then(() => {
+            return Promise.resolve();
+        })
+        .catch((err) => {
             return Promise.reject({error: err});
-        }
-        return Promise.resolve(result);
-    });
+        });
 };
 
 let getMap = (id) => {
