@@ -3,7 +3,7 @@ import time
 
 class myThreadTest(threading.Thread):
 
-    def __init__(self,drone,array):
+    def __init__(self,drone,array): # eventueel gewoon ook nog de functie mee geven
         threading.Thread.__init__(self)
         self.drone = drone
         self.coordinaten = array
