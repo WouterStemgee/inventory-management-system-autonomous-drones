@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 let obstaclePositions = (val) => {
-    return val.length == 2;
+    return val.length === 2;
 };
 
 const coordSchema = mongoose.Schema({

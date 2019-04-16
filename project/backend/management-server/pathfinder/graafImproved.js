@@ -1,5 +1,6 @@
 const PriorityQueue = require('./priorityQueue');
 const Knoop = require('./knoop');
+
 class GraafImproved {
     constructor() {
         this.knopen = [];
@@ -12,20 +13,20 @@ class GraafImproved {
         this.mapId;
     }
 
-    setMapId(mapId){
+    setMapId(mapId) {
         this.mapId = mapId;
     }
 
-    setSize(sizeX, sizeY){
+    setSize(sizeX, sizeY) {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
     }
 
-    setDroneValue(droneValue){
+    setDroneValue(droneValue) {
         this.droneValue = droneValue;
     }
 
-    ObstakelWaypoints(knoopLB, knoopRO){
+    ObstakelWaypoints(knoopLB, knoopRO) {
         //verwijder knopen en verbindingen binnen obstakel
         this.resetVerbindingen();
 
@@ -48,23 +49,23 @@ class GraafImproved {
         this.voegKnoopToe(knoopLD);
 
         //verbindingen moeten nog gemaakt worden
-        for(let i = 0; i < this.knopen.length; i++){
+        for (let i = 0; i < this.knopen.length; i++) {
             this.maakVerbindingen(this.knopen[i]);
         }
     }
 
-    resetVerbindingen(){
+    resetVerbindingen() {
         this.verbindingen = [];
     };
 
     //toevoegen van knopen op de graaf adhv een json.
     voegKnoopToe(knoop) {
-        if (knoop.x >= this.droneValue && knoop.y >= this.droneValue && knoop.x <= this.sizeX - this.droneValue &&  knoop.y <= this.sizeY - this.droneValue && this.myIndexOf(knoop) < 0){
+        if (knoop.x >= this.droneValue && knoop.y >= this.droneValue && knoop.x <= this.sizeX - this.droneValue && knoop.y <= this.sizeY - this.droneValue && this.myIndexOf(knoop) < 0) {
             this.knopen.push(knoop);
         }
     }
 
-    maakVerbindingen(knoop1){
+    maakVerbindingen(knoop1) {
         if (this.knopen.length > 0) {
             for (let point of this.knopen) {
                 let clean = true;
@@ -107,7 +108,7 @@ class GraafImproved {
 
     voegVerbindingenToe(verbinding) {
         let graaf = this;
-        if (verbinding.constructor === Array && verbinding.length === 3 && (typeof verbinding[2] === "number" && verbinding[2] >= 0) && graaf.myIndexOf(verbinding[0]) >= 0 && graaf.myIndexOf(verbinding[1]) >= 0){
+        if (verbinding.constructor === Array && verbinding.length === 3 && (typeof verbinding[2] === "number" && verbinding[2] >= 0) && graaf.myIndexOf(verbinding[0]) >= 0 && graaf.myIndexOf(verbinding[1]) >= 0) {
             graaf.verbindingen.push(verbinding);
         } else {
             throw 'Geen correcte array van verbindingen of een of meer van de opgegeven knopen bestaat niet'
@@ -153,7 +154,7 @@ class GraafImproved {
     };
     */
 
-    collision(lijnstuk1, lijnstuk2){
+    collision(lijnstuk1, lijnstuk2) {
         let p1x = lijnstuk1[0].x;
         let p2x = lijnstuk1[1].x;
         let p3x = lijnstuk2[0].x;
@@ -163,22 +164,22 @@ class GraafImproved {
         let p3y = lijnstuk2[0].y;
         let p4y = lijnstuk2[1].y;
 
-        let p13x = p1x-p3x;
-        let p13y = p1y-p3y;
+        let p13x = p1x - p3x;
+        let p13y = p1y - p3y;
 
-        let p43x = p4x-p3x;
-        let p43y = p4y-p3y;
+        let p43x = p4x - p3x;
+        let p43y = p4y - p3y;
 
-        if (Math.abs(p43x) < Number.EPSILON && Math.abs(p43y) < Number.EPSILON){
+        if (Math.abs(p43x) < Number.EPSILON && Math.abs(p43y) < Number.EPSILON) {
             //console.log("zeker yeet 1?");
             //console.log(lijnstuk1, lijnstuk2);
             return false;
         }
 
-        let p21x = p2x-p1x;
-        let p21y = p2y-p1y;
+        let p21x = p2x - p1x;
+        let p21y = p2y - p1y;
 
-        if (Math.abs(p21x) < Number.EPSILON && Math.abs(p21y) < Number.EPSILON){
+        if (Math.abs(p21x) < Number.EPSILON && Math.abs(p21y) < Number.EPSILON) {
             //punt1 en 2 same
             return false;
         }
@@ -192,11 +193,11 @@ class GraafImproved {
 
         let denom = (d2121 * d4343) - (d4321 * d4321);
         let numer = (d1343 * d4321) - (d1321 * d4343);
-        if (Math.abs(denom) < Number.EPSILON){
+        if (Math.abs(denom) < Number.EPSILON) {
             //evenwijdig dus ok indien de afstand tussen de rechten >= droneValue;
-            if (p1x === p2x && p3x === p4x){
+            if (p1x === p2x && p3x === p4x) {
                 return Math.abs(p1x - p3x) >= this.droneValue
-            } else if (p1y === p2y && p3y === p4y){
+            } else if (p1y === p2y && p3y === p4y) {
                 return Math.abs(p1y - p3y) >= this.droneValue
             }
             return false;
@@ -209,34 +210,34 @@ class GraafImproved {
         let pb = new Knoop(p3x + (mub * p43x), p3y + (mub * p43y));
 
         //check correctie punt nie op lijntuk
-        if ((this.heuristics(lijnstuk1[0], pa) + this.heuristics(lijnstuk1[1], pa)).toFixed(5) != this.heuristics(lijnstuk1[0], lijnstuk1[1]).toFixed(5)){
-            if(this.heuristics(lijnstuk1[0], pa) < this.heuristics(lijnstuk1[1], pa)){
+        if ((this.heuristics(lijnstuk1[0], pa) + this.heuristics(lijnstuk1[1], pa)).toFixed(5) != this.heuristics(lijnstuk1[0], lijnstuk1[1]).toFixed(5)) {
+            if (this.heuristics(lijnstuk1[0], pa) < this.heuristics(lijnstuk1[1], pa)) {
                 pa = lijnstuk1[0];
             } else {
                 pa = lijnstuk1[1];
             }
         }
-        if ((this.heuristics(lijnstuk2[0], pb) + this.heuristics(lijnstuk2[1], pb)).toFixed(5) != this.heuristics(lijnstuk2[0], lijnstuk2[1]).toFixed(5)){
-            if(this.heuristics(lijnstuk2[0], pb) < this.heuristics(lijnstuk2[1], pb)){
+        if ((this.heuristics(lijnstuk2[0], pb) + this.heuristics(lijnstuk2[1], pb)).toFixed(5) != this.heuristics(lijnstuk2[0], lijnstuk2[1]).toFixed(5)) {
+            if (this.heuristics(lijnstuk2[0], pb) < this.heuristics(lijnstuk2[1], pb)) {
                 pb = lijnstuk2[0];
             } else {
                 pb = lijnstuk2[1];
             }
         }
-        return this.heuristics(pa,pb) >= this.droneValue;
+        return this.heuristics(pa, pb) >= this.droneValue;
     }
 
-    geefBuren(knoop){
+    geefBuren(knoop) {
         let buren = [];
         let knoop1, knoop2;
-        this.verbindingen.filter(function(verbinding){
+        this.verbindingen.filter(function (verbinding) {
             knoop1 = verbinding[0];
             knoop2 = verbinding[1];
             return (knoop1.x == knoop.x && knoop1.y == knoop.y) || (knoop2.x == knoop.x && knoop2.y == knoop.y);
-        }).forEach(function(verbinding){
+        }).forEach(function (verbinding) {
             knoop1 = verbinding[0];
             knoop2 = verbinding[1];
-            if (knoop1.x == knoop.x && knoop1.y == knoop.y){
+            if (knoop1.x == knoop.x && knoop1.y == knoop.y) {
                 buren.push([knoop2, verbinding[2]]);
             } else {
                 buren.push([knoop1, verbinding[2]]);
@@ -245,12 +246,12 @@ class GraafImproved {
         return buren;
     };
 
-    heuristics(begin, eind){
+    heuristics(begin, eind) {
         let h = Math.sqrt(Math.pow(begin.x - eind.x, 2) + Math.pow(begin.y - eind.y, 2));
         return h;
     };
 
-    zoekPad(start, eind){
+    zoekPad(start, eind) {
         let startk = new Knoop(start.x, start.y);
         this.voegKnoopToe(startk);
         let eindk = new Knoop(eind.x, eind.y);
@@ -259,7 +260,7 @@ class GraafImproved {
         let pQueue = new PriorityQueue();
 
         this.knopen.forEach(function (knoop) {
-            if (knoop.x === start.x && knoop.y === start.y){
+            if (knoop.x === start.x && knoop.y === start.y) {
                 pQueue.voegKnoopToeMetPrioriteit(knoop, 0);
                 knoop.afstand = 0;
             } else {
@@ -269,21 +270,21 @@ class GraafImproved {
             knoop.bezocht = false;
         });
 
-        while (!pQueue.isLeeg()){
+        while (!pQueue.isLeeg()) {
             let huidige = pQueue.geefEersteKnoop();
             huidige.bezocht = true;
 
-            if(huidige.x === eind.x && huidige.y === eind.y){
+            if (huidige.x === eind.x && huidige.y === eind.y) {
                 return dees.geefPad(huidige, start);
             }
 
-            for(let volgende of this.geefBuren(huidige)){
-                if (!volgende[0].bezocht){
+            for (let volgende of this.geefBuren(huidige)) {
+                if (!volgende[0].bezocht) {
                     volgende[0].bezocht = true;
                     pQueue.voegKnoopToeMetPrioriteit(volgende[0], volgende[1]);
                 }
-                let totaleAfstand = huidige.afstand +  volgende[1];
-                if (totaleAfstand < volgende[0].afstand){
+                let totaleAfstand = huidige.afstand + volgende[1];
+                if (totaleAfstand < volgende[0].afstand) {
                     volgende[0].afstand = totaleAfstand;
                     pQueue.verminderPrioriteit(volgende[0], totaleAfstand + dees.heuristics(eind, volgende[0]));
                     volgende[0].vorige = huidige;
@@ -294,7 +295,7 @@ class GraafImproved {
         throw 'fok';
     };
 
-    zoekMultiplePaden(start, waypoints){
+    zoekMultiplePaden(start, waypoints) {
         let graaf = this;
 
         let startk = new Knoop(start.x, start.y);
@@ -318,7 +319,7 @@ class GraafImproved {
             let gekozenEindknoop = null;
             let afstandVanafVorigeKnoop = Infinity;
             let gekozenpad;
-            for (let eind of waypoints){
+            for (let eind of waypoints) {
                 let testpad = graaf.zoekPad(start, eind);
                 let afstand = testpad[0];
                 if (afstand < afstandVanafVorigeKnoop) { // een kleinere afstand gevonden tot 1 van de waypoints dus deze eerst bezoeken
@@ -329,13 +330,13 @@ class GraafImproved {
                     gekozenpad = testpad;
                 }
             }
-            if (!gekozenEindknoop){
+            if (!gekozenEindknoop) {
                 throw 'fok';
             }
             pad.push(gekozenpad);
             totaleAfstand += afstandVanafVorigeKnoop;
             start = gekozenEindknoop;
-            waypoints.splice(waypoints.indexOf(gekozenEindknoop),1);
+            waypoints.splice(waypoints.indexOf(gekozenEindknoop), 1);
         }
         //pad.unshift(totaleAfstand);
         //reset
@@ -350,7 +351,7 @@ class GraafImproved {
         return pad;
     }
 
-    geefPad(knoop, start){
+    geefPad(knoop, start) {
         let pad = [];
         let afstand = knoop.afstand;
         if (afstand != Infinity) {
@@ -367,7 +368,7 @@ class GraafImproved {
         }
     };
 
-    eigenPad(knopen){
+    eigenPad(knopen) {
         let graaf = this;
         knopen.forEach(function (knoop) {
             let temp = new Knoop(knoop.x, knoop.y);
@@ -375,10 +376,10 @@ class GraafImproved {
         });
         let i = 0;
         let clean = true;
-        while (clean && i < knopen.length-1){
+        while (clean && i < knopen.length - 1) {
             let j = 0;
             let knoop1 = knopen[i];
-            let knoop2 = knopen[i+1];
+            let knoop2 = knopen[i + 1];
             let lijnstuk1 = [knoop1, knoop2];
             while (clean && j < this.obstakels.length) {
                 let obstakel = this.obstakels[j];
@@ -398,7 +399,7 @@ class GraafImproved {
             }
             i++;
         }
-        if (clean){
+        if (clean) {
             return knopen;
         } else {
             throw 'Dit pad gaat door obstakels';
@@ -522,7 +523,7 @@ class GraafImproved {
     }
     */
 
-    eigenPadMetASter(knopen){
+    eigenPadMetASter(knopen) {
         let graaf = this;
         let toevoeging = [];
         knopen.forEach(function (knoop) {
@@ -536,10 +537,10 @@ class GraafImproved {
         let pad = [];
         let i = 0;
         let clean = true;
-        while (clean && i < knopen.length-1){
+        while (clean && i < knopen.length - 1) {
             let j = 0;
             let knoop1 = knopen[i];
-            let knoop2 = knopen[i+1];
+            let knoop2 = knopen[i + 1];
             let lijnstuk1 = [knoop1, knoop2];
             while (clean && j < this.obstakels.length) {
                 let obstakel = this.obstakels[j];
@@ -560,12 +561,12 @@ class GraafImproved {
             pad.push(knopen[i]);
             i++;
         }
-        if (clean){
+        if (clean) {
             pad.push(knopen[i]);
             return pad;
         } else {
-            let correctie = this.zoekPad(knopen[i-1],knopen[i]);
-            for (let m = 2; m< correctie.length - 1; m++){
+            let correctie = this.zoekPad(knopen[i - 1], knopen[i]);
+            for (let m = 2; m < correctie.length - 1; m++) {
                 pad.push(correctie[m]);
             }
             knopen = knopen.slice(i);
@@ -577,4 +578,5 @@ class GraafImproved {
         }
     }
 }
+
 module.exports = GraafImproved;

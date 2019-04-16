@@ -128,36 +128,9 @@ export class HttpService {
     });
   }
 
-  getDroneDbInformation(droneId = 0){
+  getAllDrones() {
     return new Promise((resolve, reject) => {
-      if (droneId != 0) {
-        this.http.get(environment.baseAPIUrl + 'api/drones/' + droneId).subscribe(
-          result => {
-            resolve(result);
-          },
-          (error: HttpErrorResponse) => {
-            reject(error);
-          }
-        );
-      }
-      else {
-        // nog voor nu, omdat er geen rekening wordt gehouden met droneid's in de db, die per user zouden moeten opgeslagen worden
-        // => alle drones opvragen en de eerste selecteren (er zit ook maar in config in de db normaal bij testing)
-        this.http.get(environment.baseAPIUrl + 'api/drones/').subscribe(
-          result => {
-            resolve(result[0]);
-          },
-          (error: HttpErrorResponse) => {
-            reject(error[0]);
-          }
-        );
-      }
-    });
-  }
-
-  putDroneDbInformation(droneConfig){
-    return new Promise((resolve, reject) => {
-      this.http.put(environment.baseAPIUrl + 'api/drones/' + droneConfig._id, droneConfig).subscribe(
+      this.http.get(environment.baseAPIUrl + 'api/drones/').subscribe(
         result => {
           resolve(result);
         },
@@ -168,11 +141,18 @@ export class HttpService {
     });
   }
 
-  postDroneDbInformation(droneConfig){
+  updateDrone(drone) {
     return new Promise((resolve, reject) => {
-      this.http.post(environment.baseAPIUrl + 'api/drones', droneConfig).subscribe(
-        result => {
-          resolve(result);
+      this.http.put(environment.baseAPIUrl + 'api/drones/' + drone._id, drone).subscribe(
+        res => {
+          this.http.put(environment.baseAPIUrl + 'red/drone/', drone.properties.radius.toString()).subscribe(
+            () => {
+              resolve(res);
+            },
+            (error: HttpErrorResponse) => {
+              reject(error);
+            }
+          );
         },
         (error: HttpErrorResponse) => {
           reject(error);
@@ -181,10 +161,9 @@ export class HttpService {
     });
   }
 
-  updateDroneConfiguration(configuration) {
+  addDrone(drone) {
     return new Promise((resolve, reject) => {
-      console.log('Drone configuration update: ', configuration);
-      this.http.put(environment.baseAPIUrl + 'red/drone/', configuration).subscribe(
+      this.http.post(environment.baseAPIUrl + 'api/drones', drone).subscribe(
         result => {
           resolve(result);
         },
@@ -199,7 +178,7 @@ export class HttpService {
     return new Promise((resolve, reject) => {
       const httpOptions = {
         headers: new HttpHeaders({
-          'Content-Type':  'application/json'
+          'Content-Type': 'application/json'
         })
       };
       this.http.put(environment.baseAPIUrl + 'red/data/', topics, httpOptions).subscribe(

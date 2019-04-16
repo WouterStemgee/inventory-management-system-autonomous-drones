@@ -37,8 +37,7 @@ function PuntTotLijn(px, py, p1x, p1y, p2x, p2y) {
             // intersects at or to the "right" of second segment vertex (p2x, p2y).  If t is approximately 1.0, then
             // intersection is at p2.  If t is greater than that, then there is no intersection (i.e. p is not within
             // the 'bounds' of the segment)
-            if (this.t <= (1.0 + Number.EPSILON))
-            {
+            if (this.t <= (1.0 + Number.EPSILON)) {
                 // intersects at 2nd segment vertex
                 this.t = 1.0;
             }

@@ -13,10 +13,10 @@ var RED = require('node-red');
 
 //settings voor node-red (normaal settings.js file)
 var settings = {
-    httpAdminRoot:"/editor",
+    httpAdminRoot: "/editor",
     httpNodeRoot: "/red",
-    userDir:"./nodered",
-    functionGlobalContext: { },    // enables global context
+    userDir: "./nodered",
+    functionGlobalContext: {},    // enables global context
     credentialSecret: 'drone'
 };
 
@@ -38,10 +38,10 @@ var server = http.createServer(app);
 RED.init(server, settings);
 
 // Serve the editor UI from /red
-app.use(settings.httpAdminRoot,RED.httpAdmin);
+app.use(settings.httpAdminRoot, RED.httpAdmin);
 
 // Serve the http nodes UI from /api
-app.use(settings.httpNodeRoot,RED.httpNode);
+app.use(settings.httpNodeRoot, RED.httpNode);
 
 // catch 404 and forward to error handler
 app.use(function (err, req, res, next) {
@@ -132,10 +132,5 @@ function onListening() {
         : 'port ' + addr.port;
     debug('Listening on ' + bind);
 }
-
-/**
- * Alvorens nodered gestart wordt, moet ervoor gezorgd worden dat de geweste flows gerunt worden
- */
-//RED.flows.setFlows("flows_JOCHENLAROYA478.json") => {}
 
 RED.start();

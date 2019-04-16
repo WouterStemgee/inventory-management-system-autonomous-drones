@@ -11,15 +11,16 @@ import {SharedService} from '../../shared.service';
 })
 export class DroneSimulatorService {
   selectedMap = 0;
+  selectedDrone = 0;
 
   map;
   drone;
-  droneDbinfo;
 
   loaded;
   initialized;
 
   maps;
+  drones;
 
   @Output() onAlertEvent = new EventEmitter<any>();
   @Output() onSimulatorLoadedEvent = new EventEmitter<boolean>();
@@ -38,8 +39,9 @@ export class DroneSimulatorService {
   reset(sendNotification = true) {
     this.map.reset();
     this.map.loadMap(this.maps[this.selectedMap]);
+    this.drone.loadDrone(this.drones[this.selectedDrone]);
     if (sendNotification) {
-      this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Map reset.', type: 'info'});
+      this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Simulator reset.', type: 'info'});
     }
   }
 
@@ -47,7 +49,7 @@ export class DroneSimulatorService {
     if (this.map === undefined) {
       this.map = new Map();
       this.drone = new Drone();
-      this.fillDroneObject();
+      this.drone.loadDrone(this.drones[this.selectedDrone]);
       this.map.loadMap(this.maps[this.selectedMap]);
     }
     this.initialized = true;
@@ -104,34 +106,59 @@ export class DroneSimulatorService {
               });
           }
         })
-        .then(lol => {
-          console.log('Loading drone information...');
-          this.http.getDroneDbInformation()
-            .then(
-            res => {
-              this.droneDbinfo = res;
-              this.http.updateDroneConfiguration(this.droneDbinfo.properties.radius.toString())
-                .then( ress => {resolve(); } );
-              resolve();
-            }).catch(
-              error => {
-                console.log('geen drone gevonden in database');
-                this.data.getNewDrone().then(res => {
-                  console.log('nieuwe standaard drone inladen...');
-                  this.droneDbinfo = res;
-                  this.http.postDroneDbInformation(res)
-                    .then( ress => {
-                      this.http.updateDroneConfiguration(this.droneDbinfo.properties.radius.toString()).then( ress => {
-                        resolve(); }
-                      );
-                    }).catch(error => {
-                    console.log('can\'t add new drone config');
+        .then(() => {
+          console.log('Loading drone data...');
+          this.http.getAllDrones()
+            .then(result => {
+                this.drones = result;
+                if (this.drones.length === 0) {
+                  this.onAlertEvent.emit({
+                    title: 'Drone Control Center',
+                    message: 'No drones found in database, initializing new drone...',
+                    type: 'warning'
                   });
-
-
-                });
+                  this.data.getNewDrone()
+                    .then((res) => {
+                      this.http.addDrone(res)
+                        .then(() => {
+                          this.onAlertEvent.emit({
+                            title: 'Drone Control Center', message: 'New drone added.', type: 'success'
+                          });
+                          this.http.getAllDrones()
+                            .then(newDrones => {
+                              this.drones = newDrones;
+                            })
+                            .catch(error => {
+                              this.onAlertEvent.emit({
+                                title: 'Drone Control Center',
+                                message: 'Error loading drones from database.',
+                                type: 'error'
+                              });
+                              console.log(error);
+                            });
+                        })
+                        .catch(error => {
+                          this.onAlertEvent.emit({
+                            title: 'Drone Control Center',
+                            message: 'Error adding new drones.',
+                            type: 'error'
+                          });
+                          console.log(error);
+                        });
+                    })
+                    .catch(error => {
+                      this.onAlertEvent.emit({
+                        title: 'Drone Control Center',
+                        message: 'Error loading new drone from JSON.',
+                        type: 'error'
+                      });
+                      console.log(error);
+                    });
+                } else {
+                  resolve();
+                }
               }
-          );
+            );
         })
         .catch(error => {
           this.onAlertEvent.emit({
@@ -151,6 +178,11 @@ export class DroneSimulatorService {
 
   selectMap(id) {
     this.selectedMap = id;
+    this.reset(false);
+  }
+
+  selectDrone(id) {
+    this.selectedDrone = id;
     this.reset(false);
   }
 
@@ -195,7 +227,7 @@ export class DroneSimulatorService {
 
   updateMap(notification = true) {
     return new Promise(((resolve, reject) => {
-      this.http.updateMap(this.map.toJSON(this.map.name)).then(() => {
+      this.http.updateMap(this.map.toJSON()).then(() => {
         this.http.getAllMaps()
           .then(result => {
             this.maps = result;
@@ -214,23 +246,37 @@ export class DroneSimulatorService {
               message: err.toString(),
               type: 'error'
             });
+            reject();
           });
       });
     }));
   }
 
-  fillDroneObject() {
-    this.drone.id = this.droneDbinfo._id;
-    this.drone.name = this.droneDbinfo.name;
-    this.drone.radius = this.droneDbinfo.properties.radius;
-  }
-
-  updateDrone() {
-    this.http.putDroneDbInformation(this.droneDbinfo).then(
-      res => {
-        this.fillDroneObject();
-        this.http.updateDroneConfiguration(this.droneDbinfo.properties.radius.toString());
+  updateDrone(notification = true) {
+    return new Promise(((resolve, reject) => {
+      this.http.updateDrone(this.drone.toJSON()).then(() => {
+        this.http.getAllDrones()
+          .then(result => {
+            this.drones = result;
+            if (notification) {
+              this.onAlertEvent.emit({
+                title: 'Drone Control Center',
+                message: 'Saved drone.',
+                type: 'success'
+              });
+            }
+            resolve();
+          })
+          .catch(err => {
+            this.onAlertEvent.emit({
+              title: 'Drone Control Center',
+              message: err.toString(),
+              type: 'error'
+            });
+            reject();
+          });
       });
+    }));
   }
 
   exportMap() {

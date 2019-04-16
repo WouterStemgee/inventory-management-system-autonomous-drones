@@ -27,6 +27,6 @@
     </button>
   </mat-toolbar>
   <div class="simulator">
-    <app-leaflet [height]="height"></app-leaflet>
+    <app-leaflet [height]="height" *ngIf="simulator.initialized"></app-leaflet>
   </div>
 </div>
