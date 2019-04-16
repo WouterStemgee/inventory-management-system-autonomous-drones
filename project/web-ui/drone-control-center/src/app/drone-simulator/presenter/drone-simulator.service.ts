@@ -127,6 +127,7 @@ export class DroneSimulatorService {
                           this.http.getAllDrones()
                             .then(newDrones => {
                               this.drones = newDrones;
+                              resolve();
                             })
                             .catch(error => {
                               this.onAlertEvent.emit({
