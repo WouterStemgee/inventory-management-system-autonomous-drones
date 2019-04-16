@@ -7,4 +7,5 @@ class Knoop {
         this.vorige = null;
     }
 }
+
 module.exports = Knoop;

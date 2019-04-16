@@ -4,11 +4,11 @@
   padding-top: 15px;
 }
 
-.fieldcontainer{
+.field-container {
   display: flex;
-  align-content: center;
-  align-items: center;
+  flex-direction: column;
 }
+
 mat-form-field {
   padding-right: 10px;
 }

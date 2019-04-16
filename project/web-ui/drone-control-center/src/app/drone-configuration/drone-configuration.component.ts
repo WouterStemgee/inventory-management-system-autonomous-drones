@@ -10,15 +10,21 @@ import {AuthenticationService} from '../authentication.service';
 })
 export class DroneConfigurationComponent implements OnInit {
 
+
+
   constructor(private http: HttpService, public simulator: DroneSimulatorService, private auth: AuthenticationService) {
   }
 
   ngOnInit() {
   }
 
-  setProperties() {
-    this.simulator.updateDrone();
+  setProperties(form) {
+    const config = form.value;
+    this.simulator.drone.name = config.name;
+    this.simulator.drone.radius = config.radius;
+    this.simulator.updateDrone()
+      .catch((err) => {
+        console.log(err);
+      });
   }
-
-
 }

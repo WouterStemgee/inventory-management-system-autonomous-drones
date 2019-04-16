@@ -7,16 +7,18 @@ export class Map {
   constructor() {
     this.name = '';
     this.id = 0;
+    this.products = [];
     this.obstacles = [];
     this.scanzones = [];
     this.flightpath = undefined;
-    this.dimensions = {};
+    this.dimensions = {}; // TODO
   }
 
   reset() {
     this.id = 0;
     this.name = '';
     this.flightpath = undefined;
+    this.products = [];
     this.obstacles = [];
     this.scanzones = [];
   }
@@ -25,35 +27,49 @@ export class Map {
     this.id = map._id;
     this.name = map.name;
     this.flightpath = new FlightPath(this.id);
+    map.products.forEach(p => this.addProduct(p));
     map.obstacles.forEach(o => this.addObstacle(o.positions));
-    map.scanzones.forEach(p => this.addScanZone(p.name, p.position.x, p.position.y, p.orientation, p.range));
+    map.scanzones.forEach(sz => this.addScanZone(sz.name, sz.position.x, sz.position.y, sz.orientation, sz.range));
   }
 
-  toJSON(name) {
+  toJSON() {
     let map = {
       _id: this.id,
-      name: name,
+      name: this.name,
+      products: [],
       obstacles: [],
-      scanzones: [],
-      products: []
+      scanzones: []
     };
     this.obstacles.forEach((o) => map.obstacles.push({positions: o.positions}));
-    this.scanzones.forEach((p) => map.scanzones.push({
+    this.scanzones.forEach((sz) => map.scanzones.push({
+        name: sz.name,
+        range: sz.range,
+        orientation: sz.orientation,
+        position: {x: sz.position.x, y: sz.position.y}
+      })
+    );
+    this.products.forEach((p) => map.products.push({
         name: p.name,
-        range: p.range,
-        orientation: p.orientation,
-        position: {x: p.position.x, y: p.position.y}
+        quantity: p.quantity,
       })
     );
     return map;
   }
 
+  addProduct(product) {
+    // TODO
+  }
+
+  removeProduct() {
+    // TODO
+  }
+
   addScanZone(name, x, y, orientation, range) {
-    let p = new ScanZone(x, y);
-    p.name = name;
-    p.range = range;
-    p.orientation = orientation;
-    this.scanzones.push(p);
+    let sz = new ScanZone(x, y);
+    sz.name = name;
+    sz.range = range;
+    sz.orientation = orientation;
+    this.scanzones.push(sz);
   }
 
   removeScanZone(x, y) {

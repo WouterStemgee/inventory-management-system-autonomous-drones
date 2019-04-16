@@ -26,7 +26,7 @@ class ASter {
         });
     };
 
-    setDroneValue(droneValue){
+    setDroneValue(droneValue) {
         this.droneValue = droneValue;
     }
 
@@ -75,10 +75,11 @@ class ASter {
         graaf.setDroneValue(this.droneValue);
         //graaf.setSize(map.sizeX, map.sizeY);
         let obstakels = mapsJSON.obstacles;
-        obstakels.forEach(function(obstakel){
+        obstakels.forEach(function (obstakel) {
             graaf.ObstakelWaypoints(obstakel.positions[0], obstakel.positions[1]);
         });
         return graaf;
     };
 }
+
 module.exports = ASter;

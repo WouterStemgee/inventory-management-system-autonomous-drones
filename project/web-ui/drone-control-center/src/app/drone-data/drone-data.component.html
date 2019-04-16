@@ -1,13 +1,14 @@
 <div class="mat-elevation-z8">
   <table mat-table class="full-width-table" [dataSource]="dataSource" matSort aria-label="DroneData">
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
-      <td mat-cell *matCellDef="let row">{{row.id}}</td>
-    </ng-container>
 
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
       <td mat-cell *matCellDef="let row">{{row.name}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="radius">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Radius</th>
+      <td mat-cell *matCellDef="let row">{{row.radius}}</td>
     </ng-container>
 
     <ng-container matColumnDef="battery">

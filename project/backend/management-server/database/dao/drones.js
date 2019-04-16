@@ -22,7 +22,6 @@ let getDrone = (id) => {
 };
 
 let addDrone = (drone) => {
-
     let d = new Drone({
         _id: new mongoose.Types.ObjectId(),
         name: drone.name,

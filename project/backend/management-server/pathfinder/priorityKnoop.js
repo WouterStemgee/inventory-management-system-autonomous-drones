@@ -1,7 +1,8 @@
 class PriorityKnoop {
-    constructor(knoop, prioriteit){
+    constructor(knoop, prioriteit) {
         this.knoop = knoop;
         this.prioriteit = prioriteit;
     }
-};
+}
+
 module.exports = PriorityKnoop;

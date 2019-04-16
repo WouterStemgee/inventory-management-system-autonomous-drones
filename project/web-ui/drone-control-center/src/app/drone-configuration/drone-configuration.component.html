@@ -1,17 +1,20 @@
-<div class="form fieldcontainer">
+<form #configForm="ngForm" class="form field-container" (submit)="setProperties(configForm)">
   <mat-form-field>
-    <input matInput disabled placeholder="Id" *ngIf="simulator.loaded" [(ngModel)]="simulator.droneDbinfo._id">
-  </mat-form-field><br>
+    <input matInput disabled [(ngModel)]="simulator.drones[simulator.selectedDrone]._id" name="id" id="id" ngModel>
+  </mat-form-field>
   <mat-form-field>
-    <input matInput [disabled]="!auth.isAdmin()" placeholder="Name" *ngIf="simulator.loaded" [(ngModel)]="simulator.droneDbinfo.name">
-  </mat-form-field><br>
+    <input matInput [disabled]="!auth.isAdmin()" [(ngModel)]="simulator.drones[simulator.selectedDrone].name" name="name" id="name"
+           ngModel>
+  </mat-form-field>
   <mat-form-field>
-    <input matInput [disabled]="!auth.isAdmin()" type="number" placeholder="Radius"*ngIf="simulator.loaded" [(ngModel)]="simulator.droneDbinfo.properties.radius">
-  </mat-form-field><br>
-</div>
-<div class="form">
-  <button mat-flat-button color="primary" type="submit" [disabled]="!auth.isAdmin()" (click)="setProperties()">Update drone configuration</button>
-</div>
+    <input matInput [disabled]="!auth.isAdmin()" type="number" [(ngModel)]="simulator.drones[simulator.selectedDrone].properties.radius" name="radius"
+           id="radius"
+           ngModel>
+  </mat-form-field>
+  <button mat-flat-button color="primary" type="submit" [disabled]="!auth.isAdmin()">
+    Update Drone Configuration
+  </button>
+</form>
 
 
 
