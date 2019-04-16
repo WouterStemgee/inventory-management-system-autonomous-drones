@@ -20,6 +20,7 @@ class Simulator:
         while True:
             if self.queue.qsize() >0 and threading.activeCount() == 0 :
                 array = self.queue.get()
+                print("in simulator test zit nu in de array ",str(array))
                 thread = myThreadTest(self.drone,array)
                 thread.start()
             self.drone.set_battery(self.drone.get_battery()-1)

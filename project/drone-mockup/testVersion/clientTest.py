@@ -23,6 +23,7 @@ class ClientTest:
                 #self.drone.vliegNaar(xCoord, yCoord, zCoord)
                 array = [xCoord,yCoord,zCoord]
                 queue.put(array)
+                print("In de queue zit nu: ",str(array))
 
         self.client = mqtt.Client("python1")
         self.broker = "localhost:1883"
