@@ -38,3 +38,4 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 10/04/19,11:00,12:00,Extern,Daily standup en overleg met het team via discord,,
 10/04/19,14:00,19:00,Extern,Bugfixes + optimalisatie omleiding pad + koppeling aan bestaande API (dijksta is nu volledig vervangen door A*),23,
 13/04/19,14:00,16:00,Extern,Pushen en mergen van ASter met github,23,
+16/04/19,16:00,18:00,Extern,Verslag + testAPI,,
