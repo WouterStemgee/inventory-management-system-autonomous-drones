@@ -14,6 +14,7 @@ export class DroneSimulatorService {
 
   map;
   drone;
+  droneDbinfo;
 
   loaded;
   initialized;
@@ -46,6 +47,7 @@ export class DroneSimulatorService {
     if (this.map === undefined) {
       this.map = new Map();
       this.drone = new Drone();
+      this.fillDroneObject();
       this.map.loadMap(this.maps[this.selectedMap]);
     }
     this.initialized = true;
@@ -73,7 +75,6 @@ export class DroneSimulatorService {
                     this.http.getAllMaps()
                       .then(newMaps => {
                         this.maps = newMaps;
-                        resolve();
                       })
                       .catch(error => {
                         this.onAlertEvent.emit({
@@ -101,9 +102,36 @@ export class DroneSimulatorService {
                 });
                 console.log(error);
               });
-          } else {
-            resolve();
           }
+        })
+        .then(lol => {
+          console.log('Loading drone information...');
+          this.http.getDroneDbInformation()
+            .then(
+            res => {
+              this.droneDbinfo = res;
+              this.http.updateDroneConfiguration(this.droneDbinfo.properties.radius.toString())
+                .then( ress => {resolve(); } );
+              resolve();
+            }).catch(
+              error => {
+                console.log('geen drone gevonden in database');
+                this.data.getNewDrone().then(res => {
+                  console.log('nieuwe standaard drone inladen...');
+                  this.droneDbinfo = res;
+                  this.http.postDroneDbInformation(res)
+                    .then( ress => {
+                      this.http.updateDroneConfiguration(this.droneDbinfo.properties.radius.toString()).then( ress => {
+                        resolve(); }
+                      );
+                    }).catch(error => {
+                    console.log('can\'t add new drone config');
+                  });
+
+
+                });
+              }
+          );
         })
         .catch(error => {
           this.onAlertEvent.emit({
@@ -189,6 +217,20 @@ export class DroneSimulatorService {
           });
       });
     }));
+  }
+
+  fillDroneObject() {
+    this.drone.id = this.droneDbinfo._id;
+    this.drone.name = this.droneDbinfo.name;
+    this.drone.radius = this.droneDbinfo.properties.radius;
+  }
+
+  updateDrone() {
+    this.http.putDroneDbInformation(this.droneDbinfo).then(
+      res => {
+        this.fillDroneObject();
+        this.http.updateDroneConfiguration(this.droneDbinfo.properties.radius.toString());
+      });
   }
 
   exportMap() {
