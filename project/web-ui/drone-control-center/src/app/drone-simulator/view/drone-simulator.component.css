@@ -5,3 +5,7 @@
 .toolbar-button {
   margin-right: 10px;
 }
+
+.toolbar-button span {
+  padding-left: 5px;
+}

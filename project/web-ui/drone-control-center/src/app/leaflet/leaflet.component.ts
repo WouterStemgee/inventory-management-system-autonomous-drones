@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import * as L from 'leaflet';
 import * as geojson from 'geojson';
 
@@ -27,6 +27,12 @@ export class LeafletComponent implements OnInit {
   @Input() height;
 
   constructor(public auth: AuthenticationService, public simulator: DroneSimulatorService) {
+    simulator.onFlightpathValidatedEvent.subscribe((valid) => {
+        if (valid) {
+          this.drawValidFlightpath(simulator.map.flightpath.waypoints);
+        }
+      }
+    );
   }
 
   show = false;
@@ -118,9 +124,6 @@ export class LeafletComponent implements OnInit {
   };
 
   layersControl = {
-    baseLayers: {
-      'Map Image': this.mapImageLayer
-    },
     overlays: {
       'Editable layer': this.editableLayers,
       'Heat layer': this.heatLayer,
@@ -289,6 +292,33 @@ export class LeafletComponent implements OnInit {
     // console.log(overlapping);
   }
 
+  drawValidFlightpath(waypoints) {
+    const coords = [];
+    waypoints.forEach(w => {
+      coords.push([w.x, w.y]);
+    });
+    const feature = L.geoJSON({
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'LineString',
+        coordinates: coords
+      } as geojson.LineString
+    } as geojson.Feature);
+
+    feature.eachLayer(l => {
+      const layer = l as L.GeoJSON;
+      layer.on('click', () => {
+        console.log(JSON.stringify(layer.toGeoJSON()));
+      });
+      const oldLayer = this.editableLayers.getLayer(this.flightpathLayerId);
+      this.editableLayers.removeLayer(oldLayer);
+      this.flightpathLayerId = l._leaflet_id;
+      this.editableLayers.addLayer(layer);
+      console.log(layer);
+    });
+  }
+
   setFlightPath(geoJSON) {
     const coords = geoJSON.geometry.coordinates;
     const dronePosition = this.simulator.drone.position;
@@ -303,7 +333,7 @@ export class LeafletComponent implements OnInit {
     });
     console.log(waypoints);
     this.simulator.map.flightpath.waypoints = waypoints;
-    this.checkScanZoneOverlap(geoJSON);
+    // this.checkScanZoneOverlap(geoJSON);
   }
 
   flightpathLayerId;
@@ -390,13 +420,13 @@ export class LeafletComponent implements OnInit {
         circle.addTo(this.editableLayers);
       });
     });
-
   }
 
   onDrawCreated(e) {
     if (e.layer.toGeoJSON().geometry.type === 'LineString') { // flightpath
       this.flightpathLayerId = e.layer._leaflet_id;
       this.setFlightPath(e.layer.toGeoJSON());
+      this.simulator.validateFlightPath();
     } else if (e.layer.toGeoJSON().geometry.type === 'Polygon') { // obstacle
       const coordinates = e.layer.toGeoJSON().geometry.coordinates[0];
       const p1 = coordinates[0];
@@ -434,7 +464,8 @@ export class LeafletComponent implements OnInit {
   onDrawStart(e) {
     if (e.layerType === 'polyline') {
       if (this.flightpathLayerId) {
-        this.editableLayers.removeLayer(this.flightpathLayerId);
+        const layer = this.editableLayers.getLayer(this.flightpathLayerId);
+        this.editableLayers.removeLayer(layer);
         this.simulator.map.flightpath.waypoints = [];
       }
     }
@@ -446,15 +477,22 @@ export class LeafletComponent implements OnInit {
     if (this.flightpathLayerId) {
       const layer = this.editableLayers.getLayer(this.flightpathLayerId) as L.GeoJSON;
       this.setFlightPath(layer.toGeoJSON());
+      console.log(layer._leaflet_id);
     }
 
     Object.keys(e.layers._layers).forEach(id => {
+      console.log(e.layers);
       const newLayer = e.layers._layers[id];
       const oldLayer = this.editingLayers.find((layer, index) => {
         return layer.id === newLayer._leaflet_id;
       });
 
-      if (oldLayer.bounds) { // obstacle
+      if (oldLayer.bounds && newLayer.options.color === '#3388ff') { // valid flightpath
+        this.simulator.validateFlightPath();
+      }
+
+      if (oldLayer.bounds && newLayer.options.color === '#a80a0a') { // obstacle
+        console.log(oldLayer);
         const bounds = oldLayer.bounds;
         const p1 = bounds._southWest;
         const p2 = bounds._northEast;
@@ -492,7 +530,7 @@ export class LeafletComponent implements OnInit {
       }
     });
 
-    this.simulator.updateMap();
+    this.simulator.updateMap().catch((err) => console.log(err));
   }
 
   oDrawEditStart(e) {
@@ -563,6 +601,6 @@ export class LeafletComponent implements OnInit {
         this.simulator.map.flightpath.waypoints = [];
       }
     });
-    this.simulator.updateMap();
+    this.simulator.updateMap().catch((err) => console.log(err));
   }
 }

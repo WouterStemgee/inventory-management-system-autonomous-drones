@@ -67,9 +67,9 @@ import { MonitorComponent } from './monitor/monitor.component';
     LeafletModule.forRoot(),
     LeafletDrawModule.forRoot(),
     ToastrModule.forRoot({
-      timeOut: 8000,
+      timeOut: 4000,
       positionClass: 'toast-bottom-right',
-      preventDuplicates: true,
+      preventDuplicates: false,
       closeButton: true
     }),
     ChartsModule,
