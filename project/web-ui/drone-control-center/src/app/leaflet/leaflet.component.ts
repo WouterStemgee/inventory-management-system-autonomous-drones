@@ -27,6 +27,13 @@ export class LeafletComponent implements OnInit {
   @Input() height;
 
   constructor(public auth: AuthenticationService, public simulator: DroneSimulatorService) {
+    simulator.onSimulatorLoadedEvent.subscribe((loaded) => {
+        if (loaded) {
+          console.log('Simulator finished loading data.');
+          this.loaded = true;
+        }
+      }
+    );
   }
 
   show = false;
@@ -303,7 +310,7 @@ export class LeafletComponent implements OnInit {
     });
     console.log(waypoints);
     this.simulator.map.flightpath.waypoints = waypoints;
-    this.checkScanZoneOverlap(geoJSON);
+    // this.checkScanZoneOverlap(geoJSON);
   }
 
   flightpathLayerId;
@@ -492,7 +499,7 @@ export class LeafletComponent implements OnInit {
       }
     });
 
-    this.simulator.updateMap();
+    this.simulator.updateMap().catch((err) => console.log(err));
   }
 
   oDrawEditStart(e) {
@@ -563,6 +570,6 @@ export class LeafletComponent implements OnInit {
         this.simulator.map.flightpath.waypoints = [];
       }
     });
-    this.simulator.updateMap();
+    this.simulator.updateMap().catch((err) => console.log(err));
   }
 }

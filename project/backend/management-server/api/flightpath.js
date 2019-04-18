@@ -13,7 +13,7 @@ router.route('')
             res.send("niet mogelijk");
         }
 
-        client.send(result);
+        // client.send(result);
     });
 
 module.exports = router;
