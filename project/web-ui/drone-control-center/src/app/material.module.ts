@@ -18,7 +18,7 @@ import {
   MatInputModule,
   MatFormFieldModule,
   MatSortModule,
-  MatTabsModule
+  MatTabsModule, MatExpansionModule
 } from '@angular/material';
 
 
@@ -45,7 +45,8 @@ import {
     MatInputModule,
     MatFormFieldModule,
     MatSortModule,
-    MatTabsModule
+    MatTabsModule,
+    MatExpansionModule
   ]
 })
 

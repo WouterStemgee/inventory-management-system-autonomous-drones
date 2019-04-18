@@ -1,0 +1,25 @@
+<mat-accordion multi="true">
+  <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Battery
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    TEST
+  </mat-expansion-panel>
+  <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Position
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-graph-test
+      [sort]="localPosition"
+      [showLegend]="true"
+      [yScaleMin]="0"
+      [yScaleMax]="11000"
+      [yAxisLabel]="REEEEEE"
+      [showYAxisLabel]="true">
+    </app-graph-test>
+  </mat-expansion-panel>
+</mat-accordion>

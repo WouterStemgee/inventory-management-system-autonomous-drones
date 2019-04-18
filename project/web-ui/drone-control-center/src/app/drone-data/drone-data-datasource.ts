@@ -13,6 +13,10 @@ export interface DroneData {
   pitch: number;
   roll: number;
   yaw: number;
+  batteryDataset: any[];
+  positionDataset: any[];
+  pushBattery();
+  pushPosition();
 }
 
 export class DroneDataDataSource extends DataSource<DroneData> {

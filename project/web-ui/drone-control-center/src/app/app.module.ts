@@ -35,6 +35,7 @@ import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
 import {GraphTestComponent} from './graph-test/graph-test.component';
 import {AngularDraggableModule} from 'angular2-draggable';
+import { MonitorComponent } from './monitor/monitor.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import {AngularDraggableModule} from 'angular2-draggable';
     ProfileComponent,
     LoginComponent,
     RegisterComponent,
-    GraphTestComponent
+    GraphTestComponent,
+    MonitorComponent
   ],
   imports: [
     BrowserModule,

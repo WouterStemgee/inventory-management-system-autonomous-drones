@@ -1,7 +1,7 @@
 
   <ngx-charts-line-chart
     [view]="dimensions"
-    [results]="D3Dataset"
+    [results]="dataset"
     [scheme]="colorScheme"
     [gradient]="gradient"
     [xAxis]="showXAxis"
@@ -11,12 +11,14 @@
     [showYAxisLabel]="showYAxisLabel"
     [xAxisLabel]="xAxisLabel"
     [yAxisLabel]="yAxisLabel"
+    [xAxisTickFormatting]="xAxisTickFormatting"
     [timeline]="timeline"
     [activeEntries]="entries"
     [yScaleMax]="yScaleMax"
-    [yScaleMin]="yScaleMin">
+    [yScaleMin]="yScaleMin"
+    [animations]="animations"
+    [tooltipDisabled]="true"
+    (deactivate)="onDeactivate()">
   </ngx-charts-line-chart>
-
-  <button (click)="onClick()">Push</button>
 
 

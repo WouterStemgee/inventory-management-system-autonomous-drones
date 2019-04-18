@@ -14,6 +14,29 @@ export class Drone {
     this.pitch = 0;
     this.roll = 0;
     this.yaw = 0;
+    this.batteryDataset = [
+      {
+        name: 'Remaining',
+        series: []
+      }
+    ];
+    this.positionDataset = [
+      {
+        name: 'X position',
+        series: []
+      },
+      {
+        name: 'Y position',
+        series: []
+      },
+      {
+        name: 'Z position',
+        series: []
+      }
+    ];
+    if(!Date.now()) {
+      Date.now = function() { return new Date().getTime(); }
+    }
   }
 
   loadDrone(drone) {
@@ -30,5 +53,22 @@ export class Drone {
         radius: this.radius
       }
     };
+  }
+
+  pushAllDatasets() {
+    this.pushBattery();
+    this.pushPosition();
+  }
+
+  pushBattery() {
+    console.log("PUSH BATTERY");
+    this.batteryDataset[0].series.push({name: Date.now(), value: this.battery});
+  }
+
+  pushPosition() {
+    console.log("PUSH POSITION");
+    this.positionDataset[0].series.push({name: Date.now(), value: this.position.x});
+    this.positionDataset[1].series.push({name: Date.now(), value: this.position.y});
+    this.positionDataset[2].series.push({name: Date.now(), value: this.position.z});
   }
 }

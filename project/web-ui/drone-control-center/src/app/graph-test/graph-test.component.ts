@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {DroneSimulatorService} from "../drone-simulator/presenter/drone-simulator.service";
+import {NoInputRenameRule} from "codelyzer";
+import {isUndefined} from "util";
 
 @Component({
   selector: 'app-graph-test',
@@ -6,86 +9,65 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./graph-test.component.css']
 })
 export class GraphTestComponent implements OnInit {
+  /** Kan nu eender welke grafiek maken, de bedoeling is nu dat vanaf de drone start, dat hij de waarden gaat beginnen pushen (vanaf de knop ingedrukt is),
+   * nu gaat het dus nog niet van meerdere grafieken te tonen maar dat zou dus geen probleem mogen zijn. Kan dit pas doen als de knoppen effectief ingesteld zijn.
+   * Kan er voor zorgen dat het aantal waarden die in de grafiek getoont worden op een bepaald aantal blijven zodat het overzichtelijk blijft maar normaal is
+   * er daar geen probleem mee.
+   */
 
-  D3Dataset : any[] = [
-    {
-      name: 'remaining',
-      series: [
-        {
-          name: 0 ,
-          value: 0
-        },
-        {
-          name: 5 ,
-          value: 0
-        },
-        {
-          name: 10 ,
-          value: 85
-        },
-        {
-          name: 15 ,
-          value:84
-        }
-      ]
-    }
-  ];
+  //alle dependencies van de grafieken
+  @Input() showYAxisLabel;
+  @Input() yAxisLabel;
+  @Input() yScaleMax;
+  @Input() yScaleMin;
+  @Input() showLegend;
+  @Input() sort;
 
-  dimensions = [400, 300];
+    //algemene teller om het pushen van de grafieken aan te sturen (gaan niet per keer er een waarde binnenkomt gepusht worden (overkill)
+  timer;
+
+  dataset : any[] = [];
+  //dimensions = [400, 300];
   //X-axis
-  showXAxis = false;
+  showXAxis = true;
   showXAxisLabel = false;
-  xAxisLabel = 'Number';
+  //xAxisLabel = 'Number';
   //Y-axis
   showYAxis = true;
-  showYAxisLabel = false;
-  yAxisLabel = 'Color Value';
-  yScaleMax : number = 100;
-  yScaleMin : number = 0;
   //style + data
   gradient = false;
-  showLegend = false;
   timeline = false;
-  time : number = 20;
-  batteryState : number = 84;
-  entries : any[] = this.D3Dataset;
-  //animations = Data
+  animations = false;
 
   colorScheme = {
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
   };
 
-  constructor() { }
+  constructor(public simulator : DroneSimulatorService) {
+    this.timer = setInterval(() => { this.pushValue(); },200);
+  }
 
   ngOnInit() {
+    console.log("INIT\n" + this.sort + "\n");
+    if (this.sort === 'battery')
+      this.dataset = this.simulator.drone.batteryDataset;
+    if(this.sort === 'localPosition')
+      this.dataset = this.simulator.drone.positionDataset;
   }
-
-  /*onSelect(event) {
-    console.log(event);
-  }*/
-
-
-
-  /** Data toevoegen: eerste waarde is een timestamp, voorlopig veronderstel ik enkel de batterij met een timestamp
-   * en waarde van 0 tot 1 hoeveel de batterij nog bedraagt. **/
 
   pushValue() {
-    if(!Date.now()) {
-      Date.now = function() { return new Date().getTime(); }
-    }
-    this.D3Dataset[0].series.push({name: this.time, value: this.batteryState--});
-    if(this.D3Dataset[0].series.length > 1000) {
-      this.D3Dataset[0].series.shift();
-      this.entries = this.D3Dataset[0].series.slice(this.D3Dataset[0].length-10, this.D3Dataset[0].length);
-    }
+    console.log("Waarde op grafiek pushen\n\ttimestamp: " + Date.now() + "\n");
+    this.simulator.drone.pushPosition();
     //dit triggerded de grafiek en re-rendered hem
-    this.D3Dataset = this.D3Dataset.slice();
-    this.time += 5;
+    this.dataset = this.simulator.drone.positionDataset;
+    this.dataset = this.dataset.slice();
   }
 
-  onClick() {
-    this.pushValue();
-
+  xAxisTickFormatting(val) {
+    return new Date(val).toLocaleTimeString();
   }
 
+  onDeactivate(event) {
+    console.log(event);
+  }
 }
