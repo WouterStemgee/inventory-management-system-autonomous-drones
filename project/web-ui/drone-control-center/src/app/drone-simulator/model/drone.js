@@ -61,12 +61,10 @@ export class Drone {
   }
 
   pushBattery() {
-    console.log("PUSH BATTERY");
     this.batteryDataset[0].series.push({name: Date.now(), value: this.battery});
   }
 
   pushPosition() {
-    console.log("PUSH POSITION");
     this.positionDataset[0].series.push({name: Date.now(), value: this.position.x});
     this.positionDataset[1].series.push({name: Date.now(), value: this.position.y});
     this.positionDataset[2].series.push({name: Date.now(), value: this.position.z});

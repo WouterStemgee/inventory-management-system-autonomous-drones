@@ -48,7 +48,6 @@ export class GraphTestComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("INIT\n" + this.sort + "\n");
     if (this.sort === 'battery')
       this.dataset = this.simulator.drone.batteryDataset;
     if(this.sort === 'localPosition')
@@ -56,7 +55,6 @@ export class GraphTestComponent implements OnInit {
   }
 
   pushValue() {
-    console.log("Waarde op grafiek pushen\n\ttimestamp: " + Date.now() + "\n");
     this.simulator.drone.pushPosition();
     //dit triggerded de grafiek en re-rendered hem
     this.dataset = this.simulator.drone.positionDataset;
