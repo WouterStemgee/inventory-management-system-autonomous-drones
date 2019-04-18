@@ -1,4 +1,5 @@
 export class FlightPath {
+
   constructor(mapId) {
     this.mapId = mapId;
     this.waypoints = [];

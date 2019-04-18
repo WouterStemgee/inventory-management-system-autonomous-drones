@@ -38,12 +38,15 @@ export class DroneSimulatorService {
   }
 
   reset(sendNotification = true) {
-    this.map.reset();
-    this.map.loadMap(this.maps[this.selectedMap]);
-    this.drone.loadDrone(this.drones[this.selectedDrone]);
-    if (sendNotification) {
-      this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Simulator reset.', type: 'info'});
-    }
+    this.http.sendCommand('stop').then(res => {
+      this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Drone stopped flying', type: 'succes'});
+      this.map.reset();
+      this.map.loadMap(this.maps[this.selectedMap]);
+      this.drone.loadDrone(this.drones[this.selectedDrone]);
+      if (sendNotification) {
+        this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Simulator reset.', type: 'info'});
+      }
+    });
   }
 
   init() {
@@ -215,10 +218,6 @@ export class DroneSimulatorService {
     });
   }
 
-  start() {
-    this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Starting flight...', type: 'info'});
-  }
-
   selectMap(id) {
     this.selectedMap = id;
     this.reset(false);
@@ -266,6 +265,115 @@ export class DroneSimulatorService {
       });
       this.onFlightpathValidatedEvent.emit(false);
     }
+  }
+
+  sendFlightpath() {
+    this.http.getDroneStatus().then(res => {
+      // voor ts errors te onderdrukken, want ts zal anders zeggen dat res de properties validated etc niet heeft
+      const info = res as Statusinfo;
+      console.log(info);
+      if (!info.validated) {
+        this.onAlertEvent.emit({
+          title: 'Drone Control Center',
+          message: 'No valid flightpath set',
+          type: 'error'
+        });
+      } else {
+        const flightpath = this.map.flightpath.toJSON();
+        this.http.sendFlightpathToDrone(flightpath).then((ress) => {
+          this.map.flightpath.sentToDrone = true;
+          this.onAlertEvent.emit({
+            title: 'Drone Control Center',
+            message: 'Flightpath sent to drone',
+            type: 'success'
+          });
+        }).catch(error => {
+          this.onAlertEvent.emit({
+            title: 'Drone Control Center',
+            message: 'Sending valid flightpath to drone failed',
+            type: 'success'
+          });
+        });
+      }
+    }).catch(error => {
+      // statusinfo kon niet worden opgevraagd
+      console.log(error);
+    });
+
+  }
+
+  startDrone() {
+    this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Starting flight...', type: 'info'});
+    this.http.getDroneStatus().then( res => {
+      // voor ts errors te onderdrukken, want ts zal anders zeggen dat res de properties validated etc niet heeft
+      const info = res as Statusinfo;
+      if (info.validated && info.sent) {
+        if (!info.flying) {
+          this.http.sendCommand('start').then( ress => {
+            console.log(ress);
+            this.onAlertEvent.emit({
+              title: 'Drone Control Center',
+              message: 'Drone started flying',
+              type: 'success'
+            });
+          }).catch( error => {
+            this.onAlertEvent.emit({
+              title: 'Drone Control Center',
+              message: 'Drone did not start flying',
+              type: 'error'
+            });
+          });
+        } else {
+          this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Drone is already flying', type: 'info'});
+        }
+      } else {
+        let mes = 'alt nie gezet wordt door de rest eh';
+        if (!info.validated) {
+          mes = 'No flightpath has been validated and sent';
+        } else if (info.validated && !info.sent) {
+          mes = 'A flightpath has been validated, but not sent to the drone';
+        }
+        this.onAlertEvent.emit({
+          title: 'Drone Control Center',
+          message: mes,
+          type: 'error'
+        });
+      }
+    }).catch(error => {
+      // statusinfo kon niet worden opgevraagd
+      console.log(error);
+    });
+  }
+
+  pauseDrone() {
+    this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Pausing flight...', type: 'info'});
+    this.http.getDroneStatus().then(res => {
+      const info = res as Statusinfo;
+      if (info.flying) {
+        this.http.sendCommand('pause').then(ress => {
+          this.onAlertEvent.emit({
+            title: 'Drone Control Center',
+            message: 'Drone paused flying',
+            type: 'success'
+          });
+        }).catch( error => {
+          this.onAlertEvent.emit({
+            title: 'Drone Control Center',
+            message: 'Drone did not pause flying',
+            type: 'error'
+          });
+        });
+      } else {
+        this.onAlertEvent.emit({
+          title: 'Drone Control Center',
+          message: 'Drone already stopped flying earlier',
+          type: 'info'
+        });
+      }
+    }).catch(error => {
+      // statusinfo kon niet worden opgevraagd
+      console.log(error);
+    });
   }
 
   updateMap(notification = true) {
@@ -325,4 +433,10 @@ export class DroneSimulatorService {
   exportMap() {
     // TODO: Generate JSON file on backend and download file
   }
+}
+
+interface Statusinfo {
+  validated: boolean;
+  sent: boolean;
+  flying: boolean;
 }

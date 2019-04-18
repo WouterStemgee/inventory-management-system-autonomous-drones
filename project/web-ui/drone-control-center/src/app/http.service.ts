@@ -78,7 +78,8 @@ export class HttpService {
 
   validateFlightpath(flightpath) {
     return new Promise((resolve, reject) => {
-      this.http.post(environment.baseAPIUrl + 'api/flightpath/', flightpath).subscribe(
+      console.log(environment.baseAPIUrl + 'red/path/validate');
+      this.http.post(environment.baseAPIUrl + 'red/path/validate', flightpath).subscribe(
         result => {
           resolve(result);
         },
@@ -86,6 +87,48 @@ export class HttpService {
           reject(error);
         }
       );
+    });
+  }
+
+  sendFlightpathToDrone(flightpath) {
+    return new Promise( (resolve, reject) => {
+      this.http.post(environment.baseAPIUrl + 'red/path/set', flightpath).subscribe(
+        result => {
+          resolve(result);
+        },
+        (error: HttpErrorResponse) => {
+          reject(error);
+        });
+    });
+  }
+
+  getDroneStatus() {
+    return new Promise( (resolve, reject) => {
+      this.http.get(environment.baseAPIUrl + 'red/statusinfo').subscribe(
+        result => {
+          resolve(result);
+        },
+        (error: HttpErrorResponse) => {
+          reject(error);
+        });
+    });
+  }
+
+
+  sendCommand(command) {
+    return new Promise( (resolve, reject) => {
+      const commands = ['start', 'pause', 'stop'];
+      if (commands.indexOf(command) >= 0 ) {
+        this.http.post(environment.baseAPIUrl + 'red/drone/' + command, {}).subscribe(
+          result => {
+            resolve(result);
+          },
+          (error: HttpErrorResponse) => {
+            reject(error);
+          });
+      } else {
+        reject('No predefined command given');
+      }
     });
   }
 

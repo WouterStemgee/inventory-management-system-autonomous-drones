@@ -6,17 +6,24 @@
         Validate
       </span>
     </button>
-    <button mat-flat-button class="toolbar-button">
+    <button (click)="simulator.sendFlightpath()" mat-flat-button class="toolbar-button">
       <mat-icon>present_to_all</mat-icon>
       <span *ngIf="!shared.isHandset$">
         Fly
       </span>
     </button>
-    <button type="button" (click)="simulator.start()"
+    <button type="button" (click)="simulator.startDrone()"
             [disabled]="simulator.map.flightpath.length === 0" mat-flat-button class="toolbar-button">
       <mat-icon>play_arrow</mat-icon>
       <span *ngIf="!shared.isHandset$">
         Start
+      </span>
+    </button>
+    <button type="button" (click)="simulator.pauseDrone()"
+            [disabled]="simulator.map.flightpath.length === 0" mat-flat-button class="toolbar-button">
+      <mat-icon>pause</mat-icon>
+      <span *ngIf="!shared.isHandset$">
+        Pause
       </span>
     </button>
     <button type="button" (click)="simulator.reset()" mat-flat-button class="toolbar-button">
