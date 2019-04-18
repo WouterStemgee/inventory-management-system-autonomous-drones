@@ -315,6 +315,7 @@ export class LeafletComponent implements OnInit {
       this.editableLayers.removeLayer(oldLayer);
       this.flightpathLayerId = l._leaflet_id;
       this.editableLayers.addLayer(layer);
+      console.log(layer);
     });
   }
 
@@ -419,13 +420,13 @@ export class LeafletComponent implements OnInit {
         circle.addTo(this.editableLayers);
       });
     });
-
   }
 
   onDrawCreated(e) {
     if (e.layer.toGeoJSON().geometry.type === 'LineString') { // flightpath
       this.flightpathLayerId = e.layer._leaflet_id;
       this.setFlightPath(e.layer.toGeoJSON());
+      this.simulator.validateFlightPath();
     } else if (e.layer.toGeoJSON().geometry.type === 'Polygon') { // obstacle
       const coordinates = e.layer.toGeoJSON().geometry.coordinates[0];
       const p1 = coordinates[0];
@@ -476,15 +477,22 @@ export class LeafletComponent implements OnInit {
     if (this.flightpathLayerId) {
       const layer = this.editableLayers.getLayer(this.flightpathLayerId) as L.GeoJSON;
       this.setFlightPath(layer.toGeoJSON());
+      console.log(layer._leaflet_id);
     }
 
     Object.keys(e.layers._layers).forEach(id => {
+      console.log(e.layers);
       const newLayer = e.layers._layers[id];
       const oldLayer = this.editingLayers.find((layer, index) => {
         return layer.id === newLayer._leaflet_id;
       });
 
-      if (oldLayer.bounds) { // obstacle
+      if (oldLayer.bounds && newLayer.options.color === '#3388ff') { // valid flightpath
+        this.simulator.validateFlightPath();
+      }
+
+      if (oldLayer.bounds && newLayer.options.color === '#a80a0a') { // obstacle
+        console.log(oldLayer);
         const bounds = oldLayer.bounds;
         const p1 = bounds._southWest;
         const p2 = bounds._northEast;
