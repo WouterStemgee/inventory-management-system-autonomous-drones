@@ -53,7 +53,8 @@ class ASter {
         });
     };
 
-    zoekPad(mapid, waypointsJSON) {
+    zoekPad(mapid, waypointsJSON, radius) {
+        this.setDroneValue(radius);
         this.recalculateGraaf(mapid);
         console.log('calculating path for id: ' + mapid);
         let graaf = this.grafen.find(g => g.mapId == mapid);

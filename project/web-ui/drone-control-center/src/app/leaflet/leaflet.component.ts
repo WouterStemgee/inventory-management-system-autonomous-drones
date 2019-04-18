@@ -514,6 +514,8 @@ export class LeafletComponent implements OnInit {
         const newPositions = [{x: newX1, y: newY1}, {x: newX2, y: newY2}];
 
         this.simulator.map.addObstacle(newPositions);
+
+        this.simulator.validateFlightPath();
       } else if (oldLayer.position) { // scanzone
         const p = oldLayer.position;
         const x1 = p.lng;
@@ -597,7 +599,7 @@ export class LeafletComponent implements OnInit {
         const r = layer._mRadius;
         this.simulator.map.removeScanZone(x1, y1);
       }
-      if (layer._latlngs) { // flightpath
+      if (layer._latlngs && layer.options.color === '#3388ff') { // flightpath
         this.simulator.map.flightpath.waypoints = [];
       }
     });

@@ -7,7 +7,8 @@ export class FlightPath {
   toJSON() {
     let flightpath = {
       mapId: 0,
-      waypoints: []
+      waypoints: [],
+      radius: 0
     };
     flightpath.mapId = this.mapId;
     this.waypoints.forEach(waypoint => flightpath.waypoints.push({x: waypoint.x, y: waypoint.y}));
