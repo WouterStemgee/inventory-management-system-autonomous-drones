@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import * as L from 'leaflet';
 import * as geojson from 'geojson';
 
@@ -27,10 +27,9 @@ export class LeafletComponent implements OnInit {
   @Input() height;
 
   constructor(public auth: AuthenticationService, public simulator: DroneSimulatorService) {
-    simulator.onSimulatorLoadedEvent.subscribe((loaded) => {
-        if (loaded) {
-          console.log('Simulator finished loading data.');
-          this.loaded = true;
+    simulator.onFlightpathValidatedEvent.subscribe((valid) => {
+        if (valid) {
+          this.drawValidFlightpath(simulator.map.flightpath.waypoints);
         }
       }
     );
@@ -125,9 +124,6 @@ export class LeafletComponent implements OnInit {
   };
 
   layersControl = {
-    baseLayers: {
-      'Map Image': this.mapImageLayer
-    },
     overlays: {
       'Editable layer': this.editableLayers,
       'Heat layer': this.heatLayer,
@@ -296,6 +292,32 @@ export class LeafletComponent implements OnInit {
     // console.log(overlapping);
   }
 
+  drawValidFlightpath(waypoints) {
+    const coords = [];
+    waypoints.forEach(w => {
+      coords.push([w.x, w.y]);
+    });
+    const feature = L.geoJSON({
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'LineString',
+        coordinates: coords
+      } as geojson.LineString
+    } as geojson.Feature);
+
+    feature.eachLayer(l => {
+      const layer = l as L.GeoJSON;
+      layer.on('click', () => {
+        console.log(JSON.stringify(layer.toGeoJSON()));
+      });
+      const oldLayer = this.editableLayers.getLayer(this.flightpathLayerId);
+      this.editableLayers.removeLayer(oldLayer);
+      this.flightpathLayerId = l._leaflet_id;
+      this.editableLayers.addLayer(layer);
+    });
+  }
+
   setFlightPath(geoJSON) {
     const coords = geoJSON.geometry.coordinates;
     const dronePosition = this.simulator.drone.position;
@@ -441,7 +463,8 @@ export class LeafletComponent implements OnInit {
   onDrawStart(e) {
     if (e.layerType === 'polyline') {
       if (this.flightpathLayerId) {
-        this.editableLayers.removeLayer(this.flightpathLayerId);
+        const layer = this.editableLayers.getLayer(this.flightpathLayerId);
+        this.editableLayers.removeLayer(layer);
         this.simulator.map.flightpath.waypoints = [];
       }
     }
