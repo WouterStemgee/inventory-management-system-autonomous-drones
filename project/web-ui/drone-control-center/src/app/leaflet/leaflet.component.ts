@@ -240,9 +240,9 @@ export class LeafletComponent implements OnInit {
 
     map.addLayer(new L.LayerGroup([this.gridLayer]));
     // map.addLayer(this.heatLayer);
-    map.addLayer(this.editableLayers.bringToFront());
-    map.addLayer(this.livedataLayer.bringToFront());
-    map.addLayer(this.scanlocationLayer.bringToFront());
+    map.addLayer(this.scanlocationLayer);
+    map.addLayer(this.editableLayers);
+    map.addLayer(this.livedataLayer);
 
     L.Control.Coordinates.include({
       _update(evt) {
@@ -309,7 +309,6 @@ export class LeafletComponent implements OnInit {
         const b = y1 - y2;
         const dist = Math.sqrt(a * a + b * b);
         if (dist <= sz.range && sz.range >= this.simulator.drone.radius) {
-          console.log('legit scanzone found');
           waypoints[index].z = sz.position.z;
           waypoints[index].scan = true;
           waypoints[index].x = x1;
@@ -321,12 +320,15 @@ export class LeafletComponent implements OnInit {
   }
 
   drawValidFlightpath() {
+    this.scanlocationLayer.clearLayers();
     let wp = this.simulator.map.flightpath.waypoints;
     wp = this.checkScanZoneOverlap(wp);
     wp.forEach(w => {
       if (!w.z) {
         w.z = this.simulator.drone.defaultFlyAltitude;
         w.scan = false;
+      } else {
+        L.marker(this.xy(w.x, w.y)).addTo(this.scanlocationLayer);
       }
     });
     const coords = [];
@@ -350,7 +352,6 @@ export class LeafletComponent implements OnInit {
       });
       const oldLayer = this.editableLayers.getLayer(this.flightpathLayerId);
       this.editableLayers.removeLayer(oldLayer);
-      this.scanlocationLayer.clearLayers();
       this.flightpathLayerId = l._leaflet_id;
       this.editableLayers.addLayer(layer);
     });
@@ -439,7 +440,7 @@ export class LeafletComponent implements OnInit {
 
       feature.eachLayer(l => {
         const layer = l as L.GeoJSON;
-        const circle = L.circle([y1, x1], {
+        const circle = L.circle(L.latLng([y1, x1, z1]), {
           radius: r
         });
         circle.setStyle({
@@ -458,7 +459,7 @@ export class LeafletComponent implements OnInit {
       });
     });
   }
-
+  
   onDrawCreated(e) {
     if (e.layer.toGeoJSON().geometry.type === 'LineString') { // flightpath
       this.flightpathLayerId = e.layer._leaflet_id;
@@ -555,16 +556,16 @@ export class LeafletComponent implements OnInit {
         const p = oldLayer.position;
         const x1 = p.lng;
         const y1 = p.lat;
+        const alt = p.alt;
 
         this.simulator.map.removeScanZone(x1, y1);
 
         const newP = newLayer._latlng;
         const newX1 = newP.lng;
         const newY1 = newP.lat;
-        const newZ1 = newP.alt;
         const newR = newLayer._mRadius;
 
-        this.simulator.map.addScanZone('scanzone', newX1, newY1, newZ1, 0, newR);
+        this.simulator.map.addScanZone('scanzone', newX1, newY1, alt, 0, newR);
       }
     });
 
