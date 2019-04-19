@@ -26,7 +26,7 @@
         Pause
       </span>
     </button>
-    <button type="button" (click)="simulator.reset()" mat-flat-button class="toolbar-button">
+    <button type="button" (click)="simulator.stop()" mat-flat-button class="toolbar-button">
       <mat-icon>stop</mat-icon>
       <span *ngIf="!shared.isHandset$">
         Stop

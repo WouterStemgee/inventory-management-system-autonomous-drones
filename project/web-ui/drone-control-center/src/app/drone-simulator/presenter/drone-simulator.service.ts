@@ -38,14 +38,21 @@ export class DroneSimulatorService {
   }
 
   reset(sendNotification = true) {
+    this.map.reset();
+    this.map.loadMap(this.maps[this.selectedMap]);
+    this.drone.loadDrone(this.drones[this.selectedDrone]);
+    if (sendNotification) {
+      this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Simulator reset.', type: 'info'});
+    }
+  }
+
+  stop() {
     this.http.sendCommand('stop').then(res => {
-      this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Drone stopped flying', type: 'succes'});
-      this.map.reset();
-      this.map.loadMap(this.maps[this.selectedMap]);
-      this.drone.loadDrone(this.drones[this.selectedDrone]);
-      if (sendNotification) {
-        this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Simulator reset.', type: 'info'});
-      }
+      this.onAlertEvent.emit({
+        title: 'Drone Control Center',
+        message: 'Drone stopped flying.',
+        type: 'warning'
+      });
     });
   }
 
