@@ -459,7 +459,7 @@ export class LeafletComponent implements OnInit {
       });
     });
   }
-  
+
   onDrawCreated(e) {
     if (e.layer.toGeoJSON().geometry.type === 'LineString') { // flightpath
       this.flightpathLayerId = e.layer._leaflet_id;
@@ -467,6 +467,11 @@ export class LeafletComponent implements OnInit {
       this.simulator.validateFlightPath();
     } else if (e.layer.toGeoJSON().geometry.type === 'Polygon') { // obstacle
       const coordinates = e.layer.toGeoJSON().geometry.coordinates[0];
+      console.log(coordinates);
+      coordinates.forEach((c, index) => {
+        coordinates[index][0] = Math.floor(c[0]);
+        coordinates[index][1] = Math.floor(c[1]);
+      });
       const p1 = coordinates[0];
       const p2 = coordinates[2];
       const positions = [{x: p1[0], y: p1[1]}, {x: p2[0], y: p2[1]}];
@@ -623,10 +628,10 @@ export class LeafletComponent implements OnInit {
         const bounds = layer._bounds;
         const p1 = bounds._southWest;
         const p2 = bounds._northEast;
-        const x1 = p1.lng;
-        const y1 = p1.lat;
-        const x2 = p2.lng;
-        const y2 = p2.lat;
+        const x1 = Math.floor(p1.lng);
+        const y1 = Math.floor(p1.lat);
+        const x2 = Math.floor(p2.lng);
+        const y2 = Math.floor(p2.lat);
         const positions = [{x: x1, y: y1}, {x: x2, y: y2}];
         this.simulator.map.removeObstacle(positions);
       } else if (layer._latlng) { // scanzone
