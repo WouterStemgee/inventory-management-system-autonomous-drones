@@ -308,11 +308,9 @@ export class LeafletComponent implements OnInit {
         const a = x1 - x2;
         const b = y1 - y2;
         const dist = Math.sqrt(a * a + b * b);
-        waypoints[index].z = this.simulator.drone.defaultFlyAltitude;
-        waypoints[index].scan = false;
         if (dist <= sz.range && sz.range >= this.simulator.drone.radius) {
-          console.log(sz);
-          waypoints[index].z = sz.position.z; // TODO: werkt niet
+          console.log('legit scanzone found');
+          waypoints[index].z = sz.position.z;
           waypoints[index].scan = true;
           waypoints[index].x = x1;
           waypoints[index].y = y1;
@@ -323,11 +321,17 @@ export class LeafletComponent implements OnInit {
   }
 
   drawValidFlightpath() {
-    const wpNotChecked = this.simulator.map.flightpath.waypoints;
-    this.simulator.map.flightpath.waypoints = this.checkScanZoneOverlap(wpNotChecked);
-    const wpChecked = this.simulator.map.flightpath.waypoints;
+    let wp = this.simulator.map.flightpath.waypoints;
+    wp = this.checkScanZoneOverlap(wp);
+    wp.forEach(w => {
+      if (!w.z) {
+        w.z = this.simulator.drone.defaultFlyAltitude;
+        w.scan = false;
+      }
+    });
     const coords = [];
-    wpChecked.forEach(w => {
+
+    wp.forEach(w => {
       coords.push([w.x, w.y]);
     });
     const feature = L.geoJSON({
