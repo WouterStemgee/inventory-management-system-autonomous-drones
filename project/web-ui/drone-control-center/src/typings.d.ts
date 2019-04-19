@@ -4,12 +4,14 @@ declare module 'leaflet' {
 
   namespace control {
     function coordinates(v: any);
+    function polylineMeasure(options: any);
   }
 
   let NumberFormatter: any;
 
   namespace Control {
     let Coordinates: any;
+    let PolylineMeasure: any;
   }
 
   interface Layer {

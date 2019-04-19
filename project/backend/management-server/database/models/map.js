@@ -7,8 +7,14 @@ let obstaclePositions = (val) => {
 const coordSchema = mongoose.Schema({
     _id: false,
     x: {type: Number, required: true},
-    y: {type: Number, required: true},
+    y: {type: Number, required: true}
+});
 
+const coordSchemaZ = mongoose.Schema({
+    _id: false,
+    x: {type: Number, required: true},
+    y: {type: Number, required: true},
+    z: {type: Number, required: true}
 });
 
 const mapSchema = mongoose.Schema({
@@ -33,7 +39,7 @@ const mapSchema = mongoose.Schema({
             name: {type: String, required: false},
             orientation: {type: Number, required: true},
             range: {type: Number, required: true},
-            position: coordSchema
+            position: coordSchemaZ
         }
     ],
     products: [

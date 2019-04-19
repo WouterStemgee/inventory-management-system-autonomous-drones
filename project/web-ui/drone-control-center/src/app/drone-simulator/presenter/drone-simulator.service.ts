@@ -272,7 +272,7 @@ export class DroneSimulatorService {
       // voor ts errors te onderdrukken, want ts zal anders zeggen dat res de properties validated etc niet heeft
       const info = res as Statusinfo;
       console.log(info);
-      if(info.validated && !info.flying){
+      if (info.validated && !info.flying) {
         const flightpath = this.map.flightpath.toJSON();
         this.http.sendFlightpathToDrone(flightpath).then((ress) => {
           this.map.flightpath.sentToDrone = true;
@@ -312,19 +312,19 @@ export class DroneSimulatorService {
 
   startDrone() {
     this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Starting flight...', type: 'info'});
-    this.http.getDroneStatus().then( res => {
+    this.http.getDroneStatus().then(res => {
       // voor ts errors te onderdrukken, want ts zal anders zeggen dat res de properties validated etc niet heeft
       const info = res as Statusinfo;
       if (info.validated && info.sent) {
         if (!info.flying) {
-          this.http.sendCommand('start').then( ress => {
+          this.http.sendCommand('start').then(ress => {
             console.log(ress);
             this.onAlertEvent.emit({
               title: 'Drone Control Center',
               message: 'Drone started flying.',
               type: 'success'
             });
-          }).catch( error => {
+          }).catch(error => {
             this.onAlertEvent.emit({
               title: 'Drone Control Center',
               message: 'Drone did not start flying.',
@@ -364,7 +364,7 @@ export class DroneSimulatorService {
             message: 'Drone paused flying.',
             type: 'success'
           });
-        }).catch( error => {
+        }).catch(error => {
           this.onAlertEvent.emit({
             title: 'Drone Control Center',
             message: 'Drone did not pause flying.',

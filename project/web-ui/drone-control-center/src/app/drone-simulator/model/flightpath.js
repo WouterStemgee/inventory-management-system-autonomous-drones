@@ -12,7 +12,7 @@ export class FlightPath {
       radius: 0
     };
     flightpath.mapId = this.mapId;
-    this.waypoints.forEach(waypoint => flightpath.waypoints.push({x: waypoint.x, y: waypoint.y}));
+    this.waypoints.forEach(waypoint => flightpath.waypoints.push({x: waypoint.x, y: waypoint.y, z: waypoint.z, scan: waypoint.scan}));
     return flightpath;
   }
 }

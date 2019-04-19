@@ -14,6 +14,7 @@ export class Drone {
     this.pitch = 0;
     this.roll = 0;
     this.yaw = 0;
+    this.defaultFlyAltitude = 1500;
     this.batteryDataset = [
       {
         name: 'Remaining',
