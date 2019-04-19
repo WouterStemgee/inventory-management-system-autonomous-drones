@@ -12,6 +12,10 @@ declare module 'leaflet' {
     let Coordinates: any;
   }
 
+  interface Layer {
+    _leaflet_id: any;
+  }
+
   function rotateImageLayer(url: any, bounds: any, options: any): RotateImageLayer;
 
   interface RotateImageLayer extends L.ImageOverlay {

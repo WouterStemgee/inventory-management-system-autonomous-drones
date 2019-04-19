@@ -16,6 +16,12 @@ import {AuthenticationService} from '../authentication.service';
 
 import {environment} from '../../environments/environment';
 
+import booleanOverlap from '@turf/boolean-overlap';
+import {polygon} from '@turf/turf';
+import {lineString} from '@turf/turf';
+
+import {lineOverlap} from '@turf/turf';
+
 
 @Component({
   selector: 'app-leaflet',
@@ -48,6 +54,10 @@ export class LeafletComponent implements OnInit {
   img = {width: 30190, height: 10901.944444};
 
   heatPoints = [];
+
+  editingLayers = [];
+
+  flightpathLayerId;
 
   MySimple = L.Util.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0)
@@ -286,10 +296,11 @@ export class LeafletComponent implements OnInit {
   }
 
   checkScanZoneOverlap(flightpath) {
-    const poly1 = flightpath;
-    const poly2 = flightpath;
-    // const overlapping = overlaps(poly1, poly2);
-    // console.log(overlapping);
+    // layers overlopen van obstakels
+    const poly1 = lineString(flightpath);
+    const poly2 = lineString(flightpath);
+    const overlap = lineOverlap(poly1, poly2);
+    console.log(overlap);
   }
 
   drawValidFlightpath(waypoints) {
@@ -315,8 +326,9 @@ export class LeafletComponent implements OnInit {
       this.editableLayers.removeLayer(oldLayer);
       this.flightpathLayerId = l._leaflet_id;
       this.editableLayers.addLayer(layer);
-      console.log(layer);
     });
+
+    this.checkScanZoneOverlap(coords);
   }
 
   setFlightPath(geoJSON) {
@@ -335,8 +347,6 @@ export class LeafletComponent implements OnInit {
     this.simulator.map.flightpath.waypoints = waypoints;
     // this.checkScanZoneOverlap(geoJSON);
   }
-
-  flightpathLayerId;
 
   drawObstacles() {
     const obstacles = this.simulator.map.obstacles;
@@ -471,13 +481,10 @@ export class LeafletComponent implements OnInit {
     }
   }
 
-  editingLayers = [];
-
   onDrawEdited(e) {
     if (this.flightpathLayerId) {
       const layer = this.editableLayers.getLayer(this.flightpathLayerId) as L.GeoJSON;
       this.setFlightPath(layer.toGeoJSON());
-      console.log(layer._leaflet_id);
     }
 
     Object.keys(e.layers._layers).forEach(id => {
