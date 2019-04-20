@@ -281,6 +281,7 @@ export class DroneSimulatorService {
       console.log(info);
       if (info.validated && !info.flying) {
         const flightpath = this.map.flightpath.toJSON();
+        flightpath.radius = this.drone.radius;
         this.http.sendFlightpathToDrone(flightpath).then((ress) => {
           this.map.flightpath.sentToDrone = true;
           this.onAlertEvent.emit({

@@ -35,8 +35,8 @@ class Simulator:
 
 drone = Drone()
 drone.set_battery(100)
-drone.set_xCoord(2)
-drone.set_yCoord(22)
+drone.set_xCoord(500)
+drone.set_yCoord(500)
 drone.set_zCoord(8)
 drone.set_accelX(0)
 drone.set_accelY(0)
