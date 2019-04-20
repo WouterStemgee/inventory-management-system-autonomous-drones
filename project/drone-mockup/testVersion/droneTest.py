@@ -149,10 +149,30 @@ class DroneTest:
                   self.position[2])
             self.speed[2] = 0
 
+    def stijgOp(self):
+        print("opstijgen")
+        if (self.position[2]==0):
+            if self.speed[2] == 0:
+                self.speed[2] = 100
+            z = 8
+            tijd2 = z / self.speed[2]
+            t = 0
+            initieelZ = self.position[2]
+            while t <= tijd2:
+                self.position[2] = initieelZ + self.speed[2] * t
+                print("opstijgen " , "x: ", self.position[0], " y:", self.position[1], " z:",self.position[2])
+                t = t + 0.05
+                round(t, 2)
+                time.sleep(0.05)
+            self.position[2] = z
+            print("op tijdstip: ", tijd2, " x: ", self.position[0], " y:", self.position[1], " z:",self.position[2])
+            self.speed[2] = 0
+
     def vliegNaar(self, x, y, z):
         if z == -1:
             z = self.position[2]
         if not (x == self.position[0] and y == self.position[1] and z == self.position[2]):
+            self.stijgOp()
             # als je op zelfde positie blijft doe je niets
             tijd = self.vliegHorizontaal(x, y)
             if z != self.position[2]:
