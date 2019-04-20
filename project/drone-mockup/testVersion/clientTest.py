@@ -21,6 +21,10 @@ class ClientTest:
                 yCoord = d["y"]
                 zCoord = d["z"] # er zit nog geen z-coord in
                 #self.drone.vliegNaar(xCoord, yCoord, zCoord)
+                scan = d["scan"]
+                scannen = True
+                if scan != "False":
+                    scannen = False
                 array = [xCoord,yCoord,zCoord]
                 queue.put(array)
                 print("In de queue zit nu: ",str(array))

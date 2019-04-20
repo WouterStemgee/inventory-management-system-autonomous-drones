@@ -18,7 +18,7 @@ class Simulator:
         self.client.connecteer()
         self.client.ontvangWaypoint()  # hier wordt gewoon gesubscribed op iets dat waypoints door te sturen
         while True:
-            if self.queue.qsize() >0 and threading.activeCount() == 0 :
+            if self.queue.qsize() >0 and threading.activeCount() == 1 : # hier moet volgens mij een fout zitten
                 array = self.queue.get()
                 print("in simulator test zit nu in de array ",str(array))
                 thread = myThreadTest(self.drone,array)
