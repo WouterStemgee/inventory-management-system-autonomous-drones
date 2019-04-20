@@ -5,11 +5,12 @@ import threading
 import time
 import queue
 
+
 class Simulator:
-    def __init__(self,d):
+    def __init__(self, d):
         self.drone = d
         self.queue = queue.Queue(maxsize=100)
-        self.client = ClientTest(self.drone,self.queue)
+        self.client = ClientTest(self.drone, self.queue)
 
     def get_queue(self):
         return self.queue
@@ -18,17 +19,18 @@ class Simulator:
         self.client.connecteer()
         self.client.ontvangWaypoint()  # hier wordt gewoon gesubscribed op iets dat waypoints door te sturen
         while True:
-            if self.queue.qsize() >0 and threading.activeCount() == 1 : # hier moet volgens mij een fout zitten
+            if self.queue.qsize() > 0 and threading.activeCount() == 1:  # hier moet volgens mij een fout zitten
                 array = self.queue.get()
-                print("in simulator test zit nu in de array ",str(array))
-                thread = myThreadTest(self.drone,array)
+                print("in simulator test zit nu in de array ", str(array))
+                thread = myThreadTest(self.drone, array)
                 thread.start()
-            self.drone.set_battery(self.drone.get_battery()-1)
+            self.drone.set_battery(self.drone.get_battery() - 1)
             self.client.stuurBattery()
             self.client.stuurPosition()
             time.sleep(0.05)
 
-        self.client.disconnecteer() # hier ga je nooit geraken, het programma moet in een oneindige loop lopen
+        self.client.disconnecteer()  # hier ga je nooit geraken, het programma moet in een oneindige loop lopen
+
 
 drone = DroneTest()
 drone.set_battery(100)

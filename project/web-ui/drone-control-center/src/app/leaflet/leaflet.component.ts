@@ -363,8 +363,7 @@ export class LeafletComponent implements OnInit {
     const coords = geoJSON.geometry.coordinates;
     const dronePosition = this.simulator.drone.position;
     const startPosition = {x: dronePosition.x, y: dronePosition.y};
-    // const waypoints = [startPosition];
-    const waypoints = [];
+    const waypoints = [startPosition];
     coords.forEach(c => {
       waypoints.push({
         x: Math.floor(c[0]),

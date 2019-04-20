@@ -5,7 +5,7 @@ import json
 
 class ClientTest:
 
-    def __init__(self, d,queue):
+    def __init__(self, d, queue):
         self.drone = d
         self.queue = queue
 
@@ -19,15 +19,15 @@ class ClientTest:
                 print(d)
                 xCoord = d["x"]
                 yCoord = d["y"]
-                zCoord = d["z"] # er zit nog geen z-coord in
-                #self.drone.vliegNaar(xCoord, yCoord, zCoord)
+                zCoord = d["z"]  # er zit nog geen z-coord in
+                # self.drone.vliegNaar(xCoord, yCoord, zCoord)
                 scan = d["scan"]
                 scannen = True
                 if scan != "False":
                     scannen = False
-                array = [xCoord,yCoord,zCoord]
+                array = [xCoord, yCoord, zCoord]
                 queue.put(array)
-                print("In de queue zit nu: ",str(array))
+                print("In de queue zit nu: ", str(array))
 
         self.client = mqtt.Client("python1")
         self.broker = "localhost:1883"
@@ -51,7 +51,8 @@ class ClientTest:
 
     def stuurBattery(self):
         self.client.loop_start()  # moet lopen om de callback functies te kunnen verbinden
-        self.client.publish("drone/battery",self.drone.get_battery())  # eerste argument is het topic, 2de is de message
+        self.client.publish("drone/battery",
+                            self.drone.get_battery())  # eerste argument is het topic, 2de is de message
         self.client.loop_stop()
 
     def ontvangWaypoint(self):
@@ -64,4 +65,3 @@ class ClientTest:
 
     def disconnecteer(self):
         self.client.disconnect()
-
