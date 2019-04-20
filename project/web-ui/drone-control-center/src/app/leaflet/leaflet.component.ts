@@ -324,7 +324,7 @@ export class LeafletComponent implements OnInit {
     let wp = this.simulator.map.flightpath.waypoints;
     wp = this.checkScanZoneOverlap(wp);
     wp.forEach(w => {
-      if (!w.z) {
+      if (!w.scan) {
         w.z = this.simulator.drone.defaultFlyAltitude;
         w.scan = false;
       } else {
