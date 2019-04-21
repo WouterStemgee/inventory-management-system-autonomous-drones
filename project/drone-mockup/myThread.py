@@ -2,7 +2,7 @@ import threading
 import time
 
 
-class myThreadTest(threading.Thread):
+class myThread(threading.Thread):
 
     def __init__(self, drone, array):  # eventueel gewoon ook nog de functie mee geven
         threading.Thread.__init__(self)

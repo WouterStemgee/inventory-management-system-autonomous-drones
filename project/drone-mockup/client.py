@@ -1,15 +1,13 @@
 import paho.mqtt.client as mqtt
 import time
-# from Drone import Drone
 import json
 
 
 class Client:
-    def __init__(self, d):
-        self.drone = d
 
-        def on_log(client, userdata, level, buf):
-            print("log: " + buf)
+    def __init__(self, d, queue):
+        self.drone = d
+        self.queue = queue
 
         def on_connect(client, userdata, flags, rc):
             if rc == 0:
@@ -28,41 +26,23 @@ class Client:
                 # json {x:...,y...}
                 d = json.loads(m_decode)
                 print(d)
-                # coordinaten = m_decode.split(';')
-                # xCoord = coordinaten[0]
-                # yCoord = coordinaten[1]
-                # zCoord = coordinaten[2]
                 xCoord = d["x"]
                 yCoord = d["y"]
-                # zCoord = d["z"] # er zit nog geen z-coord in
-                self.drone.vliegNaar(xCoord, yCoord, 0)
-            elif topic == "snelheid":
-                # Vx;Vy;Vz
-                vector = m_decode.split(';')
-                Vx = vector[0]
-                Vy = vector[1]
-                Vz = vector[2]
-                self.drone.set_speedX(Vx)
-                self.drone.set_speedY(Vy)
-                self.drone.set_speedZ(Vz)
-            elif topic == "versnelling":
-                # Ax;Ay;Az
-                vector = m_decode.split(';')
-                Ax = vector[0]
-                Ay = vector[1]
-                Az = vector[2]
-                self.drone.set_accelX(Ax)
-                self.drone.set_accelY(Ay)
-                self.drone.set_accelZ(Az)
-            elif topic == "ScanCommando":
-                self.drone.scan()
+                zCoord = d["z"]  # er zit nog geen z-coord in
+                # self.drone.vliegNaar(xCoord, yCoord, zCoord)
+                scan = d["scan"]
+                scannen = True
+                if scan != "False":
+                    scannen = False
+                array = [xCoord, yCoord, zCoord]
+                queue.put(array)
+                print("In de queue zit nu: ", str(array))
 
         self.client = mqtt.Client("python1")
-        # self.broker = "test.mosquitto.org"
         self.broker = "localhost:1883"
-        self.client.on_connect = on_connect
-        # self.client.on_disconnect = on_disconnect
         self.client.on_message = on_message
+        self.client.on_connect = on_connect
+        self.client.on_disconnect = on_disconnect
 
     def stuurPosition(self):
         self.client.loop_start()
@@ -81,15 +61,14 @@ class Client:
         self.client.loop_stop()
 
     def stuurBattery(self):
-        # print("connecting to broker ", self.broker)
-        # self.client.connect("localhost", 1883)
         self.client.loop_start()  # moet lopen om de callback functies te kunnen verbinden
-        # self.client.subscribe("Battery")
-        self.client.publish("drone/battery",
-                            self.drone.get_battery())  # eerste argument is het topic, 2de is de message
-        # time.sleep(4) # even wachten zodat je het result van het subscriben kan zien, mag als alles werkt verwijder worden
+        self.client.publish("drone/battery",self.drone.get_battery())  # eerste argument is het topic, 2de is de message
         self.client.loop_stop()
-        # self.client.disconnect()
+
+    def ontvangWaypoint(self):
+        self.client.loop_start()
+        self.client.subscribe("drone/moveto")
+        self.client.loop_stop()
 
     def stuurAcceleration(self):
         self.client.loop_start()
@@ -123,16 +102,6 @@ class Client:
         self.client.publish("drone/pitch", self.drone.get_pitch())
         self.client.loop_stop()
 
-    def ontvangScanCommando(self):
-        self.client.loop_start()
-        self.client.subscribe("drone/scanCommando")
-        self.client.loop_stop()
-
-    def ontvangWaypoint(self):
-        self.client.loop_start()
-        self.client.subscribe("drone/moveto")
-        self.client.loop_stop()
-
     def ontvangSnelheid(self):
         self.client.loop_start()
         self.client.subscribe("drone/snelheid")
@@ -148,6 +117,3 @@ class Client:
 
     def disconnecteer(self):
         self.client.disconnect()
-
-# client = Client()
-# client.stuurSpeedVector()
