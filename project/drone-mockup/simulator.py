@@ -18,6 +18,9 @@ class Simulator:
     def simuleer(self):
         self.client.connecteer()
         self.client.ontvangWaypoint()  # hier wordt gewoon gesubscribed op iets dat waypoints door te sturen
+        self.client.ontvangJaw()
+        self.client.ontvangPitch()
+        self.client.ontvangRoll()
         #self.client.ontvangSnelheid()
         #self.client.ontvangVersnelling()
         # hier schrijf je alles waarop je je wilt subscriben
@@ -27,12 +30,14 @@ class Simulator:
                 print("in simulator test zit nu in de array ", str(array))
                 thread = myThread(self.drone, array)
                 thread.start()
+                if array[3]:
+                    self.client.stuurScan()
             self.drone.set_battery(self.drone.get_battery() - 1)
             self.client.stuurBattery()
             self.client.stuurPosition()
-            #self.client.stuurJaw()
-            #self.client.stuurPitch()
-            #self.client.stuurRoll()
+            self.client.stuurJaw()
+            self.client.stuurPitch()
+            self.client.stuurRoll()
             #self.client.stuurVersnellingsVector()
             #self.client.stuurSpeedVector()
             # hier schrijf je alles wat je wilt doorsturen

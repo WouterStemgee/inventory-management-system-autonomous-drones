@@ -34,9 +34,16 @@ class Client:
                 scannen = True
                 if scan != "False":
                     scannen = False
-                array = [xCoord, yCoord, zCoord]
+                array = [xCoord, yCoord, zCoord,scannen]
                 queue.put(array)
                 print("In de queue zit nu: ", str(array))
+            elif topic == "drone/pitch":
+                hoek = m_decode
+                self.drone.set_pitch(hoek)
+            elif topic == "drone/jaw":
+                self.drone.set_jaw(m_decode)
+            elif topic == "drone/roll":
+                self.drone.set_roll(m_decode)
 
         self.client = mqtt.Client("python1")
         self.broker = "localhost:1883"
@@ -53,11 +60,6 @@ class Client:
         }
         y = json.dumps(x)
         self.client.publish("drone/position", y)
-        self.client.loop_stop()
-
-    def stuurScan(self):
-        self.client.loop_start()
-        self.client.publish("drone/scan", self.drone.scan())
         self.client.loop_stop()
 
     def stuurBattery(self):
@@ -81,15 +83,27 @@ class Client:
         self.client.publish("drone/acceleration", string)
         self.client.loop_stop()
 
+    def stuurScan(self):
+        self.client.loop_start()
+        self.client.publish("drone/scan",str(self.drone.scan()))
+        self.client.loop_stop()
+
+
     def stuurSpeed(self):
         self.client.loop_start()
         string = "{x:" + str(self.drone.get_xCoord()) + ",y:" + str(self.drone.get_yCoord()) + ",z:" + str(
             self.drone.get_zCoord()) + "}"
         self.client.publish("drone/speed", string)
+        self.client.loop_stop()
 
     def stuurJaw(self):
         self.client.loop_start()
         self.client.publish("drone/jaw", self.drone.get_jaw())
+        self.client.loop_stop()
+
+    def ontvangJaw(self):
+        self.client.loop_start()
+        self.client.subscribe("drone/jaw")
         self.client.loop_stop()
 
     def stuurRoll(self):
@@ -97,9 +111,19 @@ class Client:
         self.client.publish("drone/roll", self.drone.get_roll())
         self.client.loop_stop()
 
+    def ontvangRoll(self):
+        self.client.loop_start()
+        self.client.subscribe("drone/roll")
+        self.client.loop_stop()
+
     def stuurPitch(self):
         self.client.loop_start()
         self.client.publish("drone/pitch", self.drone.get_pitch())
+        self.client.loop_stop()
+
+    def ontvangPitch(self):
+        self.client.loop_start()
+        self.client.subscribe("drone/pitch")
         self.client.loop_stop()
 
     def ontvangSnelheid(self):
