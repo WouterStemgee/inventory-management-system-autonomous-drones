@@ -65,7 +65,7 @@ export class InventoryComponent implements OnInit {
     const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
     const mapData = form.value;
     mapData.position = {x: form.value.x, y: form.value.y};
-    if (mapData.name === '' || mapData.quanity === '' || mapData.position.x === '' || mapData.position.y === '') {
+    if (mapData.name === '' || mapData.quantity === '' || mapData.position.x === '' || mapData.position.y === '') {
       this.simulator.onAlertEvent.emit({
         title: 'Inventory',
         message: 'Please fill in all the fields before submitting.',
