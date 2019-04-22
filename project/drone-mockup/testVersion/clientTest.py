@@ -28,10 +28,17 @@ class ClientTest:
                 array = [xCoord, yCoord, zCoord]
                 queue.put(array)
                 print("In de queue zit nu: ", str(array))
+            if topic == "drone/stop" and m_decode == "stop":
+                self.drone.stop()
 
         self.client = mqtt.Client("python1")
         self.broker = "localhost:1883"
         self.client.on_message = on_message
+
+    def ontvangStop(self):
+        self.client.loop_start()
+        self.client.subscribe("drone/stop")
+        self.client.loop_stop()
 
     def stuurPosition(self):
         x = {
@@ -45,17 +52,55 @@ class ClientTest:
     def stuurScan(self):
         self.client.publish("drone/scan", self.drone.scan())
 
+    def stuurAlles(self):
+        x = {
+            "xCoord" : self.drone.get_xCoord(),
+            "yCoord" : self.drone.get_yCoord(),
+            "zCoord" : self.drone.get_zCoord(),
+            "xSpeed" : self.drone.get_speedX(),
+            "ySpeed" : self.drone.get_speedY(),
+            "zSpeed" : self.drone.get_speedZ(),
+            "xAccel" : self.drone.get_accelX(),
+            "yAccel" : self.drone.get_accelY(),
+            "zAccel" : self.drone.get_accelZ(),
+            "battery": self.drone.get_battery(),
+            "jaw"    : self.drone.get_jaw(),
+            "pitch"  : self.drone.get_pitch(),
+            "roll"   : self.drone.get_roll(),
+        }
+        y = json.dumps(x)
+        self.client.publish("drone/multiple",y)
+
     def stuurBattery(self):
-        self.client.publish("drone/battery",
-                            self.drone.get_battery())  # eerste argument is het topic, 2de is de message
+        self.client.publish("drone/battery",self.drone.get_battery())  # eerste argument is het topic, 2de is de message
 
     def ontvangWaypoint(self):
         self.client.loop_start()
         self.client.subscribe("drone/moveto")
         self.client.loop_stop()
 
+    def stuurMultiple(self):
+        x = {
+            "xCoord": self.drone.get_xCoord(),
+            "yCoord": self.drone.get_yCoord(),
+            "zCoord": self.drone.get_zCoord(),
+            "xSpeed": self.drone.get_speedX(),
+            "ySpeed": self.drone.get_speedY(),
+            "zSpeed": self.drone.get_speedZ(),
+            "xAccel": self.drone.get_accelX(),
+            "yAccel": self.drone.get_accelY(),
+            "zAccel": self.drone.get_accelZ(),
+            "battery": self.drone.get_battery(),
+            "jaw": self.drone.get_jaw(),
+            "pitch": self.drone.get_pitch(),
+            "roll": self.drone.get_roll(),
+        }
+        y = json.dumps(x)
+        self.client.publish("drone/multiple", y)
+
     def connecteer(self):
         self.client.connect("localhost", 1883)
 
     def disconnecteer(self):
         self.client.disconnect()
+

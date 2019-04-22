@@ -8,6 +8,7 @@ class Client:
     def __init__(self, d, queue):
         self.drone = d
         self.queue = queue
+        self.nrWaypoint = 1
 
         def on_connect(client, userdata, flags, rc):
             if rc == 0:
@@ -35,6 +36,11 @@ class Client:
                 if scan != "False":
                     scannen = False
                 array = [xCoord, yCoord, zCoord,scannen]
+                if self.nrWaypoint == 1:
+                    self.drone.set_xCoord(xCoord)
+                    self.drone.set_yCoord(yCoord)
+                    self.drone.set_zCoord(zCoord)
+                    self.nrWaypoint = 0
                 queue.put(array)
                 print("In de queue zit nu: ", str(array))
             elif topic == "drone/pitch":
