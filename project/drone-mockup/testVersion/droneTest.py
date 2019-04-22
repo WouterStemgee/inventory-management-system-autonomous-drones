@@ -84,7 +84,10 @@ class DroneTest:
         if self.speed[0] == 0:
             self.speed[0] = 100
         self.speed[2] = 0  # want je beweegt niet
-        self.speed[1] = (math.fabs(y - self.position[1]) / math.fabs(x - self.position[0])) * self.speed[0]
+        if x != self.position[0]:
+            self.speed[1] = (math.fabs(y - self.position[1]) / math.fabs(x - self.position[0])) * self.speed[0]
+        else:
+            self.speed[1] = 0
         # zie berekeningen op blad
         tijd = 0.0 + (math.fabs(x - self.position[0]) / self.speed[0])
         t = 0

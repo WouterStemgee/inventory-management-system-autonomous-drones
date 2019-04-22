@@ -34,7 +34,6 @@ class ClientTest:
         self.client.on_message = on_message
 
     def stuurPosition(self):
-        self.client.loop_start()
         x = {
             "x": self.drone.get_xCoord(),
             "y": self.drone.get_yCoord(),
@@ -42,18 +41,13 @@ class ClientTest:
         }
         y = json.dumps(x)
         self.client.publish("drone/position", y)
-        self.client.loop_stop()
 
     def stuurScan(self):
-        self.client.loop_start()
         self.client.publish("drone/scan", self.drone.scan())
-        self.client.loop_stop()
 
     def stuurBattery(self):
-        self.client.loop_start()  # moet lopen om de callback functies te kunnen verbinden
         self.client.publish("drone/battery",
                             self.drone.get_battery())  # eerste argument is het topic, 2de is de message
-        self.client.loop_stop()
 
     def ontvangWaypoint(self):
         self.client.loop_start()
