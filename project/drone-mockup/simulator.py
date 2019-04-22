@@ -1,4 +1,4 @@
-from drone import Drone
+from Drone import Drone
 from client import Client
 from myThread import myThread
 import threading
