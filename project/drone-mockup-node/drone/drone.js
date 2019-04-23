@@ -33,7 +33,7 @@ class Drone {
         }
 
         let diffY = this.destination.y - this.position.y;
-        let absDiffY = Math.abs(diffX);
+        let absDiffY = Math.abs(diffY);
         if(diffY < 0 && absDiffY > this.radius){
             this.position.y -= this.speed.y * 0.05;
         }
