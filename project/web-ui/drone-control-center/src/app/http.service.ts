@@ -77,6 +77,7 @@ export class HttpService {
   }
 
   validateFlightpath(flightpath) {
+    console.log(flightpath);
     return new Promise((resolve, reject) => {
       console.log(environment.baseAPIUrl + 'red/path/validate');
       this.http.post(environment.baseAPIUrl + 'red/path/validate', flightpath).subscribe(
@@ -91,6 +92,7 @@ export class HttpService {
   }
 
   sendFlightpathToDrone(flightpath) {
+    console.log(flightpath);
     return new Promise( (resolve, reject) => {
       this.http.post(environment.baseAPIUrl + 'red/path/set', flightpath).subscribe(
         result => {
