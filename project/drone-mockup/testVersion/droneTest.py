@@ -159,8 +159,8 @@ class DroneTest:
     def stop(self):
         self.Stop = True
         # even wachten om threads te laten stoppen??????????
-        while threading.activeCount() != 1:
-            time.sleep(2)
+        #while threading.activeCount() != 1:
+        #    time.sleep(2)
         self.set_speedX(0)
         self.drone.set_speedY(0)
         self.drone.set_speedZ(0)
@@ -182,7 +182,7 @@ class DroneTest:
         t = 0
         initieelX = self.position[0]
         initieelY = self.position[1]
-        while t <= tijd and (not self.stop):
+        while t <= tijd:
             # misschien ga je niet exact op tijd uit komen op het einde
             if x > initieelX and y > initieelY:
                 self.position[0] = initieelX + (self.speed[0] * t)
@@ -211,12 +211,11 @@ class DroneTest:
             round(t,
                   2)  # dit geeft een hoop slecht afgeronde komma getallen door beperkingen in de binaite voorstelling
             time.sleep(0.05)
-        if not self.stop:
-            self.position[0] = x
-            self.position[1] = y
-            print("op tijdstip: ", tijd, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
-            self.speed[0] = 0
-            self.speed[1] = 0
+        self.position[0] = x
+        self.position[1] = y
+        print("op tijdstip: ", tijd, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
+        self.speed[0] = 0
+        self.speed[1] = 0
         return tijd
 
     def vliegVerticaal(self, z, tijd):
@@ -227,7 +226,7 @@ class DroneTest:
             tijd2 = math.fabs(z - self.position[2]) / self.speed[2]
             t = 0
             initieelZ = self.position[2]
-            while t <= tijd2 and (not self.stop):
+            while t <= tijd2:
                 if (z > self.position[2]):
                     self.position[2] = initieelZ + self.speed[2] * t
                 elif z < self.position[2]:
@@ -236,9 +235,8 @@ class DroneTest:
                 t = t + 0.05
                 round(t, 2)
                 time.sleep(0.05)
-            if not self.stop:
-                self.position[2] = z
-                print("op tijdstip: ", tijd + tijd2, " x: ", self.position[0], " y:", self.position[1], " z:",self.position[2])
+            self.position[2] = z
+            print("op tijdstip: ", tijd + tijd2, " x: ", self.position[0], " y:", self.position[1], " z:",self.position[2])
             self.speed[2] = 0
 
     def stijgOp(self):
@@ -250,15 +248,14 @@ class DroneTest:
             tijd2 = z / self.speed[2]
             t = 0
             initieelZ = self.position[2]
-            while t <= tijd2 and (not self.stop):
+            while t <= tijd2:
                 self.position[2] = initieelZ + self.speed[2] * t
                 print("opstijgen " , "x: ", self.position[0], " y:", self.position[1], " z:",self.position[2])
                 t = t + 0.05
                 round(t, 2)
                 time.sleep(0.05)
-            if not self.stop:
-                self.position[2] = z
-                print("op tijdstip: ", tijd2, " x: ", self.position[0], " y:", self.position[1], " z:",self.position[2])
+            self.position[2] = z
+            print("op tijdstip: ", tijd2, " x: ", self.position[0], " y:", self.position[1], " z:",self.position[2])
             self.speed[2] = 0
 
     def vliegNaar(self, x, y, z):

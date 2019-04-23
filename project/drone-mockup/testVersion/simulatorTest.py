@@ -19,13 +19,16 @@ class Simulator:
         self.clientTest.connecteer()
         self.clientTest.ontvangWaypoint()  # hier wordt gewoon gesubscribed op iets dat waypoints door te sturen
         while True:
+
             if self.queue.qsize() > 0 and threading.activeCount() == 1:  # hier moet volgens mij een fout zitten
                 array = self.queue.get()
                 print("in simulator test zit nu in de array ", str(array))
                 thread = myThreadTest(self.drone, array)
                 thread.start()
             self.drone.set_battery(self.drone.get_battery() - 1)
+            self.clientTest.loopStart()
             self.clientTest.stuurMultiple()
+            self.clientTest.loopStop()
             time.sleep(0.05)
 
         self.clientTest.disconnecteer()  # hier ga je nooit geraken, het programma moet in een oneindige loop lopen
