@@ -61,4 +61,10 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 15/04/19,20:00,21:00,Extern,Aanpassingen van het project getest,,
 16/04/19,10:30,13:00,Extern,Configuratie van drones uitgebreid voor ondersteuning van meerdere drones,24,
 16/04/19,13:30,15:00,Extern,Race problemen bij het laden van drones en maps opgelost,24,
-
+17/04/19,11:30,12:30,Extern,Daily standup via discord,,
+18/04/19,13:30,18:00,Extern,Gevalideerd flightpath op frontend tekenen - begonnen aan presentatie,24,
+19/04/19,13:30,18:30,Extern,Bug fix bij het verwijderen van obstakels en scanzones - bug fix UI knoppen,24,
+20/04/19,14:00,19:00,Extern,Bug fix voor drone als eerste waypoint,24,
+21/04/19,12:30,18:00,Extern,Bug fix flightpath met drone als eerste waypoint,24,
+22/04/19,14:30,19:00,Extern,Oorzaak MQTT lagg in python gevonden - mockup in Node gemaakt als backup,10,
+23/04/19,08:15,12:30,Campus,Presentatie afwerken - mockup testen,10,
