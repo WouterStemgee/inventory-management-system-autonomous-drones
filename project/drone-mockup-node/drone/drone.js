@@ -1,117 +1,78 @@
 class Drone {
-    constructor() {
+    constructor(posx = 1000, posy =1000, posz = 100, radius = 1) {
         this.position = {
-            x: 1000,
-            y: 1000,
-            z: 100
+            x: posx,
+            y: posy,
+            z: posz
+        };
+        this.destination = {
+            x: posx,
+            y: posy,
+            z: posz
         };
         this.speed = {
-            x: 0,
-            y: 0,
-            z: 0
+            x: 100,
+            y: 100,
+            z: 100
         };
         this.battery = 100;
-        this.intervalXY;
-        this.intervalZ;
+        this.radius = radius;
     }
 
-    flyXY(x, y) {
-            console.log('======================== FlyXY ========================');
-            if (this.speed.x === 0) {
-                this.speed.x = 100;
-            }
-            if (x !== this.position.x) {
-                this.speed.y = (Math.abs(y - this.position.y) / Math.abs(x - this.position.x)) * this.speed.x;
-            } else {
-                this.speed.y = 0;
-            }
-            this.speed.z = 0;
+    flyXYnew(){
+        let res = false;
 
-            let t = 0;
-            let time = (Math.abs(x - this.position.x) / this.speed.x);
-            let initX = this.position.x;
-            let initY = this.position.y;
-
-            this.intervalXY = setInterval(() => {
-                if (t <= time) {
-                    if (x > initX && y > initY) {
-                        this.position.x = initX + (this.speed.x * t);
-                        this.position.y = initY + (this.speed.y * t);
-                    } else if (x < initX && y > initY) {
-                        this.position.x = initX - (this.speed.x * t);
-                        this.position.y = initY + (this.speed.y * t);
-                    }
-                    else if (x > initX && y < initY) {
-                        this.position.x = initX + (this.speed.x * t);
-                        this.position.y = initY - (this.speed.y * t);
-                    }
-
-                    else if (x < initX && y < initY) {
-                        this.position.x = initX - (this.speed.x * t);
-                        this.position.y = initY - (this.speed.y * t);
-                    }
-                    else if (x === initX) {
-                        if (y < initY) {
-                            this.position.y = initY - (this.speed.y * t);
-                        } else if (y > initY) {
-                            this.position.y = initY + (this.speed.y * t);
-                        }
-                    } else if (y === initY) {
-                        if (x < initX) {
-                            this.position.x = initX - (this.speed.x * t)
-                        }
-                        else if (x > initX) {
-                            this.position.x = initX + (this.speed.x * t)
-                        }
-                    }
-                    this.logPosition();
-                    t += 0.05;
-                } else {
-                    try {
-                        clearInterval(this.intervalXY);
-                    }
-                    catch(err){
-
-                    }
-                    this.position.x = x;
-                    this.position.y = y;
-                    this.speed.x = 0;
-                    this.speed.y = 0;
-                    this.logPosition();
-                }
-            }, 50);
-    }
-
-    flyZ(z) {
-        console.log('======================== FlyZ ========================');
-        if (z !== this.position.z) {
-            if (this.speed.z === 0) {
-                this.speed.z = 100;
-            }
-            let t = 0;
-            let initZ = this.position.z;
-            this.intervalZ = setInterval(() => {
-                if (Math.round(this.position.z) !== z) {
-                    if (z > this.position.z) {
-                        this.position.z = initZ + this.speed.z * t;
-                    }
-                    else if (z < this.position.z) {
-                        this.position.z = initZ - this.speed.z * t;
-                    }
-                    this.logPosition();
-                    t += 0.05;
-                } else {
-                    try {
-                        clearInterval(this.intervalZ);
-                    }
-                    catch(err){
-
-                    }
-                    this.speed.z = 0;
-                    this.logPosition();
-                }
-            }, 50);
+        let diffX = this.destination.x - this.position.x;
+        let absDiffX = Math.abs(diffX);
+        if(diffX < 0 && absDiffX > this.radius){
+            this.position.x -= this.speed.x * 0.05;
+            res = true;
         }
+        else if(diffX > 0 && absDiffX > this.radius) {
+            this.position.x += this.speed.x * 0.05;
+            res = true;
+        }
+
+        let diffY = this.destination.y - this.position.y;
+        let absDiffY = Math.abs(diffX);
+        if(diffY < 0 && absDiffY > this.radius){
+            this.position.y -= this.speed.y * 0.05;
+            res = true;
+        }
+        else if(diffY > 0 && absDiffY > this.radius){
+            this.position.y += this.speed.y * 0.05;
+            res = true;
+        }
+
+        return res;
+    }
+
+    flyZnew(){
+        let diffZ = this.destination.z - this.position.z;
+        let absDiffZ = Math.abs(diffZ);
+        if(diffZ < 0 && absDiffZ > this.radius){
+            this.position.z -= this.speed.z * 0.05;
+        }
+        else if(diffZ > 0 && absDiffZ > this.radius) {
+            this.position.z += this.speed.z * 0.05;
+        }
+    }
+
+    setXYSpeed(){
+        this.speed.x = 1;
+        if (this.destination.x !== this.position.x) {
+            this.speed.y = (Math.abs(this.destination.y - this.position.y) / Math.abs(this.destination.x - this.position.x)) * this.speed.x;
+        } else {
+            this.speed.y = 0;
+        }
+        let sum = this.speed.x + this.speed.y;
+        this.speed.x = this.speed.x / sum * 200;
+        this.speed.y = this.speed.y / sum * 200;
+        this.speed.z = 0;
+    }
+
+    land(){
+        this.destination = {x: this.position.x, y: this.position.y, z: 0};
     }
 
     logPosition(){
@@ -133,7 +94,7 @@ class Drone {
             clearInterval(this.intervalZ);
         }
         catch(err){}
-        this.flyZ(0);
+        this.land();
     }
 
     flyTo(x, y, z) {

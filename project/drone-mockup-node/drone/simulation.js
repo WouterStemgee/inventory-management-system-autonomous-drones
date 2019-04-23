@@ -10,7 +10,7 @@ class Simulation {
 
     start() {
         let runner = setInterval(() => {
-            this.client.publishPosition();
+            this.client.loop();
         }, 50);
     }
 }
