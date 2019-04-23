@@ -66,6 +66,7 @@ class MQTTClient {
         console.log(this.drone.destination);
         this.publishPosition();
         this.publishBattery();
+        this.publishOrientation();
         // TODO
     }
 
@@ -82,13 +83,17 @@ class MQTTClient {
         this.client.publish('drone/position', JSON.stringify(pos));
     }
 
+    publishOrientation() {
+        this.client.publish('drone/orientation', JSON.stringify(this.drone.orientation));
+    }
+
     loop(){
         if(this.status === start){
             if(this.drone.liftoff)
                 this.drone.flyZnew();
             else
                 this.drone.flyXYnew();
-            this.drone.useBattery();
+            this.drone.drainBattery();
         }
         else if(this.status === stop){
             this.drone.flyZnew();

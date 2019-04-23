@@ -29,9 +29,9 @@ class Drone {
         return Math.floor(Math.random() * Math.floor(max));
     }
 
-    useBattery() {
-        if(this.getRandomInt(5) === 1)
-            this.battery -= 0.1;
+    drainBattery() {
+        if(this.getRandomInt(2) === 1)
+            this.battery -= 0.01;
     }
 
     flyXYnew(){
