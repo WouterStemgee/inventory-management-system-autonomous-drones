@@ -42,7 +42,6 @@ class MQTTClient {
                 if(this.status === start){
                     this.drone.destination = waypoint;
                     this.drone.setXYSpeed();
-                    //this.drone.flyTo(waypoint.x, waypoint.y, waypoint.z);
                 }
                 break;
             case 'drone/stop':
@@ -53,6 +52,9 @@ class MQTTClient {
                 break;
             case 'drone/scanner':
                 this.status = scanning;
+                this.drone.scanstatus = 0;
+                console.log("Zou de rotation moeten zijn: " + message);
+                this.drone.scanrotation = message;
                 break;
 
         }
@@ -62,7 +64,12 @@ class MQTTClient {
         this.drone.logPosition();
         console.log(this.drone.destination);
         this.publishPosition();
+        this.publishBattery();
         // TODO
+    }
+
+    publishBattery() {
+        this.client.publish('drone/battery', JSON.stringify(this.drone.battery));
     }
 
     publishPosition() {
@@ -76,11 +83,11 @@ class MQTTClient {
 
     loop(){
         if(this.status === start){
-            if(this.drone.liftoff){
+            if(this.drone.liftoff)
                 this.drone.flyZnew();
-            }
             else
                 this.drone.flyXYnew();
+            this.drone.useBattery();
         }
         else if(this.status === stop){
             this.drone.land();
@@ -89,10 +96,17 @@ class MQTTClient {
         else if(this.status === paused){
 
         }
-        else if(this.status === scanning){
+        else if(this.status === scanning) {
             let bool = this.drone.flyZnew();
-            if(bool){
-                this.drone.scan();
+            if (bool) {
+                if(this.drone.scanstatus === 0)
+                    this.drone.rotate();
+                else if(this.drone.scanstatus === 1) {
+                    this.drone.scan();
+                    this.client.publish('drone/scanned',JSON.stringify({id:1, quantity:100}));
+                }
+                else if(this.drone.scanstatus === 2)
+                    this.status = start;
             }
         }
         this.publishAllData();

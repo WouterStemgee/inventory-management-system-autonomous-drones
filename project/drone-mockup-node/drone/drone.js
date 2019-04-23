@@ -20,6 +20,18 @@ class Drone {
         this.battery = 100;
         this.radius = radius;
         this.liftoff = true;
+        this.rotation = 0;
+        this.scanrotation = 0;
+        this.scanstatus = 0;
+    }
+
+    getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
+    }
+
+    useBattery() {
+        if(this.getRandomInt(5) === 1)
+            this.battery -= 0.1;
     }
 
     flyXYnew(){
@@ -33,7 +45,7 @@ class Drone {
         }
 
         let diffY = this.destination.y - this.position.y;
-        let absDiffY = Math.abs(diffX);
+        let absDiffY = Math.abs(diffY);
         if(diffY < 0 && absDiffY > this.radius){
             this.position.y -= this.speed.y * 0.05;
         }
@@ -82,16 +94,23 @@ class Drone {
         console.log(this.date.getTime() + ' - [' + this.position.x + ', ' + this.position.y + ', ' + this.position.z + ']');
     }
 
-
-    flyTo(x, y, z) {
-        this.flyZ(z);
-        this.flyXY(x, y);
+    rotate() {
+        let diffRot = this.scanrotation - 180 - this.rotation;
+        if(this.scanrotation-this.rotation > 1) {
+            if (diffRot > 0)
+                this.rotation += 1;
+            else
+                this.rotation -= 1
+        }
+        else {
+            this.scanstatus = 1;
+        }
     }
 
     scan() {
-        // TODO
+        console.log("SCANNED");
+        this.scanstatus = 2;
     }
-
 }
 
 module.exports = Drone;
