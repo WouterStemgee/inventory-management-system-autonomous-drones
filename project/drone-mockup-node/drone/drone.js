@@ -30,6 +30,9 @@ class Drone {
     }
 
     drainBattery() {
+        if (this.battery <= 0) {
+            this.battery = 100;
+        }
         if(this.getRandomInt(2) === 1)
             this.battery -= 0.01;
     }
