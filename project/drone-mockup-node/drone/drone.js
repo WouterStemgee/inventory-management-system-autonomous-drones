@@ -20,31 +20,25 @@ class Drone {
     }
 
     flyXYnew(){
-        let res = false;
-
         let diffX = this.destination.x - this.position.x;
         let absDiffX = Math.abs(diffX);
         if(diffX < 0 && absDiffX > this.radius){
             this.position.x -= this.speed.x * 0.05;
-            res = true;
         }
         else if(diffX > 0 && absDiffX > this.radius) {
             this.position.x += this.speed.x * 0.05;
-            res = true;
         }
 
         let diffY = this.destination.y - this.position.y;
         let absDiffY = Math.abs(diffX);
         if(diffY < 0 && absDiffY > this.radius){
             this.position.y -= this.speed.y * 0.05;
-            res = true;
         }
         else if(diffY > 0 && absDiffY > this.radius){
             this.position.y += this.speed.y * 0.05;
-            res = true;
         }
 
-        return res;
+        return !(absDiffX < 20 && absDiffY < 20)
     }
 
     flyZnew(){
@@ -68,7 +62,7 @@ class Drone {
         let sum = this.speed.x + this.speed.y;
         this.speed.x = this.speed.x / sum * 200;
         this.speed.y = this.speed.y / sum * 200;
-        this.speed.z = 0;
+        this.speed.z = 100;
     }
 
     land(){

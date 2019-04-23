@@ -57,6 +57,7 @@ class MQTTClient {
 
     publishAllData() {
         this.drone.logPosition();
+        console.log(this.drone.destination);
         this.publishPosition();
         // TODO
     }
