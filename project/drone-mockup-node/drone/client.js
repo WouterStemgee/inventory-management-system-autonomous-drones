@@ -110,8 +110,8 @@ class MQTTClient {
                 if(this.drone.scanstatus === 0)
                     this.drone.rotate();
                 else if(this.drone.scanstatus === 1) {
-                    this.drone.scan();
                     this.client.publish('drone/scanned',JSON.stringify({id:1, quantity:100}));
+                    this.drone.scan();
                 }
                 else if(this.drone.scanstatus === 2)
                     this.status = start;

@@ -96,10 +96,15 @@ class Drone {
     rotate() {
         let diffRot = this.scanrotation - 180 - this.rotation;
         if(this.scanrotation-this.rotation > 1) {
-            if (diffRot > 0)
+            if (diffRot > 0) {
+                if (this.rotation === 360)
+                    this.rotation = 0;
                 this.rotation += 1;
-            else
+            } else {
+                if (this.rotation === 0)
+                    this.rotation = 360;
                 this.rotation -= 1
+            }
         }
         else {
             this.scanstatus = 1;
