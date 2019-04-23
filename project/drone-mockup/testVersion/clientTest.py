@@ -47,6 +47,7 @@ class ClientTest:
         self.client.loop_stop()
 
     def stuurPosition(self):
+
         x = {
             "x": self.drone.get_xCoord(),
             "y": self.drone.get_yCoord(),
@@ -55,11 +56,14 @@ class ClientTest:
         y = json.dumps(x)
         self.client.publish("drone/position", y)
 
+
     def stuurScan(self):
         self.client.publish("drone/scan", self.drone.scan())
 
     def stuurBattery(self):
+        self.client.loop_start()
         self.client.publish("drone/battery",self.drone.get_battery())  # eerste argument is het topic, 2de is de message
+        self.client.loop_stop()
 
     def ontvangWaypoint(self):
         self.client.loop_start()

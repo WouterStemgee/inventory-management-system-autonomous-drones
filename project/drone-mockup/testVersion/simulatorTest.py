@@ -26,9 +26,8 @@ class Simulator:
                 thread = myThreadTest(self.drone, array)
                 thread.start()
             self.drone.set_battery(self.drone.get_battery() - 1)
-            self.clientTest.loopStart()
-            self.clientTest.stuurMultiple()
-            self.clientTest.loopStop()
+            self.clientTest.stuurBattery()
+            self.clientTest.stuurPosition()
             time.sleep(0.05)
 
         self.clientTest.disconnecteer()  # hier ga je nooit geraken, het programma moet in een oneindige loop lopen

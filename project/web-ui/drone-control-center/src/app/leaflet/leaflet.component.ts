@@ -311,6 +311,7 @@ export class LeafletComponent implements OnInit {
         if (dist <= sz.range && sz.range >= this.simulator.drone.radius) {
           waypoints[index].z = sz.position.z;
           waypoints[index].scan = true;
+          waypoints[index].orientation = sz.orientation;
           waypoints[index].x = x1;
           waypoints[index].y = y1;
         }
