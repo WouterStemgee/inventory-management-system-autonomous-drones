@@ -27,6 +27,7 @@ class MQTTClient {
 
     initSubscriptions() {
         this.client.subscribe('drone/moveto');
+        this.client.subscribe('drone/scanner');
         this.client.subscribe('drone/start');
         this.client.subscribe('drone/pause');
         this.client.subscribe('drone/stop');
@@ -62,8 +63,8 @@ class MQTTClient {
     }
 
     publishAllData() {
-        this.drone.logPosition();
-        console.log(this.drone.destination);
+        //this.drone.logPosition();
+        //console.log(this.drone.destination);
         this.publishPosition();
         this.publishBattery();
         this.publishOrientation();
@@ -84,7 +85,7 @@ class MQTTClient {
     }
 
     publishOrientation() {
-        this.client.publish('drone/orientation', JSON.stringify(this.drone.orientation));
+        this.client.publish('drone/orientation', JSON.stringify(this.drone.rotation));
     }
 
     loop(){
@@ -110,8 +111,11 @@ class MQTTClient {
                 if(this.drone.scanstatus === 0)
                     this.drone.rotate();
                 else if(this.drone.scanstatus === 1) {
-                    this.client.publish('drone/scanned',JSON.stringify({id:1, quantity:100}));
                     this.drone.scan();
+                    this.client.publish('drone/scanned',JSON.stringify({
+                        name: "badeendjes2",
+                        quantity: 500
+                    }));
                 }
                 else if(this.drone.scanstatus === 2)
                     this.status = start;

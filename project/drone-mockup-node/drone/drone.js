@@ -1,5 +1,5 @@
 class Drone {
-    constructor(posx = 1000, posy =1000, posz = 100, radius = 1) {
+    constructor(posx = 1000, posy =1000, posz = 100, radius = 12) {
         this.standardZ = posz;
 
         this.position = {
@@ -30,6 +30,9 @@ class Drone {
     }
 
     drainBattery() {
+        if (this.battery <= 0) {
+            this.battery = 100;
+        }
         if(this.getRandomInt(2) === 1)
             this.battery -= 0.01;
     }
@@ -109,6 +112,7 @@ class Drone {
         else {
             this.scanstatus = 1;
         }
+        console.log(this.rotation);
     }
 
     scan() {
