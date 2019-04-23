@@ -25,6 +25,7 @@ export class DroneSimulatorService {
   @Output() onAlertEvent = new EventEmitter<any>();
   @Output() onSimulatorLoadedEvent = new EventEmitter<boolean>();
   @Output() onFlightpathValidatedEvent = new EventEmitter<any>();
+  @Output() onStopEvent = new EventEmitter<boolean>();
 
   constructor(private data: DataService, private http: HttpService, private shared: SharedService) {
     console.log('Starting simulator service...');
@@ -48,6 +49,7 @@ export class DroneSimulatorService {
 
   stop() {
     this.http.sendCommand('stop').then(res => {
+      this.onStopEvent.emit(true);
       this.onAlertEvent.emit({
         title: 'Drone Control Center',
         message: 'Drone stopped flying.',
