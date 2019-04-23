@@ -32,6 +32,15 @@ export class LeafletComponent implements OnInit {
         }
       }
     );
+
+    simulator.onStopEvent.subscribe((stop) => {
+      const layer = this.editableLayers.getLayer(this.flightpathLayerId);
+      if (layer) {
+        this.editableLayers.removeLayer(layer);
+      }
+      this.simulator.map.flightpath.waypoints = [];
+      this.scanlocationLayer.clearLayers();
+    });
   }
 
   show = false;
@@ -552,7 +561,10 @@ export class LeafletComponent implements OnInit {
         const newY1 = newP1.lat;
         const newX2 = newP2.lng;
         const newY2 = newP2.lat;
-        const newPositions = [{x: Math.round(newX1), y: Math.round(newY1)}, {x: Math.round(newX2), y: Math.round(newY2)}];
+        const newPositions = [{x: Math.round(newX1), y: Math.round(newY1)}, {
+          x: Math.round(newX2),
+          y: Math.round(newY2)
+        }];
 
         this.simulator.map.addObstacle(newPositions);
 
