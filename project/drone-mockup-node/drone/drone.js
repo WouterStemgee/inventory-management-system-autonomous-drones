@@ -1,9 +1,11 @@
 class Drone {
     constructor(posx = 1000, posy =1000, posz = 100, radius = 1) {
+        this.standardZ = posz;
+
         this.position = {
             x: posx,
             y: posy,
-            z: posz
+            z: 0
         };
         this.destination = {
             x: posx,
@@ -11,12 +13,13 @@ class Drone {
             z: posz
         };
         this.speed = {
-            x: 100,
-            y: 100,
+            x: 0,
+            y: 0,
             z: 100
         };
         this.battery = 100;
         this.radius = radius;
+        this.liftoff = true;
     }
 
     flyXYnew(){
@@ -38,10 +41,11 @@ class Drone {
             this.position.y += this.speed.y * 0.05;
         }
 
-        return !(absDiffX < 20 && absDiffY < 20)
+        return (absDiffX < 10 && absDiffY < 10)
     }
 
     flyZnew(){
+        this.speed.z = 100;
         let diffZ = this.destination.z - this.position.z;
         let absDiffZ = Math.abs(diffZ);
         if(diffZ < 0 && absDiffZ > this.radius){
@@ -50,6 +54,9 @@ class Drone {
         else if(diffZ > 0 && absDiffZ > this.radius) {
             this.position.z += this.speed.z * 0.05;
         }
+        this.liftoff = absDiffZ > 10;
+
+        return absDiffZ < 50;
     }
 
     setXYSpeed(){
@@ -62,11 +69,12 @@ class Drone {
         let sum = this.speed.x + this.speed.y;
         this.speed.x = this.speed.x / sum * 200;
         this.speed.y = this.speed.y / sum * 200;
-        this.speed.z = 100;
+        this.speed.z = 0;
     }
 
     land(){
         this.destination = {x: this.position.x, y: this.position.y, z: 0};
+        this.speed.z = 100;
     }
 
     logPosition(){
@@ -74,22 +82,6 @@ class Drone {
         console.log(this.date.getTime() + ' - [' + this.position.x + ', ' + this.position.y + ', ' + this.position.z + ']');
     }
 
-    stopMoving(){
-        try {
-            clearInterval(this.intervalXY);
-            clearInterval(this.intervalZ);
-        }
-        catch(err){}
-    }
-
-    stopAndLand(){
-        try {
-            clearInterval(this.intervalXY);
-            clearInterval(this.intervalZ);
-        }
-        catch(err){}
-        this.land();
-    }
 
     flyTo(x, y, z) {
         this.flyZ(z);

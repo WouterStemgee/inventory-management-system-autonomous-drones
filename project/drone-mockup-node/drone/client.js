@@ -1,10 +1,10 @@
 const mqtt = require('mqtt');
-const start = 1000, paused = 115456, stop = 45546465;
+const start = 1000, paused = 115456, stop = 45546465, scanning = 64556, landed = 1515;
 
 class MQTTClient {
     constructor(drone) {
         this.drone = drone;
-        this.status = paused;
+        this.status = landed;
     }
 
     connect() {
@@ -51,6 +51,9 @@ class MQTTClient {
             case 'drone/pause':
                 this.status = paused;
                 break;
+            case 'drone/scanner':
+                this.status = scanning;
+                break;
 
         }
     }
@@ -73,15 +76,24 @@ class MQTTClient {
 
     loop(){
         if(this.status === start){
-            let bool = this.drone.flyXYnew();
-            if(!bool)
+            if(this.drone.liftoff){
                 this.drone.flyZnew();
+            }
+            else
+                this.drone.flyXYnew();
         }
         else if(this.status === stop){
             this.drone.land();
+            this.drone.flyZnew();
         }
         else if(this.status === paused){
 
+        }
+        else if(this.status === scanning){
+            let bool = this.drone.flyZnew();
+            if(bool){
+                this.drone.scan();
+            }
         }
         this.publishAllData();
     }
