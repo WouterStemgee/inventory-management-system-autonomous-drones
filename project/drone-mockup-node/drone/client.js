@@ -27,6 +27,7 @@ class MQTTClient {
 
     initSubscriptions() {
         this.client.subscribe('drone/moveto');
+        this.client.subscribe('drone/scanner');
         this.client.subscribe('drone/start');
         this.client.subscribe('drone/pause');
         this.client.subscribe('drone/stop');
@@ -62,8 +63,8 @@ class MQTTClient {
     }
 
     publishAllData() {
-        this.drone.logPosition();
-        console.log(this.drone.destination);
+        //this.drone.logPosition();
+        //console.log(this.drone.destination);
         this.publishPosition();
         this.publishBattery();
         this.publishOrientation();
@@ -84,7 +85,7 @@ class MQTTClient {
     }
 
     publishOrientation() {
-        this.client.publish('drone/orientation', JSON.stringify(this.drone.orientation));
+        this.client.publish('drone/orientation', JSON.stringify(this.drone.rotation));
     }
 
     loop(){
