@@ -46,6 +46,7 @@ class MQTTClient {
                 }
                 break;
             case 'drone/stop':
+                this.drone.land();
                 this.status = stop;
                 break;
             case 'drone/pause':
@@ -83,8 +84,10 @@ class MQTTClient {
                 this.drone.flyXYnew();
         }
         else if(this.status === stop){
-            this.drone.land();
             this.drone.flyZnew();
+            if(this.drone.position.z < 10)
+                this.drone.liftoff = true;
+
         }
         else if(this.status === paused){
 

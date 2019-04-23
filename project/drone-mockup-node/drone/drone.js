@@ -55,7 +55,6 @@ class Drone {
             this.position.z += this.speed.z * 0.05;
         }
         this.liftoff = absDiffZ > 10;
-
         return absDiffZ < 50;
     }
 
