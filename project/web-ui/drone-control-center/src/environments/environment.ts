@@ -8,6 +8,14 @@ export const environment = {
   baseWSUrl: 'ws://localhost:3000/'
 };
 
+/* ANDROID EMULATOR
+export const environment = {
+  production: false,
+  baseAPIUrl: 'http://10.0.2.2:3000/',
+  baseWSUrl: 'ws://10.0.2.2:3000/'
+};
+*/
+
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
