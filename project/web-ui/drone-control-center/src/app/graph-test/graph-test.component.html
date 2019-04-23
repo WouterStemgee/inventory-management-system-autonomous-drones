@@ -1,6 +1,4 @@
-
   <ngx-charts-line-chart
-    [view]="dimensions"
     [results]="dataset"
     [scheme]="colorScheme"
     [gradient]="gradient"
@@ -9,16 +7,12 @@
     [legend]="showLegend"
     [showXAxisLabel]="showXAxisLabel"
     [showYAxisLabel]="showYAxisLabel"
-    [xAxisLabel]="xAxisLabel"
     [yAxisLabel]="yAxisLabel"
     [xAxisTickFormatting]="xAxisTickFormatting"
     [timeline]="timeline"
-    [activeEntries]="entries"
     [yScaleMax]="yScaleMax"
     [yScaleMin]="yScaleMin"
     [animations]="animations"
     [tooltipDisabled]="true"
-    (deactivate)="onDeactivate()">
+    (deactivate)="onDeactivate($event)">
   </ngx-charts-line-chart>
-
-

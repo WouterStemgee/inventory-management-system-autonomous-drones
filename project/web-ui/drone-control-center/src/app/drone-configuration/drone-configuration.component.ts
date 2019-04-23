@@ -12,7 +12,7 @@ export class DroneConfigurationComponent implements OnInit {
 
 
 
-  constructor(private http: HttpService, public simulator: DroneSimulatorService, private auth: AuthenticationService) {
+  constructor(public simulator: DroneSimulatorService, public auth: AuthenticationService) {
   }
 
   ngOnInit() {

@@ -87,11 +87,11 @@ THE SOFTWARE.
 
 @angular/material/button
 
-@angular/material/card
-
 @angular/material/checkbox
 
 @angular/material/core
+
+@angular/material/expansion
 
 @angular/material/form-field
 
@@ -102,6 +102,8 @@ THE SOFTWARE.
 @angular/material/list
 
 @angular/material/menu
+
+@angular/material/select
 
 @angular/material/sidenav
 
