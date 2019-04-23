@@ -309,11 +309,11 @@ export class LeafletComponent implements OnInit {
         const b = y1 - y2;
         const dist = Math.sqrt(a * a + b * b);
         if (dist <= sz.range && sz.range >= this.simulator.drone.radius) {
-          waypoints[index].z = sz.position.z;
+          waypoints[index].z = Math.round(sz.position.z);
           waypoints[index].scan = true;
           waypoints[index].orientation = sz.orientation;
-          waypoints[index].x = x1;
-          waypoints[index].y = y1;
+          waypoints[index].x = Math.round(x1);
+          waypoints[index].y = Math.round(y1);
         }
       });
     });
@@ -329,13 +329,13 @@ export class LeafletComponent implements OnInit {
         w.z = this.simulator.drone.defaultFlyAltitude;
         w.scan = false;
       } else {
-        L.marker(this.xy(w.x, w.y)).addTo(this.scanlocationLayer);
+        L.marker(this.xy(Math.round(w.x), Math.round(w.y))).addTo(this.scanlocationLayer);
       }
     });
     const coords = [];
 
     wp.forEach(w => {
-      coords.push([w.x, w.y]);
+      coords.push([Math.round(w.x), Math.round(w.y)]);
     });
     const feature = L.geoJSON({
       type: 'Feature',
@@ -363,12 +363,12 @@ export class LeafletComponent implements OnInit {
   setFlightPath(geoJSON) {
     const coords = geoJSON.geometry.coordinates;
     const dronePosition = this.simulator.drone.position;
-    const startPosition = {x: dronePosition.x, y: dronePosition.y};
+    const startPosition = {x: Math.round(dronePosition.x), y: Math.round(dronePosition.y)};
     const waypoints = [startPosition];
     coords.forEach(c => {
       waypoints.push({
-        x: Math.floor(c[0]),
-        y: Math.floor(c[1])
+        x: Math.round(c[0]),
+        y: Math.round(c[1])
       });
     });
     console.log(waypoints);
@@ -382,10 +382,10 @@ export class LeafletComponent implements OnInit {
       const p1 = o.positions[0];
       const p2 = o.positions[1];
 
-      const x1 = p1.x;
-      const y1 = p1.y;
-      const x2 = p2.x;
-      const y2 = p2.y;
+      const x1 = Math.round(p1.x);
+      const y1 = Math.round(p1.y);
+      const x2 = Math.round(p2.x);
+      const y2 = Math.round(p2.y);
 
       const feature = L.geoJSON({
         type: 'Feature',
@@ -430,18 +430,18 @@ export class LeafletComponent implements OnInit {
       const feature = L.geoJSON({
         type: 'Feature',
         properties: {
-          range: sz.range
+          range: Math.round(sz.range)
         },
         geometry: {
           type: 'Point',
-          coordinates: [x1, y1, z1]
+          coordinates: [Math.round(x1), Math.round(y1), Math.round(z1)]
         } as geojson.Point
       } as geojson.Feature);
 
       feature.eachLayer(l => {
         const layer = l as L.GeoJSON;
-        const circle = L.circle(L.latLng([y1, x1, z1]), {
-          radius: r
+        const circle = L.circle(L.latLng([Math.round(y1), Math.round(x1), Math.round(z1)]), {
+          radius: Math.round(r)
         });
         circle.setStyle({
           stroke: true,
@@ -469,17 +469,17 @@ export class LeafletComponent implements OnInit {
       const coordinates = e.layer.toGeoJSON().geometry.coordinates[0];
       console.log(coordinates);
       coordinates.forEach((c, index) => {
-        coordinates[index][0] = Math.floor(c[0]);
-        coordinates[index][1] = Math.floor(c[1]);
+        coordinates[index][0] = Math.round(c[0]);
+        coordinates[index][1] = Math.round(c[1]);
       });
       const p1 = coordinates[0];
       const p2 = coordinates[2];
-      const positions = [{x: p1[0], y: p1[1]}, {x: p2[0], y: p2[1]}];
+      const positions = [{x: Math.round(p1[0]), y: Math.round(p1[1])}, {x: Math.round(p2[0]), y: Math.round(p2[1])}];
       this.simulator.map.addObstacle(positions);
     } else if (e.layer.toGeoJSON().geometry.type === 'Point') { // scanzone
       const coordinate = e.layer.toGeoJSON().geometry.coordinates;
-      const position = {x: coordinate[0], y: coordinate[1], z: 1000};
-      this.simulator.map.addScanZone(e.layer._leaflet_id.toString(), position.x, position.y, position.z, 0, e.layer._mRadius);
+      const position = {x: Math.round(coordinate[0]), y: Math.round(coordinate[1]), z: 1000};
+      this.simulator.map.addScanZone(e.layer._leaflet_id.toString(), position.x, position.y, position.z, 0, Math.round(e.layer._mRadius));
     }
     e.layer.on('click', () => {
       const geoJSON = e.layer.toGeoJSON();
@@ -541,7 +541,7 @@ export class LeafletComponent implements OnInit {
         const y1 = p1.lat;
         const x2 = p2.lng;
         const y2 = p2.lat;
-        const oldPositions = [{x: x1, y: y1}, {x: x2, y: y2}];
+        const oldPositions = [{x: Math.round(x1), y: Math.round(y1)}, {x: Math.round(x2), y: Math.round(y2)}];
 
         this.simulator.map.removeObstacle(oldPositions);
 
@@ -552,7 +552,7 @@ export class LeafletComponent implements OnInit {
         const newY1 = newP1.lat;
         const newX2 = newP2.lng;
         const newY2 = newP2.lat;
-        const newPositions = [{x: newX1, y: newY1}, {x: newX2, y: newY2}];
+        const newPositions = [{x: Math.round(newX1), y: Math.round(newY1)}, {x: Math.round(newX2), y: Math.round(newY2)}];
 
         this.simulator.map.addObstacle(newPositions);
 
@@ -563,14 +563,14 @@ export class LeafletComponent implements OnInit {
         const y1 = p.lat;
         const alt = p.alt;
 
-        this.simulator.map.removeScanZone(x1, y1);
+        this.simulator.map.removeScanZone(Math.round(x1), Math.round(y1));
 
         const newP = newLayer._latlng;
         const newX1 = newP.lng;
         const newY1 = newP.lat;
         const newR = newLayer._mRadius;
 
-        this.simulator.map.addScanZone('scanzone', newX1, newY1, alt, 0, newR);
+        this.simulator.map.addScanZone('scanzone', Math.round(newX1), Math.round(newY1), Math.round(alt), 0, Math.round(newR));
       }
     });
 
@@ -628,10 +628,10 @@ export class LeafletComponent implements OnInit {
         const bounds = layer._bounds;
         const p1 = bounds._southWest;
         const p2 = bounds._northEast;
-        const x1 = Math.floor(p1.lng);
-        const y1 = Math.floor(p1.lat);
-        const x2 = Math.floor(p2.lng);
-        const y2 = Math.floor(p2.lat);
+        const x1 = Math.round(p1.lng);
+        const y1 = Math.round(p1.lat);
+        const x2 = Math.round(p2.lng);
+        const y2 = Math.round(p2.lat);
         const positions = [{x: x1, y: y1}, {x: x2, y: y2}];
         this.simulator.map.removeObstacle(positions);
       } else if (layer._latlng) { // scanzone
@@ -639,7 +639,7 @@ export class LeafletComponent implements OnInit {
         const x1 = p.lng;
         const y1 = p.lat;
         const r = layer._mRadius;
-        this.simulator.map.removeScanZone(x1, y1);
+        this.simulator.map.removeScanZone(Math.round(x1), Math.round(y1));
       }
       if (layer._latlngs && layer.options.color === '#3388ff') { // flightpath
         this.simulator.map.flightpath.waypoints = [];
