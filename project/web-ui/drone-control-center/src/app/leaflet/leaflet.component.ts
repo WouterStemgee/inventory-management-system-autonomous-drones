@@ -116,7 +116,7 @@ export class LeafletComponent implements OnInit {
   gridLayer = L.simpleGraticule(this.gridOptions);
 
   heatLayer = L.heatLayer(this.heatPoints, {
-    radius: 5
+    radius: 20
   });
 
 
