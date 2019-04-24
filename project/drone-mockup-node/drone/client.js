@@ -89,6 +89,8 @@ class MQTTClient {
     }
 
     loop(){
+        //console.log(this.drone.destination);
+        //console.log(this.status);
         if(this.status === start){
             if(this.drone.liftoff)
                 this.drone.flyZnew();
@@ -112,13 +114,14 @@ class MQTTClient {
                     this.drone.rotate();
                 else if(this.drone.scanstatus === 1) {
                     this.drone.scan();
+                }
+                else if(this.drone.scanstatus === 2){
+                    this.status = start;
                     this.client.publish('drone/scanned',JSON.stringify({
-                        name: "badeendjes2",
+                        name: "badeendjes",
                         quantity: 500
                     }));
                 }
-                else if(this.drone.scanstatus === 2)
-                    this.status = start;
             }
         }
         this.publishAllData();

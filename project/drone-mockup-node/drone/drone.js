@@ -97,7 +97,7 @@ class Drone {
     }
 
     rotate() {
-        let diffRot = this.scanrotation - 180 - this.rotation;
+        /*let diffRot = this.scanrotation - 180 - this.rotation;
         if(this.scanrotation-this.rotation > 1) {
             if (diffRot > 0) {
                 if (this.rotation === 360)
@@ -111,8 +111,15 @@ class Drone {
         }
         else {
             this.scanstatus = 1;
+        }*/
+        if(this.rotation < this.scanrotation)
+            this.rotation++;
+        else if(this.rotation > this.scanrotation)
+            this.rotation--;
+        else {
+            this.scanstatus = 1;
         }
-        console.log(this.rotation);
+        //console.log(this.rotation);
     }
 
     scan() {
