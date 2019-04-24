@@ -68,3 +68,4 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 21/04/19,12:30,18:00,Extern,Bug fix flightpath met drone als eerste waypoint,24,
 22/04/19,14:30,19:00,Extern,Oorzaak MQTT lagg in python gevonden - mockup in Node gemaakt als backup,10,
 23/04/19,08:15,12:30,Campus,Presentatie afwerken - mockup testen,10,
+24/04/19,16:00,20:00,Extern,Native Android applicatie gebouwd,,
