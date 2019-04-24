@@ -304,7 +304,7 @@ class GraafImproved {
         toevoeging.push(startk);
         waypoints.forEach(function (knoop) {
             let temp = new Knoop(knoop.x, knoop.y);
-            graaf.knopen.push(temp);
+            graaf.voegKnoopToe(temp);
             toevoeging.push(temp);
         });
         toevoeging.forEach(function (knoop) {
@@ -528,7 +528,7 @@ class GraafImproved {
         let toevoeging = [];
         knopen.forEach(function (knoop) {
             let temp = new Knoop(knoop.x, knoop.y);
-            graaf.knopen.push(temp);
+            graaf.voegKnoopToe(temp);
             toevoeging.push(temp);
         });
         toevoeging.forEach(function (knoop) {
