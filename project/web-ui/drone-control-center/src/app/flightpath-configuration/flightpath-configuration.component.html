@@ -1,0 +1,13 @@
+<div class="cb-group">
+  <h3>Return options</h3>
+  <mat-radio-group (change)="returnChanged()" name="Return Options" [selected]="return">
+    <mat-radio-button>Return to start</mat-radio-button>
+    <mat-radio-button>Return to coordinate</mat-radio-button>
+    <mat-radio-button checked>Don't return</mat-radio-button>
+  </mat-radio-group>
+
+  <mat-radio-group>
+    <mat-radio-button>Land</mat-radio-button>
+    <mat-radio-button >Don't land</mat-radio-button>
+  </mat-radio-group>
+</div>
