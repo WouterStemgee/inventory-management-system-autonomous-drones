@@ -4,6 +4,7 @@ import {map} from 'rxjs/operators';
 import {Observable, of as observableOf, merge} from 'rxjs';
 
 export interface InventoryDataItem {
+  scanzoneId: string;
   id: string;
   name: string;
   quantity: number;

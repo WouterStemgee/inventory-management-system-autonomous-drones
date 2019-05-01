@@ -147,9 +147,9 @@ export class HttpService {
     });
   }
 
-  deleteProduct(mapId, productId) {
+  deleteProduct(mapId, scanzoneId, productId) {
     return new Promise((resolve, reject) => {
-      this.http.delete(environment.baseAPIUrl + 'api/maps/' + mapId + '/products/' + productId).subscribe(
+      this.http.delete(environment.baseAPIUrl + 'api/maps/' + mapId + '/scanzones/' + scanzoneId + '/products/' + productId).subscribe(
         result => {
           resolve(result);
         },
@@ -160,9 +160,9 @@ export class HttpService {
     });
   }
 
-  addProduct(mapId, product) {
+  addProduct(mapId, scanzoneId, product) {
     return new Promise((resolve, reject) => {
-      this.http.post(environment.baseAPIUrl + 'api/maps/' + mapId + '/products/', product).subscribe(
+      this.http.post(environment.baseAPIUrl + 'api/maps/' + mapId + '/scanzones/' + scanzoneId + '/products/', product).subscribe(
         result => {
           resolve(result);
         },

@@ -358,11 +358,18 @@ let removeProduct = (mapId, scanzoneId, prodId) => {
 };
 
 let getAllProducts = (mapId) => {
+    //return alle products, met een extra scanzoneId per product
     return Map.findById(mapId).exec().then( res => {
         let obj = [];
         for(let sc of res.scanzones){
             for(let pr of sc.products){
-                obj.push(pr);
+                let p = {
+                    scanzoneId: sc._id,
+                    name: pr.name,
+                    quantity: pr.quantity,
+                    _id: pr._id
+                }
+                obj.push(p);
             }
         }
         return Promise.resolve(obj);

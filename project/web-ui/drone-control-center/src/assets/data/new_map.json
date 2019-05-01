@@ -49,6 +49,14 @@
         {
           "name": "badeendjes",
           "quantity": 500
+        },
+        {
+          "name": "tassen",
+          "quantity": 30
+        },
+        {
+          "name": "zakdoeken",
+          "quantity": 9001
         }
       ]
     },{
@@ -86,7 +94,17 @@
       },
       "orientation": 270,
       "range": 550,
-      "name": "test locatie"
+      "name": "test locatie",
+      "products": [
+        {
+          "name":"lepels",
+          "quantity": 1
+        },
+        {
+          "name": "drones",
+          "quantity": 7
+        }
+      ]
     },
     {
       "position": {
