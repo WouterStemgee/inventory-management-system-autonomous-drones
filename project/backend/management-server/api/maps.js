@@ -6,9 +6,10 @@ const scanzoneRouter = express.Router({mergeParams: true});
 const productRouter = express.Router({mergeParams: true});
 const obstacleRouter = express.Router({mergeParams: true});
 
-mapRouter.use('/:mapId/scanzones', scanzoneRouter);
-mapRouter.use('/:mapId/products', productRouter);
 mapRouter.use('/:mapId/obstacles', obstacleRouter);
+mapRouter.use('/:mapId/scanzones', scanzoneRouter);
+mapRouter.use('/:mapId/scanzones/:scanzoneId/products', productRouter);
+
 
 mapRouter.route('/')
     .get((req, res) => {
@@ -71,6 +72,17 @@ mapRouter.route('/:mapId')
             });
     });
 
+mapRouter.route('/:mapId/products')
+    .get((req, res) => {
+        mapsDAO.getAllProducts(req.params.mapId)
+            .then((result) => {
+            res.send(result);
+            })
+            .catch((error) => {
+                res.send(error);
+            });
+    });
+
 scanzoneRouter.route('/')
     .get((req, res) => {
         mapsDAO.getMap(req.params.mapId)
@@ -123,7 +135,7 @@ scanzoneRouter.route('/:scanzoneId')
 
 productRouter.route("")
     .get((req, res) => {
-        mapsDAO.getMap(req.params.mapId)
+        mapsDAO.getScanzone(req.params.mapId, req.params.scanzoneId)
             .then((result) => {
                 res.send(result.products);
             })
@@ -132,7 +144,7 @@ productRouter.route("")
             });
     })
     .post((req, res) => {
-        mapsDAO.addProduct(req.params.mapId, req.body)
+        mapsDAO.addProduct(req.params.mapId, req.params.scanzoneId, req.body)
             .then((result) => {
                 res.send(result);
             })
@@ -143,7 +155,7 @@ productRouter.route("")
 
 productRouter.route('/:productId')
     .get((req, res) => {
-        mapsDAO.getProduct(req.params.mapId, req.params.productId)
+        mapsDAO.getProduct(req.params.mapId, req.params.scanzoneId, req.params.productId)
             .then((result) => {
                 res.send(result);
             })
@@ -152,7 +164,7 @@ productRouter.route('/:productId')
             });
     })
     .put((req, res) => {
-        mapsDAO.updateProduct(req.params.mapId, req.params.productId, req.body)
+        mapsDAO.updateProduct(req.params.mapId, req.params.scanzoneId, req.params.productId, req.body)
             .then((result) => {
                 res.send(result);
             })
@@ -162,7 +174,7 @@ productRouter.route('/:productId')
 
     })
     .delete((req, res) => {
-        mapsDAO.removeProduct(req.params.mapId, req.params.productId)
+        mapsDAO.removeProduct(req.params.mapId, req.params.scanzoneId, req.params.productId)
             .then((result) => {
                 res.send(result);
             })

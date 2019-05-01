@@ -40,25 +40,26 @@ let addMap = (map) => {
         obstacles: [],
         //waypoints: map.waypoints || [],
         scanzones: [],
-        products: []
     });
 
-    for (let pr of map.products) {
-        const p = {
-            "_id": new mongoose.Types.ObjectId(),
-            "quantity": pr.quantity,
-            "name": pr.name
-        };
-        m.products.push(p);
-    }
     for (let scanzone of map.scanzones) {
         const sc = {
             "_id": new mongoose.Types.ObjectId(),
             "orientation": scanzone.orientation,
             "range": scanzone.range,
             "position": scanzone.position,
-            "name": scanzone.name
+            "name": scanzone.name,
+            "products": []
         };
+        if(scanzone.products !== undefined)
+            for (let pr of scanzone.products) {
+                const p = {
+                    "_id": new mongoose.Types.ObjectId(),
+                    "quantity": pr.quantity,
+                    "name": pr.name
+                };
+                sc.products.push(p);
+            }
         m.scanzones.push(sc);
     }
     for (let obstacle of map.obstacles) {
@@ -69,7 +70,6 @@ let addMap = (map) => {
                 obstacle.positions[1]
             ]
         };
-        console.log(o);
         m.obstacles.push(o);
     }
 
@@ -89,28 +89,29 @@ let updateMap = (mapId, map) => {
         "_id": mapId,
         "name": map.name,
         "obstacles": [],
-        //"waypoints": map.waypoints || [],
-        "scanzones": [],
-        "products": []
+        "scanzones": []
     };
-    for (let pr of map.products) {
-        const p = {
-            "_id": new mongoose.Types.ObjectId(),
-            "quantity": pr.quantity,
-            "name": pr.name
-        };
-        m.products.push(p);
-    }
     for (let scanzone of map.scanzones) {
         const sc = {
             "_id": new mongoose.Types.ObjectId(),
             "orientation": scanzone.orientation,
             "range": scanzone.range,
             "position": scanzone.position,
-            "name": scanzone.name
+            "name": scanzone.name,
+            "products":[]
         };
+        if(scanzone.products !== undefined)
+            for (let pr of scanzone.products) {
+                const p = {
+                    "_id": new mongoose.Types.ObjectId(),
+                    "quantity": pr.quantity,
+                    "name": pr.name
+                };
+                sc.products.push(p);
+            }
         m.scanzones.push(sc);
     }
+
     for (let obstacle of map.obstacles) {
         const o = {
             "_id": new mongoose.Types.ObjectId(),
@@ -147,6 +148,7 @@ let deleteMap = (id) => {
 let getScanzone = (mapId, zoneId) => {
     return Map.findById(mapId).exec()
         .then(result => {
+
             let scanzone = result.scanzones.find(pr => pr._id == zoneId);
             if (scanzone)
                 return Promise.resolve(scanzone);
@@ -159,14 +161,24 @@ let getScanzone = (mapId, zoneId) => {
 };
 
 let addScanzone = (mapId, scanzone) => {
-    const p = {
+    const sc = {
         "_id": new mongoose.Types.ObjectId(),
         "orientation": scanzone.orientation,
         "range": scanzone.range,
         "position": scanzone.position,
-        "name": scanzone.name
+        "name": scanzone.name,
+        "products": []
     };
-    return Map.updateOne({_id: mapId}, {$push: {scanzones: p}}).exec()
+    if(scanzone.products !== undefined)
+        for (let pr of scanzone.products) {
+            const p = {
+                "_id": new mongoose.Types.ObjectId(),
+                "quantity": pr.quantity,
+                "name": pr.name
+            };
+            sc.products.push(p);
+        }
+    return Map.updateOne({_id: mapId}, {$push: {scanzones: sc}}).exec()
         .then(result => {
             return Promise.resolve(result);
         })
@@ -181,8 +193,18 @@ let updateScanzone = (mapId, zoneId, scanzone) => {
         "orientation": scanzone.orientation,
         "range": scanzone.range,
         "position": scanzone.position,
-        "name": scanzone.name
+        "name": scanzone.name,
+        "products": []
     };
+    if(scanzone.products !== undefined)
+        for (let pr of scanzone.products) {
+            const p = {
+                "_id": new mongoose.Types.ObjectId(),
+                "quantity": pr.quantity,
+                "name": pr.name
+            };
+            sc.products.push(p);
+        }
     return Map.updateOne({_id: mapId, "scanzones._id": zoneId}, {$set: {"scanzones.$": sc}}).exec()
         .then(result => {
             return Promise.resolve(result);
@@ -263,27 +285,32 @@ let removeObstacle = (mapId, obstId) => {
 
 ////////////////////////////////PRODUCTS
 
-let getProduct = (mapId, productId) => {
+let getProduct = (mapId, scanzoneId, productId) => {
     return Map.findById(mapId).exec()
         .then(result => {
-            let product = result.products.find(pr => pr._id == productId);
-            if (product)
-                return Promise.resolve(product);
+            let scanzone = result.scanzones.find(sc => sc._id == scanzoneId);
+            if (scanzone){
+                let product = scanzone.products.find(p => p._id == productId);
+                if(product)
+                    return Promise.resolve(product);
+                else
+                    return Promise.reject("product not found in database");
+            }
             else
-                return Promise.reject("product not found in database");
+                return Promise.reject("scanzone not found in database");
         })
         .catch(err => {
             return Promise.reject({error: err});
         });
 };
 
-let addProduct = (mapId, product) => {
+let addProduct = (mapId, scanzoneId, product) => {
     const p = {
         "_id": new mongoose.Types.ObjectId(),
         "name": product.name,
         "quantity": product.quantity
     };
-    return Map.updateOne({_id: mapId}, {$push: {products: p}}).exec()
+    return Map.updateOne({_id: mapId, "scanzones._id": scanzoneId}, {$push: {"scanzones.$.products": p}}).exec()
         .then(result => {
             return Promise.resolve(result);
         })
@@ -292,13 +319,36 @@ let addProduct = (mapId, product) => {
         });
 };
 
-let updateProduct = (mapId, productId, product) => {
+let updateProduct = (mapId, scanzoneId, productId, product) => {
     const p = {
         "_id": productId,
         "name": product.name,
         "quantity": product.quantity
     };
-    return Map.updateOne({_id: mapId, "products._id": productId}, {$set: {"products.$": p}}).exec()
+    // in mongodb is het niet mogelijk om dubbel geneste dingen zomaar aan te passen, dus is dit een workaround
+    return getScanzone(mapId, scanzoneId).then(res => {
+        let index = res.products.findIndex(p => p._id == productId);
+        if(index !== -1){
+            res.products[index] = p;
+            Map.updateOne({_id: mapId, "scanzones._id": scanzoneId}, {$set: {"scanzones.$": res}}).exec()
+                .then(result => {
+                    return Promise.resolve(result);
+                })
+                .catch(err => {
+                    return Promise.reject({error: err});
+                });
+        }
+        else{
+            return Promise.reject("product not found in the scanzone");
+        }
+    }).catch(err => {
+        return Promise.reject({error: err});
+    });
+};
+
+
+let removeProduct = (mapId, scanzoneId, prodId) => {
+    return Map.updateOne({_id: mapId, "scanzones._id": scanzoneId}, {$pull: {"scanzones.$.products": {_id: prodId}}}).exec()
         .then(result => {
             return Promise.resolve(result);
         })
@@ -307,15 +357,18 @@ let updateProduct = (mapId, productId, product) => {
         });
 };
 
-
-let removeProduct = (mapId, prodId) => {
-    return Map.updateOne({_id: mapId}, {$pull: {products: {_id: prodId}}}).exec()
-        .then(result => {
-            return Promise.resolve(result);
-        })
-        .catch(err => {
-            return Promise.reject({error: err});
-        });
+let getAllProducts = (mapId) => {
+    return Map.findById(mapId).exec().then( res => {
+        let obj = [];
+        for(let sc of res.scanzones){
+            for(let pr of sc.products){
+                obj.push(pr);
+            }
+        }
+        return Promise.resolve(obj);
+    }).catch(err => {
+        return Promise.reject({error: err});
+    });
 };
 
 module.exports.getAllMaps = getAllMaps;
@@ -339,3 +392,5 @@ module.exports.getProduct = getProduct;
 module.exports.addProduct = addProduct;
 module.exports.updateProduct = updateProduct;
 module.exports.removeProduct = removeProduct;
+
+module.exports.getAllProducts = getAllProducts;

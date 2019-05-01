@@ -35,12 +35,6 @@
       ]
     }
   ],
-  "products": [
-    {
-      "name": "badeendjes",
-      "quantity": 500
-    }
-  ],
   "scanzones": [
     {
       "position": {
@@ -50,7 +44,13 @@
       },
       "orientation": 180,
       "range": 450,
-      "name": "SCANLOCATIE"
+      "name": "SCANLOCATIE",
+      "products": [
+        {
+          "name": "badeendjes",
+          "quantity": 500
+        }
+      ]
     },{
       "position": {
         "x": 5120,
