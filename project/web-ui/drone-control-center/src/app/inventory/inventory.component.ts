@@ -14,7 +14,7 @@ export class InventoryComponent implements OnInit {
   dataSource: InventoryDatasource;
 
   displayedColumns = ['id', 'name', 'quantity', 'delete'];
-
+  selectedScanzoneId;
   products;
 
   constructor(public auth: AuthenticationService, private sharedService: SharedService, private http: HttpService, public simulator: DroneSimulatorService) {
@@ -67,14 +67,14 @@ export class InventoryComponent implements OnInit {
     const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
     const mapData = form.value;
     mapData.position = {x: form.value.x, y: form.value.y};
-    if (mapData.name === '' || mapData.quantity === '' || mapData.position.x === '' || mapData.position.y === '') {
+    if (mapData.name === '' || mapData.quantity === '' || mapData.position.x === '' || mapData.position.y === '' || this.selectedScanzoneId === '') {
       this.simulator.onAlertEvent.emit({
         title: 'Inventory',
         message: 'Please fill in all the fields before submitting.',
         type: 'error'
       });
     } else {
-      this.http.addProduct(mapId, mapData.scanzoneId, mapData)
+      this.http.addProduct(mapId, this.selectedScanzoneId, mapData)
         .then((res) => {
           this.loadProducts()
             .then(() => {

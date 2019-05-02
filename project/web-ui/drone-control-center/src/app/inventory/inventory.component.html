@@ -17,6 +17,14 @@
         <input matNativeControl type="text" id="mapId" name="mapId" #mapField="ngModel" ngModel
                [(ngModel)]="simulator.maps[simulator.selectedMap]._id" required readonly>
       </mat-form-field>
+      <mat-form-field>
+        <mat-label>Scanzone Id</mat-label>
+        <mat-select [(value)]="selectedScanzoneId">
+          <mat-option *ngFor="let sc of simulator.maps[simulator.selectedMap].scanzones" [value]="sc._id">
+            {{sc.name}} - {{sc._id}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       <button mat-flat-button color="primary" type="submit">Submit</button>
     </form>
     <h2>Products in {{simulator.maps[simulator.selectedMap].name}}</h2>

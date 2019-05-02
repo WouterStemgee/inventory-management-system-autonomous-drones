@@ -30,6 +30,7 @@ export class Map {
     //map.products.forEach(p => this.addProduct(p));
     map.obstacles.forEach(o => this.addObstacle(o.positions));
     map.scanzones.forEach(sz => this.addScanZone(sz));
+    console.log(this);
   }
 
   toJSON() {
@@ -59,7 +60,15 @@ export class Map {
 
   addScanZone(sc) {
     this.scanzones.push(sc);
-    sc.products.forEach(pr => this.products.push(pr));
+    sc.products.forEach(pr => {
+      this.products.push({
+        scanzoneId: sc._id,
+        _id: pr._id,
+        name: pr.name,
+        quantity: pr.quantity
+      });
+    });
+
   }
 
   removeScanZone(x, y) {
