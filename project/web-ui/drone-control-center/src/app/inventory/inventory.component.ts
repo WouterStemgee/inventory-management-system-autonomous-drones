@@ -21,9 +21,9 @@ export class InventoryComponent implements OnInit {
     sharedService.onNavigateEvent.emit('inventory');
   }
 
-  deleteProduct(productId) {
+  deleteProduct(product) {
     const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
-    this.http.deleteProduct(mapId, productId)
+    this.http.deleteProduct(mapId, product.scanzoneId, product._id)
       .then((res) => {
         this.loadProducts()
           .then(() => {
@@ -72,7 +72,7 @@ export class InventoryComponent implements OnInit {
         type: 'error'
       });
     } else {
-      this.http.addProduct(mapId, mapData)
+      this.http.addProduct(mapId, mapData.scanzoneId, mapData)
         .then((res) => {
           this.loadProducts()
             .then(() => {
