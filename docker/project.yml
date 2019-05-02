@@ -39,3 +39,12 @@ services:
     links:
      - drone1-mongodb   
      - drone1-mosquitto
+  # Mockup container
+  drone1-mockup:
+    container_name: node
+    restart: always
+    build: 
+      context: drone1-mockup/
+      dockerfile: Dockerfile
+    links:
+     - drone1-mosquitto

@@ -116,7 +116,7 @@ export class LeafletComponent implements OnInit {
   gridLayer = L.simpleGraticule(this.gridOptions);
 
   heatLayer = L.heatLayer(this.heatPoints, {
-    radius: 20
+    radius: 10
   });
 
 
@@ -463,7 +463,7 @@ export class LeafletComponent implements OnInit {
         circle.on('click', () => {
           console.log(JSON.stringify(layer.toGeoJSON()));
         });
-        circle.addTo(this.editableLayers).bindPopup(sz.name + ' orientation:' + sz.orientation + 'position: ' + JSON.stringify(sz.position));
+        circle.addTo(this.editableLayers).bindPopup('orientation: ' + sz.orientation + ', height: ' + sz.position.z + ', range: ' + sz.range);
       });
     });
   }
