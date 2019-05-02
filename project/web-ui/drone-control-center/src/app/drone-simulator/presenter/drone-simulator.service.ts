@@ -10,6 +10,16 @@ import {SharedService} from '../../shared.service';
   providedIn: 'root'
 })
 export class DroneSimulatorService {
+  constructor(private data: DataService, private http: HttpService, private shared: SharedService) {
+    console.log('Starting simulator service...');
+    this.onSimulatorLoadedEvent.subscribe((loaded) => {
+        if (loaded) {
+          console.log('Simulator finished loading data.');
+          this.loaded = true;
+        }
+      }
+    );
+  }
   selectedMap = 0;
   selectedDrone = 0;
 
@@ -22,21 +32,12 @@ export class DroneSimulatorService {
   maps;
   drones;
 
+  flightOptions: { aster: string; land: string; return: string };
+
   @Output() onAlertEvent = new EventEmitter<any>();
   @Output() onSimulatorLoadedEvent = new EventEmitter<boolean>();
   @Output() onFlightpathValidatedEvent = new EventEmitter<any>();
   @Output() onStopEvent = new EventEmitter<boolean>();
-
-  constructor(private data: DataService, private http: HttpService, private shared: SharedService) {
-    console.log('Starting simulator service...');
-    this.onSimulatorLoadedEvent.subscribe((loaded) => {
-        if (loaded) {
-          console.log('Simulator finished loading data.');
-          this.loaded = true;
-        }
-      }
-    );
-  }
 
   reset(sendNotification = true) {
     this.map.reset();
@@ -240,7 +241,9 @@ export class DroneSimulatorService {
   validateFlightPath() {
     if (this.map.flightpath.waypoints.length > 0) {
       const flightpath = this.map.flightpath.toJSON();
+      flightpath.options = this.flightOptions;
       flightpath.radius = this.drone.radius;
+      console.log(flightpath);
       this.onAlertEvent.emit({
         title: 'Drone Control Center',
         message: 'Validating flight path...',

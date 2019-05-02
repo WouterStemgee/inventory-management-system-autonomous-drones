@@ -1,9 +1,0 @@
-{
-  "apps" : [{
-    "name"        : "backend",
-    "script"      : "./backend/app.js"
-  },{
-    "name"       : "mockup",
-    "script"     : "./mockup/app.js"
-  }]
-}

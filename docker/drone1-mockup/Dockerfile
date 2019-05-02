@@ -2,18 +2,18 @@
 FROM node:boron				
 
 # Create app directory
-RUN mkdir -p /usr/src/backend
+RUN mkdir -p /usr/src/mockup
 
 # Directory containing package.json file
-COPY src/ /usr/src/backend/ 
+COPY src/ /usr/src/mockup/ 
 
-WORKDIR /usr/src/backend
+WORKDIR /usr/src/mockup
 
 # Install dependencies
 RUN npm install
 
 # Expose HTTP port
-EXPOSE 3000
+EXPOSE 3001
 
 # Start app through npm
 CMD ["npm", "start"]

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
 
 @Component({
   selector: 'app-flightpath-configuration',
@@ -7,14 +8,30 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FlightpathConfigurationComponent implements OnInit {
 
-  constructor() { }
+  constructor(private droneSimulatorService: DroneSimulatorService) { }
 
   return: string;
+  land: string;
+  aster: string;
 
   ngOnInit() {
+      this.return = 'false';
+      this.land = 'false';
+      this.aster = 'no';
   }
 
-  returnChanged() {
-    console.log(this.return);
+  onChange() {
+    console.log(this.return, 'return');
+    console.log(this.aster, 'aster');
+    console.log(this.land, 'land');
+    this.updateOptions();
+  }
+
+  updateOptions() {
+    this.droneSimulatorService.flightOptions = {
+      return: this.return,
+      land: this.land,
+      aster: this.aster
+    };
   }
 }
