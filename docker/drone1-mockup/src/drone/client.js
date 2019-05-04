@@ -9,7 +9,7 @@ class MQTTClient {
 
     connect() {
         return new Promise((resolve) => {
-            this.client = mqtt.connect('mqtt://localhost:1883');
+            this.client = mqtt.connect('mqtt://drone1-mosquitto:1883');
             this.client.on('connect', () => {
                 console.log('Connected to broker');
                 this.initSubscriptions();
@@ -27,6 +27,7 @@ class MQTTClient {
 
     initSubscriptions() {
         this.client.subscribe('drone/moveto');
+        this.client.subscribe('drone/scanner');
         this.client.subscribe('drone/start');
         this.client.subscribe('drone/pause');
         this.client.subscribe('drone/stop');
@@ -62,10 +63,11 @@ class MQTTClient {
     }
 
     publishAllData() {
-        this.drone.logPosition();
-        console.log(this.drone.destination);
+        //this.drone.logPosition();
+        //console.log(this.drone.destination);
         this.publishPosition();
         this.publishBattery();
+        this.publishOrientation();
         // TODO
     }
 
@@ -82,13 +84,19 @@ class MQTTClient {
         this.client.publish('drone/position', JSON.stringify(pos));
     }
 
+    publishOrientation() {
+        this.client.publish('drone/orientation', JSON.stringify(this.drone.rotation));
+    }
+
     loop(){
+        //console.log(this.drone.destination);
+        //console.log(this.status);
         if(this.status === start){
             if(this.drone.liftoff)
                 this.drone.flyZnew();
             else
                 this.drone.flyXYnew();
-            this.drone.useBattery();
+            this.drone.drainBattery();
         }
         else if(this.status === stop){
             this.drone.flyZnew();
@@ -106,10 +114,14 @@ class MQTTClient {
                     this.drone.rotate();
                 else if(this.drone.scanstatus === 1) {
                     this.drone.scan();
-                    this.client.publish('drone/scanned',JSON.stringify({id:1, quantity:100}));
                 }
-                else if(this.drone.scanstatus === 2)
+                else if(this.drone.scanstatus === 2){
                     this.status = start;
+                    this.client.publish('drone/scanned',JSON.stringify({
+                        name: "badeendjes",
+                        quantity: 500
+                    }));
+                }
             }
         }
         this.publishAllData();

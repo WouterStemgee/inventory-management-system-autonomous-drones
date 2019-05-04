@@ -1,5 +1,5 @@
 class Drone {
-    constructor(posx = 1000, posy =1000, posz = 100, radius = 1) {
+    constructor(posx = 1000, posy =1000, posz = 100, radius = 12) {
         this.standardZ = posz;
 
         this.position = {
@@ -29,9 +29,12 @@ class Drone {
         return Math.floor(Math.random() * Math.floor(max));
     }
 
-    useBattery() {
-        if(this.getRandomInt(5) === 1)
-            this.battery -= 0.1;
+    drainBattery() {
+        if (this.battery <= 0) {
+            this.battery = 100;
+        }
+        if(this.getRandomInt(2) === 1)
+            this.battery -= 0.01;
     }
 
     flyXYnew(){
@@ -94,16 +97,29 @@ class Drone {
     }
 
     rotate() {
-        let diffRot = this.scanrotation - 180 - this.rotation;
+        /*let diffRot = this.scanrotation - 180 - this.rotation;
         if(this.scanrotation-this.rotation > 1) {
-            if (diffRot > 0)
+            if (diffRot > 0) {
+                if (this.rotation === 360)
+                    this.rotation = 0;
                 this.rotation += 1;
-            else
+            } else {
+                if (this.rotation === 0)
+                    this.rotation = 360;
                 this.rotation -= 1
+            }
         }
         else {
             this.scanstatus = 1;
+        }*/
+        if(this.rotation < this.scanrotation)
+            this.rotation++;
+        else if(this.rotation > this.scanrotation)
+            this.rotation--;
+        else {
+            this.scanstatus = 1;
         }
+        //console.log(this.rotation);
     }
 
     scan() {

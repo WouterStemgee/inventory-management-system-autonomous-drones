@@ -256,6 +256,8 @@ class GraafImproved {
         this.voegKnoopToe(startk);
         let eindk = new Knoop(eind.x, eind.y);
         this.voegKnoopToe(eindk);
+        this.maakVerbindingen(startk);
+        this.maakVerbindingen(eindk);
         let dees = this;
         let pQueue = new PriorityQueue();
 
@@ -292,12 +294,11 @@ class GraafImproved {
             }
             pQueue.verwijderPKnoop();
         }
-        throw 'fok';
+        throw 'kan eindknoop niet vinden';
     };
 
     zoekMultiplePaden(start, waypoints) {
         let graaf = this;
-
         let startk = new Knoop(start.x, start.y);
         this.voegKnoopToe(startk);
         let toevoeging = [];
@@ -333,7 +334,7 @@ class GraafImproved {
             if (!gekozenEindknoop) {
                 throw 'fok';
             }
-            pad.push(gekozenpad);
+            pad = pad.concat(gekozenpad);
             totaleAfstand += afstandVanafVorigeKnoop;
             start = gekozenEindknoop;
             waypoints.splice(waypoints.indexOf(gekozenEindknoop), 1);

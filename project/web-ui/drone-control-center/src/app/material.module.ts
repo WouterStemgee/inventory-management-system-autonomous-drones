@@ -20,7 +20,8 @@ import {
   MatSortModule,
   MatExpansionModule,
   MatTabsModule,
-  MatSliderModule
+  MatSliderModule,
+  MatRadioModule
 } from '@angular/material';
 
 
@@ -49,7 +50,8 @@ import {
     MatSortModule,
     MatTabsModule,
     MatExpansionModule,
-    MatSliderModule
+    MatSliderModule,
+    MatRadioModule
   ]
 })
 

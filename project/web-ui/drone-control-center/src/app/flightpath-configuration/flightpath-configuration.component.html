@@ -1,0 +1,22 @@
+<div class="cb-group">
+  <h3>Return Options</h3>
+  <mat-radio-group [(ngModel)]="return" (change)="onChange()" aria-labelledby="return">
+    <mat-radio-button value="true">Return to start</mat-radio-button>
+    <!-- <mat-radio-button>Return to coordinate</mat-radio-button> -->
+    <mat-radio-button value="false">Don't return</mat-radio-button>
+  </mat-radio-group>
+
+  <h3>Land Options</h3>
+  <mat-radio-group [(ngModel)]="land" (change)="onChange()" aria-labelledby="land">
+    <mat-radio-button value="true">Land</mat-radio-button>
+    <mat-radio-button value="false">Don't land</mat-radio-button>
+  </mat-radio-group>
+
+  <h3>Validation, Correction and Automation Options</h3>
+  <mat-radio-group [(ngModel)]="aster" (change)="onChange()" aria-labelledby="aster">
+    <mat-radio-button value="yes">Validate path</mat-radio-button>
+    <mat-radio-button value="no">Don't validate path</mat-radio-button>
+    <mat-radio-button value="correct">Validate and correct path</mat-radio-button>
+    <mat-radio-button value="auto">Calculate optimal path</mat-radio-button>
+  </mat-radio-group>
+</div>

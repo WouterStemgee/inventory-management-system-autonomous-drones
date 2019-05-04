@@ -46,12 +46,14 @@ export class InventoryComponent implements OnInit {
   }
 
   loadProducts() {
+    console.log('loading new products');
     return new Promise((resolve, reject) => {
       const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
       this.http.getAllProducts(mapId)
         .then((res) => {
           this.products = res;
           this.initDataSource();
+          console.log(res);
           resolve();
         })
         .catch((err) => {
@@ -103,13 +105,23 @@ export class InventoryComponent implements OnInit {
     this.initDataSource();
     if (this.simulator.loaded) {
       this.loadProducts().then(() => {
-        // this.initDataSource();
+        this.http.getAllMaps()
+          .then(result => {
+            this.simulator.maps = result;
+            this.simulator.reset(false);
+            this.initDataSource();
+          });
       });
     } else {
       this.simulator.onSimulatorLoadedEvent.subscribe((loaded) => {
         if (loaded) {
           this.loadProducts().then(() => {
-            // this.initDataSource();
+            this.http.getAllMaps()
+              .then(result => {
+                this.simulator.maps = result;
+                this.simulator.reset(false);
+                this.initDataSource();
+              });
           });
         }
       });

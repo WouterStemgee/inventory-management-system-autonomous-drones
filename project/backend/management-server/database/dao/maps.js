@@ -37,8 +37,8 @@ let addMap = (map) => {
     let m = new Map({
         _id: new mongoose.Types.ObjectId(),
         name: map.name,
+        size: {width: map.size.width, height: map.size.height},
         obstacles: [],
-        //waypoints: map.waypoints || [],
         scanzones: [],
         products: []
     });
