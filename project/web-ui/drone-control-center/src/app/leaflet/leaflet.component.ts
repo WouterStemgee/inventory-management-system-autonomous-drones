@@ -53,7 +53,7 @@ export class LeafletComponent implements OnInit {
   minZoom = -5;
   maxZoom = -2;
   zoom = -5;
-  img = {width: 30190, height: 10901.944444};
+  img = {width: this.simulator.map.size.width, height: this.simulator.map.size.height};
 
   heatPoints = [];
 
