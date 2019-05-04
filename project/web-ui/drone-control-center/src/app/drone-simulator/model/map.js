@@ -10,6 +10,7 @@ export class Map {
     this.size = {width: 0, height: 0};
     this.obstacles = [];
     this.scanzones = [];
+    this.products = [];
     this.flightpath = undefined;
     this.dimensions = {}; // TODO
   }
@@ -30,7 +31,7 @@ export class Map {
     this.name = map.name;
     this.flightpath = new FlightPath(this.id);
     map.obstacles.forEach(o => this.addObstacle(o.positions));
-    map.scanzones.forEach(sz => this.addScanZone(sz));
+    map.scanzones.forEach(sz => this.addScanZoneWithProducts(sz.name, sz.position.x, sz.position.y, sz.position.z, sz.orientation, sz.range, sz.products));
     console.log(this);
   }
 
@@ -49,6 +50,7 @@ export class Map {
 
   addProduct(product) {
     this.products.push({
+      scanzoneId: product.scanzoneId,
       _id: product._id,
       name: product.name,
       quantity: product.quantity
@@ -59,11 +61,23 @@ export class Map {
     // TODO
   }
 
-  addScanZone(sc) {
-    this.scanzones.push(sc);
-    sc.products.forEach(pr => {
+  addScanZone(name, x, y, z, orientation, range) {
+    let sz = new ScanZone(x, y, z);
+    sz.name = name;
+    sz.range = range;
+    sz.orientation = orientation;
+    this.scanzones.push(sz);
+  }
+
+  addScanZoneWithProducts(name, x, y, z, orientation, range, products) {
+    let sz = new ScanZone(x, y, z);
+    sz.name = name;
+    sz.range = range;
+    sz.orientation = orientation;
+    sz.products = products;
+    products.forEach(pr => {
       this.products.push({
-        scanzoneId: sc._id,
+        scanzoneId: pr.scanzoneId,
         _id: pr._id,
         name: pr.name,
         quantity: pr.quantity
