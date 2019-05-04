@@ -243,7 +243,6 @@ export class DroneSimulatorService {
       const flightpath = this.map.flightpath.toJSON();
       flightpath.options = this.flightOptions;
       flightpath.radius = this.drone.radius;
-      console.log(flightpath);
       this.onAlertEvent.emit({
         title: 'Drone Control Center',
         message: 'Validating flight path...',

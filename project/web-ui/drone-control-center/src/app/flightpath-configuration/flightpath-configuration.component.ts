@@ -18,12 +18,10 @@ export class FlightpathConfigurationComponent implements OnInit {
       this.return = 'false';
       this.land = 'false';
       this.aster = 'no';
+      this.updateOptions();
   }
 
   onChange() {
-    console.log(this.return, 'return');
-    console.log(this.aster, 'aster');
-    console.log(this.land, 'land');
     this.updateOptions();
   }
 

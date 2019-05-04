@@ -53,11 +53,7 @@ class ASter {
         });
     };
 
-    zoekPad(mapid, waypointsJSON, radius) {
-        this.setDroneValue(radius);
-        this.recalculateGraaf(mapid);
-        console.log('calculating path for id: ' + mapid);
-        let graaf = this.grafen.find(g => g.mapId == mapid);
+    /*zoekPad(waypointsJSON) {
         let pad = [];
         try {
             pad = graaf.eigenPadMetASter(waypointsJSON);
@@ -67,6 +63,7 @@ class ASter {
         console.log(pad, "PAD");
         return pad;
     };
+     */
 
     jsonMapNaarGraaf(mapsJSON) {
         //map in JSON omzetten naar graaf
@@ -80,6 +77,49 @@ class ASter {
             graaf.ObstakelWaypoints(obstakel.positions[0], obstakel.positions[1]);
         });
         return graaf;
+    };
+
+    kiesViaOpties(mapid, opties, waypointsJSON, radius){
+        this.setDroneValue(radius);
+        this.recalculateGraaf(mapid);
+        let start = waypointsJSON[0];
+        if ((waypointsJSON[0].x === waypointsJSON[waypointsJSON.length - 1].x) && (waypointsJSON[0].y === waypointsJSON[waypointsJSON.length - 1].y)){
+            waypointsJSON.pop();
+        }
+        let pad = [];
+        console.log('calculating path for id: ' + mapid);
+        let graaf = this.grafen.find(g => g.mapId == mapid);
+
+        let aster = opties.aster;
+        try {
+            if (aster === "no") {
+                pad = waypointsJSON;
+            } else if (aster === "yes") {
+                pad = graaf.eigenPad(waypointsJSON);
+            } else if (aster === "correct") {
+                pad = graaf.eigenPadMetASter(waypointsJSON);
+            } else if (aster === "auto") {
+                start = waypointsJSON.shift();
+                pad = graaf.zoekMultiplePaden(start, waypointsJSON);
+            }
+
+            console.log("pad overleefd", pad);
+            this.recalculateGraaf(mapid);
+            graaf = this.grafen.find(g => g.mapId == mapid);
+            let ret = opties.return;
+            if (ret === "true") {
+                console.log(pad, "pad");
+                let r = graaf.zoekPad(pad[pad.length - 1], start);
+                r.shift();
+                r.shift();
+                console.log(r, "return");
+                pad = pad.concat(r);
+                console.log(pad, "pad + return");
+            }
+        } catch(e){
+            throw e;
+        }
+        return pad;
     };
 }
 

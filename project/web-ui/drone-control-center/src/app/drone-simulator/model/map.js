@@ -7,7 +7,7 @@ export class Map {
   constructor() {
     this.name = '';
     this.id = 0;
-    this.products = [];
+    this.size = {width: 0, height: 0};
     this.obstacles = [];
     this.scanzones = [];
     this.flightpath = undefined;
@@ -17,6 +17,8 @@ export class Map {
   reset() {
     this.id = 0;
     this.name = '';
+    this.size.width = 0;
+    this.size.height = 0;
     this.flightpath = undefined;
     this.obstacles = [];
     this.scanzones = [];
@@ -24,6 +26,7 @@ export class Map {
 
   loadMap(map) {
     this.id = map._id;
+    this.size = map.size;
     this.name = map.name;
     this.flightpath = new FlightPath(this.id);
     map.obstacles.forEach(o => this.addObstacle(o.positions));
@@ -35,6 +38,7 @@ export class Map {
     let map = {
       _id: this.id,
       name: this.name,
+      size: this.size,
       obstacles: [],
       scanzones: []
     };

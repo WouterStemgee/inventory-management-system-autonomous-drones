@@ -20,6 +20,11 @@ const coordSchemaZ = mongoose.Schema({
 const mapSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     name: {type: String, required: true},
+    size: {
+        width: {type: Number, required: true},
+        height: {type: Number, required: true}
+    },
+    unitRatio: Number,
     obstacles: [
         {
             _id: mongoose.Schema.Types.ObjectId,
