@@ -472,7 +472,7 @@ export class LeafletComponent implements OnInit {
     if (e.layer.toGeoJSON().geometry.type === 'LineString') { // flightpath
       this.flightpathLayerId = e.layer._leaflet_id;
       this.setFlightPath(e.layer.toGeoJSON());
-      this.simulator.validateFlightPath();
+      //this.simulator.validateFlightPath();
     } else if (e.layer.toGeoJSON().geometry.type === 'Polygon') { // obstacle
       const coordinates = e.layer.toGeoJSON().geometry.coordinates[0];
       console.log(coordinates);
@@ -537,7 +537,7 @@ export class LeafletComponent implements OnInit {
       });
 
       if (oldLayer.bounds && newLayer.options.color === '#3388ff') { // valid flightpath
-        this.simulator.validateFlightPath();
+        //this.simulator.validateFlightPath();
       }
 
       if (oldLayer.bounds && newLayer.options.color === '#a80a0a') { // obstacle
@@ -567,7 +567,7 @@ export class LeafletComponent implements OnInit {
 
         this.simulator.map.addObstacle(newPositions);
 
-        this.simulator.validateFlightPath();
+        //this.simulator.validateFlightPath();
       } else if (oldLayer.position) { // scanzone
         const p = oldLayer.position;
         const x1 = p.lng;
