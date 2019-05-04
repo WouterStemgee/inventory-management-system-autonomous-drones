@@ -10,7 +10,6 @@ export class Map {
     this.size = {width: 0, height: 0};
     this.obstacles = [];
     this.scanzones = [];
-    this.products = [];
     this.flightpath = undefined;
     this.dimensions = {}; // TODO
   }
@@ -75,15 +74,7 @@ export class Map {
     sz.range = range;
     sz.orientation = orientation;
     sz.products = products;
-    products.forEach(pr => {
-      this.products.push({
-        scanzoneId: pr.scanzoneId,
-        _id: pr._id,
-        name: pr.name,
-        quantity: pr.quantity
-      });
-    });
-
+    this.scanzones.push(sz);
   }
 
   removeScanZone(x, y) {
