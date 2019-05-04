@@ -13,7 +13,7 @@ import {AuthenticationService} from '../authentication.service';
 export class InventoryComponent implements OnInit {
   dataSource: InventoryDatasource;
 
-  displayedColumns = ['id', 'name', 'quantity', 'delete'];
+  displayedColumns = ['id', 'scanzone', 'name', 'quantity', 'delete'];
   selectedScanzoneId;
   products;
 
@@ -108,8 +108,8 @@ export class InventoryComponent implements OnInit {
         this.http.getAllMaps()
           .then(result => {
             this.simulator.maps = result;
+            this.simulator.init();
             this.simulator.reset(false);
-            this.initDataSource();
           });
       });
     } else {
@@ -119,8 +119,8 @@ export class InventoryComponent implements OnInit {
             this.http.getAllMaps()
               .then(result => {
                 this.simulator.maps = result;
+                this.simulator.init();
                 this.simulator.reset(false);
-                this.initDataSource();
               });
           });
         }

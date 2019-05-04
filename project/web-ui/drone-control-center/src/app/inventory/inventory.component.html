@@ -18,7 +18,7 @@
                [(ngModel)]="simulator.maps[simulator.selectedMap]._id" required readonly>
       </mat-form-field>
       <mat-form-field>
-        <mat-label>Scanzone Id</mat-label>
+        <mat-label>ScanZone Id</mat-label>
         <mat-select [(value)]="selectedScanzoneId">
           <mat-option *ngFor="let sc of simulator.maps[simulator.selectedMap].scanzones" [value]="sc._id">
             {{sc.name}} - {{sc._id}}
@@ -29,16 +29,16 @@
     </form>
     <h2>Products in {{simulator.maps[simulator.selectedMap].name}}</h2>
   </div>
-  <div class="mat-elevation-z8">
-    <table mat-table class="full-width-table" [dataSource]="simulator.maps[simulator.selectedMap].products" matSort
+  <div class="mat-elevation-z8" *ngIf="simulator.loaded">
+    <table mat-table class="full-width-table" [dataSource]="simulator.maps[simulator.selectedMap].scanzones" matSort
            aria-label="Products">
-      <ng-container matColumnDef="scanzone id">
-        <th mat-header-cell *matHeaderCellDef>Scanzone Id</th>
-        <td mat-cell *matCellDef="let row">{{row.scanzoneId}}</td>
-      </ng-container>
-
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef>Id</th>
+        <td mat-cell *matCellDef="let row">{{row._id}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="scanzone">
+        <th mat-header-cell *matHeaderCellDef>ScanZone</th>
         <td mat-cell *matCellDef="let row">{{row._id}}</td>
       </ng-container>
 

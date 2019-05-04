@@ -18,7 +18,6 @@ export class Map {
     this.id = 0;
     this.name = '';
     this.flightpath = undefined;
-    this.products = [];
     this.obstacles = [];
     this.scanzones = [];
   }
@@ -27,7 +26,6 @@ export class Map {
     this.id = map._id;
     this.name = map.name;
     this.flightpath = new FlightPath(this.id);
-    //map.products.forEach(p => this.addProduct(p));
     map.obstacles.forEach(o => this.addObstacle(o.positions));
     map.scanzones.forEach(sz => this.addScanZone(sz));
     console.log(this);
@@ -42,7 +40,6 @@ export class Map {
     };
     this.obstacles.forEach((o) => map.obstacles.push({positions: o.positions}));
     this.scanzones.forEach((sz) => {map.scanzones.push(sz);});
-    //this.products.forEach((p) => map.products.push(p));
     return map;
   }
 
