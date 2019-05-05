@@ -16,13 +16,12 @@ export class GraphComponent implements OnInit {
   @Input() sort;
   @Input() dataset;
 
-
   autoScale = true;
   timeline = false;
 
   @Output() resultsChange = new EventEmitter();
 
-  dimensions = [undefined, 300];
+  dimensions = [undefined, undefined];
 
   // X-axis
   showXAxis = true;

@@ -7,11 +7,20 @@
 }
 
 .sidenav {
-  padding-top: 56px;
+  padding-top: 64px;
+  width: 200px;
+}
+
+.sidenav-mobile {
+  padding-top: 64px;
   width: 200px;
 }
 
 .mat-sidenav-content {
+  padding-top: 64px;
+}
+
+.mat-sidenav-content-mobile {
   padding-top: 56px;
 }
 

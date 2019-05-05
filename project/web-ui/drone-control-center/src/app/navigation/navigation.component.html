@@ -70,7 +70,7 @@
         Register</a>
     </mat-nav-list>
   </mat-sidenav>
-  <mat-sidenav-content class="mat-sidenav-content">
+  <mat-sidenav-content [ngClass]="!(isHandset$ | async) ? 'mat-sidenav-content' : 'mat-sidenav-content-mobile'" >
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

@@ -12,10 +12,10 @@
     <app-drone-configuration *ngIf="simulator.initialized"></app-drone-configuration>
   </mat-tab>
   <mat-tab label="Sensor Configuration">
-    <app-sensor-configuration></app-sensor-configuration>
+    <app-sensor-configuration *ngIf="simulator.initialized"></app-sensor-configuration>
   </mat-tab>
   <mat-tab label="Data Graphs">
-    <app-monitor></app-monitor>
+    <app-monitor *ngIf="simulator.initialized"></app-monitor>
   </mat-tab>
 </mat-tab-group>
 
