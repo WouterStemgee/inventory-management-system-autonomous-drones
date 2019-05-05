@@ -31,7 +31,6 @@ export class Map {
     this.flightpath = new FlightPath(this.id);
     map.obstacles.forEach(o => this.addObstacle(o.positions));
     map.scanzones.forEach(sz => this.addScanZoneWithProducts(sz.name, sz.position.x, sz.position.y, sz.position.z, sz.orientation, sz.range, sz.products));
-    console.log(this);
   }
 
   toJSON() {

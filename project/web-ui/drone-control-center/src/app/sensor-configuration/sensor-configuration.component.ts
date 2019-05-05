@@ -25,9 +25,6 @@ export class SensorConfigurationComponent implements OnInit {
 
   subChanged() {
     this.http.updateSubscriptions(this.subscriptions)
-      .then(() => {
-      console.log('subscriptions updated');
-    })
       .catch((err) => {
         console.log(err);
       });

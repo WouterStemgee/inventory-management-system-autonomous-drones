@@ -1,11 +1,18 @@
 .sidenav-container {
   height: 100%;
+  width: 100%;
+  display: block;
+  top: 0;
+  position: absolute;
 }
 
 .sidenav {
   padding-top: 56px;
-
   width: 200px;
+}
+
+.mat-sidenav-content {
+  padding-top: 56px;
 }
 
 .sidenav .mat-toolbar {

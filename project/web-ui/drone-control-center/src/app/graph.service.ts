@@ -6,13 +6,24 @@ import {DroneSimulatorService} from './drone-simulator/presenter/drone-simulator
 })
 export class GraphService {
 
-  positionDataset;
-  batteryDataset;
+  positionDataset: any[];
+  batteryDataset: any[];
+
+  tick = 0;
 
 
   constructor(public simulator: DroneSimulatorService) {
+    this.positionDataset = [];
+    this.batteryDataset = [];
     this.simulator.onDataUpdateEvent.subscribe(() => {
-      this.triggerDatasets();
+      if (simulator.initialized) {
+        if (this.tick <= 20) {
+          this.tick++;
+        } else {
+          this.triggerDatasets();
+          this.tick = 0;
+        }
+      }
     });
   }
 
