@@ -45,7 +45,7 @@
 </mat-toolbar>
 
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport="false"
+  <mat-sidenav #drawer class="sidenav" fixedInViewport="true"
                [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
                [mode]="(isHandset$ | async) ? 'over' : 'side'"
                [opened]="!(isHandset$ | async)">
@@ -56,9 +56,6 @@
       <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="inventory">
         <mat-icon class="sidenav-icon">inbox</mat-icon>
         Inventory</a>
-      <a mat-list-item *ngIf="auth.isLoggedIn()" routerLink="monitor">
-        <mat-icon class="sidenav-icon">timeline</mat-icon>
-        Monitor</a>
       <a mat-list-item *ngIf="auth.isLoggedIn() && auth.isAdmin()" routerLink="admin">
         <mat-icon class="sidenav-icon">security</mat-icon>
         Admin</a>

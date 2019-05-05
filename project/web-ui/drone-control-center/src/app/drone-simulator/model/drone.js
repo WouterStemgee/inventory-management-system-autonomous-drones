@@ -17,7 +17,7 @@ export class Drone {
     this.defaultFlyAltitude = 1500;
     this.batteryDataset = [
       {
-        name: 'Remaining',
+        name: 'Battery',
         series: []
       }
     ];
@@ -35,9 +35,6 @@ export class Drone {
         series: []
       }
     ];
-    if(!Date.now()) {
-      Date.now = function() { return new Date().getTime(); }
-    }
   }
 
   loadDrone(drone) {
@@ -62,10 +59,26 @@ export class Drone {
   }
 
   pushBattery() {
+    const maxHistory = 500;
+
+    if (this.batteryDataset[0].series.length >= maxHistory) {
+      this.batteryDataset[0].series.shift();
+    }
     this.batteryDataset[0].series.push({name: Date.now(), value: this.battery});
   }
 
   pushPosition() {
+    const maxHistory = 500;
+
+    if (this.positionDataset[0].series.length >= maxHistory) {
+      this.positionDataset[0].series.shift();
+    }
+    if (this.positionDataset[1].series.length >= maxHistory) {
+      this.positionDataset[1].series.shift();
+    }
+    if (this.positionDataset[2].series.length >= maxHistory) {
+      this.positionDataset[2].series.shift();
+    }
     this.positionDataset[0].series.push({name: Date.now(), value: this.position.x});
     this.positionDataset[1].series.push({name: Date.now(), value: this.position.y});
     this.positionDataset[2].series.push({name: Date.now(), value: this.position.z});

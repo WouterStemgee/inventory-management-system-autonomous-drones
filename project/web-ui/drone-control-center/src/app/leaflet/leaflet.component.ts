@@ -15,6 +15,7 @@ import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulato
 import {AuthenticationService} from '../authentication.service';
 
 import {environment} from '../../environments/environment';
+import {WebsocketService} from '../websocket.service';
 
 @Component({
   selector: 'app-leaflet',
@@ -161,7 +162,7 @@ export class LeafletComponent implements OnInit {
         return f.properties.id;
       },
       pointToLayer(feature, position) {
-        if (position) {
+        if (position.lat !== undefined) {
           return L.rotateImageLayer('assets/images/leaflet/drone-large.png',
             [
               [position.lat - feature.properties.radius / 2, position.lng - feature.properties.radius / 2],
@@ -277,20 +278,13 @@ export class LeafletComponent implements OnInit {
       enableUserInput: false,
     }).addTo(map);
 
-    const connection = new WebSocket(environment.baseWSUrl + 'red/ws/data', ['soap', 'xmpp']);
-
-    connection.onerror = (err) => {
-      console.log('WebSocket Error', err);
-    };
-
-    connection.onmessage = (e) => {
-      // console.log('WebSocket - update received');
+    this.simulator.onDataUpdateEvent.subscribe((e) => {
       const data = JSON.parse(e.data);
       for (let i = 0; i < data.features.length; i++) {
         this.realtime.update(data.features[i]);
         this.updateDroneData(data.features[i]);
       }
-    };
+    });
 
     this.realtime.on('update', () => {
       if (this.followDrone) {
@@ -475,7 +469,7 @@ export class LeafletComponent implements OnInit {
     if (e.layer.toGeoJSON().geometry.type === 'LineString') { // flightpath
       this.flightpathLayerId = e.layer._leaflet_id;
       this.setFlightPath(e.layer.toGeoJSON());
-      //this.simulator.validateFlightPath();
+      // this.simulator.validateFlightPath();
     } else if (e.layer.toGeoJSON().geometry.type === 'Polygon') { // obstacle
       const coordinates = e.layer.toGeoJSON().geometry.coordinates[0];
       console.log(coordinates);
@@ -540,7 +534,7 @@ export class LeafletComponent implements OnInit {
       });
 
       if (oldLayer.bounds && newLayer.options.color === '#3388ff') { // valid flightpath
-        //this.simulator.validateFlightPath();
+        // this.simulator.validateFlightPath();
       }
 
       if (oldLayer.bounds && newLayer.options.color === '#a80a0a') { // obstacle

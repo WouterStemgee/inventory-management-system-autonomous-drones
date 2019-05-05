@@ -1,0 +1,22 @@
+<ngx-charts-line-chart
+  [results]="dataset"
+  [view]="dimensions"
+  [scheme]="colorScheme"
+  [gradient]="gradient"
+  [xAxis]="showXAxis"
+  [yAxis]="showYAxis"
+  [legend]="showLegend"
+  [showXAxisLabel]="showXAxisLabel"
+  [showYAxisLabel]="showYAxisLabel"
+  [yAxisLabel]="yAxisLabel"
+  [xAxisTickFormatting]="xAxisTickFormatting"
+  [yScaleMax]="yScaleMax"
+  [yScaleMin]="yScaleMin"
+  [animations]="animations"
+  [autoScale]="autoScale"
+  [timeline]="timeline"
+  [tooltipDisabled]="true"
+  (activate)="onActivate($event)"
+  (deactivate)="onDeactivate($event)">
+</ngx-charts-line-chart>
+

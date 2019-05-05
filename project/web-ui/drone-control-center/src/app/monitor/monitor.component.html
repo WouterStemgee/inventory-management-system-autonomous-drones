@@ -1,10 +1,18 @@
-<mat-accordion multi="true">
+<mat-accordion multi="true" *ngIf="simulator.loaded">
   <mat-expansion-panel [expanded]="true">
     <mat-expansion-panel-header>
       <mat-panel-title>
         Battery
       </mat-panel-title>
     </mat-expansion-panel-header>
+    <app-graph
+      id="batteryGraph"
+      [showLegend]="true"
+      [yScaleMin]="0"
+      [yScaleMax]="100"
+      [showYAxisLabel]="true"
+      [dataset]="graph.batteryDataset">
+    </app-graph>
   </mat-expansion-panel>
   <mat-expansion-panel [expanded]="true">
     <mat-expansion-panel-header>
@@ -12,14 +20,13 @@
         Position
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-graph-test
+    <app-graph
       id="positionGraph"
       [showLegend]="true"
       [yScaleMin]="0"
-      [yScaleMax]="11000"
+      [yScaleMax]="simulator.map.size.width"
       [showYAxisLabel]="true"
-      [dataset]="graphDataset">
-    </app-graph-test>
-    <button (click)="showDataset()">show dataset</button>
+      [dataset]="graph.positionDataset">
+    </app-graph>
   </mat-expansion-panel>
 </mat-accordion>

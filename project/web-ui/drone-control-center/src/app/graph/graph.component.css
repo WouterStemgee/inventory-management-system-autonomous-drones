@@ -1,0 +1,6 @@
+::ng-deep .ngx-charts text {
+  fill: #fff !important;
+  width: 100%;
+  display: flex;
+}
+

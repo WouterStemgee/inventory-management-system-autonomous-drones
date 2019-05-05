@@ -1,5 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {DroneSimulatorService} from "../drone-simulator/presenter/drone-simulator.service";
+import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
+import {GraphService} from '../graph.service';
 
 @Component({
   selector: 'app-monitor',
@@ -8,16 +9,30 @@ import {DroneSimulatorService} from "../drone-simulator/presenter/drone-simulato
 })
 
 export class MonitorComponent implements OnInit {
-  graphDataset = this.simulator.drone.positionDataset;
 
-  constructor(private simulator : DroneSimulatorService) {
 
+  constructor(public simulator: DroneSimulatorService, public graph: GraphService) {
   }
 
   ngOnInit() {
+    if (this.simulator.loaded) {
+      this.initDatasets();
+    } else {
+      this.simulator.onSimulatorLoadedEvent.subscribe((loaded) => {
+        if (loaded) {
+          this.initDatasets();
+        }
+      });
+    }
   }
 
-  showDataset() {
-    console.log(this.simulator.drone.positionDataset);
+  initDatasets() {
+    this.graph.positionDataset = this.simulator.drone.positionDataset;
+    this.graph.batteryDataset = this.simulator.drone.batteryDataset;
+  }
+
+  showDatasets() {
+    console.log(this.graph.positionDataset);
+    console.log(this.graph.batteryDataset);
   }
 }

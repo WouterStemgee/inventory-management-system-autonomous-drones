@@ -28,6 +28,7 @@ export class DroneSimulatorService {
 
   loaded;
   initialized;
+  updating;
 
   maps;
   drones;
@@ -38,6 +39,7 @@ export class DroneSimulatorService {
   @Output() onSimulatorLoadedEvent = new EventEmitter<boolean>();
   @Output() onFlightpathValidatedEvent = new EventEmitter<any>();
   @Output() onStopEvent = new EventEmitter<boolean>();
+  @Output() onDataUpdateEvent = new EventEmitter<any>();
 
   reset(sendNotification = true) {
     this.map.reset();

@@ -3,11 +3,12 @@
 }
 
 .sidenav {
+  padding-top: 56px;
+
   width: 200px;
 }
 
 .sidenav .mat-toolbar {
-
   background: inherit;
 }
 
