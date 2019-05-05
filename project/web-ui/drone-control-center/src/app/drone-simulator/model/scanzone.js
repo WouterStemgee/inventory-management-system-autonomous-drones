@@ -1,5 +1,6 @@
 export class ScanZone {
   constructor(x, y, z) {
+    this._id = 0;
     this.position = {
       x: x,
       y: y,

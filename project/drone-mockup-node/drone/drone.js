@@ -21,8 +21,11 @@ class Drone {
         this.radius = radius;
         this.liftoff = true;
         this.rotation = 0;
-        this.scanrotation = 0;
+
         this.scanstatus = 0;
+        this.scanzonedata = null;
+        this.scanresults = null;
+        this.namen = ["badeentjes", "sleutelhangers", "potjes", "glaasjes", "drones", "zakdoeken", "drones", "wouters", "karels", "robbes", "jochens", "roels"];
     }
 
     getRandomInt(max) {
@@ -112,9 +115,9 @@ class Drone {
         else {
             this.scanstatus = 1;
         }*/
-        if(this.rotation < this.scanrotation)
+        if(this.rotation < this.scanzonedata.orientation)
             this.rotation++;
-        else if(this.rotation > this.scanrotation)
+        else if(this.rotation > this.scanzonedata.orientation)
             this.rotation--;
         else {
             this.scanstatus = 1;
@@ -123,6 +126,28 @@ class Drone {
     }
 
     scan() {
+        let post = false;
+        let product;
+        if(this.scanzonedata.products.length !== 0 && this.getRandomInt(3) === 0){
+            product = this.scanzonedata.products[this.getRandomInt(this.scanzonedata.products.length)];
+            product.quantity = this.getRandomInt(500);
+        }
+        else{
+            post = true;
+            product = {
+                _id: 0,
+                name: this.namen[this.getRandomInt(this.namen.length)],
+                quantity: this.getRandomInt(500)
+            }
+        }
+
+        this.scanresults = {
+            scanzoneId: this.scanzonedata._id,
+            post: post,
+            product: product
+        };
+
+        console.log(this.scanresults);
         console.log("SCANNED");
         this.scanstatus = 2;
     }

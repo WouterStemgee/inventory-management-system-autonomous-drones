@@ -58,7 +58,7 @@ class MQTTClient {
                 this.drone.scanstatus = 0;
 
                 console.log("Zou de rotation moeten zijn: " + messageObj.orientation);
-                this.drone.scanrotation = messageObj.orientation;
+                this.drone.scanzonedata = messageObj;
 
                 break;
 
@@ -120,10 +120,8 @@ class MQTTClient {
                 }
                 else if(this.drone.scanstatus === 2){
                     this.status = start;
-                    this.client.publish('drone/scanned',JSON.stringify({
-                        name: "badeendjes",
-                        quantity: 500
-                    }));
+                    this.client.publish("drone/scanned", JSON.stringify(this.drone.scanresults));
+                    console.log(this.status);
                 }
             }
         }
