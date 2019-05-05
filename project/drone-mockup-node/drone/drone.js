@@ -1,11 +1,11 @@
 class Drone {
-    constructor(posx = 1000, posy =1000, posz = 100, radius = 12) {
+    constructor(posx = 1000, posy =1000, posz = 1000, radius = 12) {
         this.standardZ = posz;
 
         this.position = {
             x: posx,
             y: posy,
-            z: 0
+            z: posz
         };
         this.destination = {
             x: posx,

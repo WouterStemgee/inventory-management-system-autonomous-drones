@@ -53,10 +53,13 @@ class MQTTClient {
                 this.status = paused;
                 break;
             case 'drone/scanner':
+                let messageObj = JSON.parse(message);
                 this.status = scanning;
                 this.drone.scanstatus = 0;
-                console.log("Zou de rotation moeten zijn: " + message);
-                this.drone.scanrotation = message;
+
+                console.log("Zou de rotation moeten zijn: " + messageObj.orientation);
+                this.drone.scanrotation = messageObj.orientation;
+
                 break;
 
         }
