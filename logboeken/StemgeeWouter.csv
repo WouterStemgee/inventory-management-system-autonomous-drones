@@ -75,3 +75,5 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 02/05/19,13:30,17:45,Campus,Evaluatie sprint 3 verslag - brainstormen over de laatste features,,
 04/05/19,12:30,15:00,Extern,Bugs gefixt met products - scanzone objecten meegeven met flightpath,27,
 04/05/19,15:30,17:00,Extern,Afmetingen van kaart toegevoegd aan model en database - bugfixing,25,
+05/05/19,10:30,13:30,Extern,Grafieken voor live data visualisatie gefixt - UI raceproblemen en bugs gefixt,28,
+05/05/19,14:00,16:00,Extern,Performantie front end verbeterd,28,
