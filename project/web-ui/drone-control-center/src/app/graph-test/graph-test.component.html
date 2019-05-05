@@ -1,5 +1,6 @@
   <ngx-charts-line-chart
-    [results]="dataset"
+    [(results)]="dataset"
+    [view]="dimensions"
     [scheme]="colorScheme"
     [gradient]="gradient"
     [xAxis]="showXAxis"
@@ -16,3 +17,4 @@
     [tooltipDisabled]="true"
     (deactivate)="onDeactivate($event)">
   </ngx-charts-line-chart>
+

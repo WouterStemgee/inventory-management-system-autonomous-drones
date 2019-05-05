@@ -631,6 +631,7 @@ export class LeafletComponent implements OnInit {
       this.heatPoints = [];
     }
     this.heatPoints.push(this.xy(drone.position.x, drone.position.y));
+    drone.pushAllDatasets();
   }
 
   onDrawDeleted(e) {
