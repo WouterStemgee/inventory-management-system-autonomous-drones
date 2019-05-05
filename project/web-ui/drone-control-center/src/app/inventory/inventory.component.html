@@ -17,16 +17,29 @@
         <input matNativeControl type="text" id="mapId" name="mapId" #mapField="ngModel" ngModel
                [(ngModel)]="simulator.maps[simulator.selectedMap]._id" required readonly>
       </mat-form-field>
+      <mat-form-field>
+        <mat-label>ScanZone Id</mat-label>
+        <mat-select [(value)]="selectedScanzoneId">
+          <mat-option *ngFor="let sc of simulator.maps[simulator.selectedMap].scanzones" [value]="sc._id">
+            {{sc.name}} - {{sc._id}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       <button mat-flat-button color="primary" type="submit">Submit</button>
     </form>
     <h2>Products in {{simulator.maps[simulator.selectedMap].name}}</h2>
   </div>
-  <div class="mat-elevation-z8">
-    <table mat-table class="full-width-table" [dataSource]="simulator.maps[simulator.selectedMap].products" matSort
+  <div class="mat-elevation-z8" *ngIf="simulator.loaded">
+    <table mat-table class="full-width-table" [dataSource]="products" matSort
            aria-label="Products">
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef>Id</th>
         <td mat-cell *matCellDef="let row">{{row._id}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="scanzone">
+        <th mat-header-cell *matHeaderCellDef>ScanZone</th>
+        <td mat-cell *matCellDef="let row">{{row.scanzoneId}}</td>
       </ng-container>
 
       <ng-container matColumnDef="name">
@@ -46,7 +59,7 @@
             type="button"
             aria-label="Delete"
             mat-icon-button
-            (click)="deleteProduct(row._id)">
+            (click)="deleteProduct(row)">
             <mat-icon aria-label="delete">delete_forever</mat-icon>
           </button>
         </td>

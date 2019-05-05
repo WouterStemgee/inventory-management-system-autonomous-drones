@@ -161,16 +161,18 @@ export class LeafletComponent implements OnInit {
         return f.properties.id;
       },
       pointToLayer(feature, position) {
-        return L.rotateImageLayer('assets/images/leaflet/drone-large.png',
-          [
-            [position.lat - feature.properties.radius / 2, position.lng - feature.properties.radius / 2],
-            [position.lat + feature.properties.radius / 2, position.lng + feature.properties.radius / 2]
-          ],
-          {
-            interactive: true,
-            animate: false,
-            rotation: feature.properties.orientation
-          });
+        if (position) {
+          return L.rotateImageLayer('assets/images/leaflet/drone-large.png',
+            [
+              [position.lat - feature.properties.radius / 2, position.lng - feature.properties.radius / 2],
+              [position.lat + feature.properties.radius / 2, position.lng + feature.properties.radius / 2]
+            ],
+            {
+              interactive: true,
+              animate: false,
+              rotation: feature.properties.orientation
+            });
+        }
       },
       onEachFeature(f, l) {
         // console.log(f);
@@ -323,6 +325,7 @@ export class LeafletComponent implements OnInit {
           waypoints[index].orientation = sz.orientation;
           waypoints[index].x = Math.round(x1);
           waypoints[index].y = Math.round(y1);
+          waypoints[index].scanzone = sz;
         }
       });
     });

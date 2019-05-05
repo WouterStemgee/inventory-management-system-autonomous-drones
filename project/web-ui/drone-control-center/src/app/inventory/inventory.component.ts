@@ -13,17 +13,17 @@ import {AuthenticationService} from '../authentication.service';
 export class InventoryComponent implements OnInit {
   dataSource: InventoryDatasource;
 
-  displayedColumns = ['id', 'name', 'quantity', 'delete'];
-
+  displayedColumns = ['id', 'scanzone', 'name', 'quantity', 'delete'];
+  selectedScanzoneId;
   products;
 
   constructor(public auth: AuthenticationService, private sharedService: SharedService, private http: HttpService, public simulator: DroneSimulatorService) {
     sharedService.onNavigateEvent.emit('inventory');
   }
 
-  deleteProduct(productId) {
+  deleteProduct(product) {
     const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
-    this.http.deleteProduct(mapId, productId)
+    this.http.deleteProduct(mapId, product.scanzoneId, product._id)
       .then((res) => {
         this.loadProducts()
           .then(() => {
@@ -67,14 +67,14 @@ export class InventoryComponent implements OnInit {
     const mapId = this.simulator.maps[this.simulator.selectedMap]._id;
     const mapData = form.value;
     mapData.position = {x: form.value.x, y: form.value.y};
-    if (mapData.name === '' || mapData.quantity === '' || mapData.position.x === '' || mapData.position.y === '') {
+    if (mapData.name === '' || mapData.quantity === '' || mapData.position.x === '' || mapData.position.y === '' || this.selectedScanzoneId === '') {
       this.simulator.onAlertEvent.emit({
         title: 'Inventory',
         message: 'Please fill in all the fields before submitting.',
         type: 'error'
       });
     } else {
-      this.http.addProduct(mapId, mapData)
+      this.http.addProduct(mapId, this.selectedScanzoneId, mapData)
         .then((res) => {
           this.loadProducts()
             .then(() => {
@@ -108,8 +108,8 @@ export class InventoryComponent implements OnInit {
         this.http.getAllMaps()
           .then(result => {
             this.simulator.maps = result;
+            this.simulator.init();
             this.simulator.reset(false);
-            this.initDataSource();
           });
       });
     } else {
@@ -119,8 +119,8 @@ export class InventoryComponent implements OnInit {
             this.http.getAllMaps()
               .then(result => {
                 this.simulator.maps = result;
+                this.simulator.init();
                 this.simulator.reset(false);
-                this.initDataSource();
               });
           });
         }

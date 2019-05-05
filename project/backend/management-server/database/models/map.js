@@ -38,16 +38,16 @@ const mapSchema = mongoose.Schema({
             name: {type: String, required: false},
             orientation: {type: Number, required: true},
             range: {type: Number, required: true},
-            position: coordSchemaZ
+            position: coordSchemaZ,
+            products: [
+                {
+                    _id: mongoose.Schema.Types.ObjectId,
+                    name: {type: String, required: true},
+                    quantity: {type: String, required: true}
+                }
+            ]
         }
     ],
-    products: [
-        {
-            _id: mongoose.Schema.Types.ObjectId,
-            name: {type: String, required: true},
-            quantity: {type: String, required: true}
-        }
-    ]
 });
 
 module.exports = mongoose.model('map', mapSchema);

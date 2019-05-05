@@ -8,7 +8,6 @@ export class Map {
     this.name = '';
     this.id = 0;
     this.size = {width: 0, height: 0};
-    this.products = [];
     this.obstacles = [];
     this.scanzones = [];
     this.flightpath = undefined;
@@ -21,7 +20,6 @@ export class Map {
     this.size.width = 0;
     this.size.height = 0;
     this.flightpath = undefined;
-    this.products = [];
     this.obstacles = [];
     this.scanzones = [];
   }
@@ -31,9 +29,9 @@ export class Map {
     this.size = map.size;
     this.name = map.name;
     this.flightpath = new FlightPath(this.id);
-    map.products.forEach(p => this.addProduct(p));
     map.obstacles.forEach(o => this.addObstacle(o.positions));
-    map.scanzones.forEach(sz => this.addScanZone(sz));
+    map.scanzones.forEach(sz => this.addScanZoneWithProducts(sz.name, sz.position.x, sz.position.y, sz.position.z, sz.orientation, sz.range, sz.products));
+    console.log(this);
   }
 
   toJSON() {
@@ -41,18 +39,17 @@ export class Map {
       _id: this.id,
       name: this.name,
       size: this.size,
-      products: [],
       obstacles: [],
       scanzones: []
     };
     this.obstacles.forEach((o) => map.obstacles.push({positions: o.positions}));
-    this.scanzones.forEach((sz) => map.scanzones.push(sz));
-    this.products.forEach((p) => map.products.push(p));
+    this.scanzones.forEach((sz) => {map.scanzones.push(sz);});
     return map;
   }
 
   addProduct(product) {
     this.products.push({
+      scanzoneId: product.scanzoneId,
       _id: product._id,
       name: product.name,
       quantity: product.quantity
@@ -63,8 +60,21 @@ export class Map {
     // TODO
   }
 
-  addScanZone(sc) {
-    this.scanzones.push(sc);
+  addScanZone(name, x, y, z, orientation, range) {
+    let sz = new ScanZone(x, y, z);
+    sz.name = name;
+    sz.range = range;
+    sz.orientation = orientation;
+    this.scanzones.push(sz);
+  }
+
+  addScanZoneWithProducts(name, x, y, z, orientation, range, products) {
+    let sz = new ScanZone(x, y, z);
+    sz.name = name;
+    sz.range = range;
+    sz.orientation = orientation;
+    sz.products = products;
+    this.scanzones.push(sz);
   }
 
   removeScanZone(x, y) {

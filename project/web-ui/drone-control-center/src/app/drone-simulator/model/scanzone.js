@@ -8,5 +8,6 @@ export class ScanZone {
     this.orientation = 0;
     this.range = 0;
     this.name = '';
+    this.products = [];
   }
 }
