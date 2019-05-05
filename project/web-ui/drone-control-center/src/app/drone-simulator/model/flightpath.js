@@ -13,13 +13,7 @@ export class FlightPath {
       options: {}
     };
     flightpath.mapId = this.mapId;
-    this.waypoints.forEach(waypoint => flightpath.waypoints.push({
-      x: waypoint.x,
-      y: waypoint.y,
-      z: waypoint.z,
-      scan: waypoint.scan,
-      orientation: waypoint.orientation
-    }));
+    this.waypoints.forEach(waypoint => flightpath.waypoints.push({x: waypoint.x, y: waypoint.y, z: waypoint.z, scan: waypoint.scan, scanzone: waypoint.scanzone}));
     return flightpath;
   }
 }
