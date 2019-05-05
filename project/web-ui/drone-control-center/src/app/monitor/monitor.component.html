@@ -13,13 +13,10 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <app-graph-test
-      id="positionGraph"
       [showLegend]="true"
       [yScaleMin]="0"
       [yScaleMax]="11000"
-      [showYAxisLabel]="true"
-      [dataset]="graphDataset">
+      [showYAxisLabel]="true">
     </app-graph-test>
-    <button (click)="showDataset()">show dataset</button>
   </mat-expansion-panel>
 </mat-accordion>

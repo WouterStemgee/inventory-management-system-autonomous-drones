@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {DroneSimulatorService} from "../drone-simulator/presenter/drone-simulator.service";
 import {NoInputRenameRule} from "codelyzer";
 import {isUndefined} from "util";
@@ -22,11 +22,12 @@ export class GraphTestComponent implements OnInit {
   @Input() yScaleMin;
   @Input() showLegend;
   @Input() sort;
-  @Input() dataset;
 
-  @Output() resultsChange = new EventEmitter();
+    //algemene teller om het pushen van de grafieken aan te sturen (gaan niet per keer er een waarde binnenkomt gepusht worden (overkill)
+  timer;
 
-  dimensions = [400, 300];
+  dataset : any[] = [];
+  //dimensions = [400, 300];
   //X-axis
   showXAxis = true;
   showXAxisLabel = false;
@@ -43,25 +44,22 @@ export class GraphTestComponent implements OnInit {
   };
 
   constructor(public simulator : DroneSimulatorService) {
-
+    this.timer = setInterval(() => { this.pushValue(); },200);
   }
 
   ngOnInit() {
-
+    if (this.sort === 'battery')
+      this.dataset = this.simulator.drone.batteryDataset;
+    if(this.sort === 'localPosition')
+      this.dataset = this.simulator.drone.positionDataset;
   }
 
-  triggerGraph() {
-    console.log("graph getriggered\n");
-    this.dataset = this.simulator.drone.positionDataset;
-    this.dataset = this.dataset.slice();
-    this.resultsChange.emit(this.dataset);
-  }
-
-  /*pushValue() {
+  pushValue() {
+    this.simulator.drone.pushPosition();
     //dit triggerded de grafiek en re-rendered hem
     this.dataset = this.simulator.drone.positionDataset;
     this.dataset = this.dataset.slice();
-  }*/
+  }
 
   xAxisTickFormatting(val) {
     return new Date(val).toLocaleTimeString();

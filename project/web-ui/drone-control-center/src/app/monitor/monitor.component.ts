@@ -1,5 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {DroneSimulatorService} from "../drone-simulator/presenter/drone-simulator.service";
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-monitor',
@@ -8,16 +7,10 @@ import {DroneSimulatorService} from "../drone-simulator/presenter/drone-simulato
 })
 
 export class MonitorComponent implements OnInit {
-  graphDataset = this.simulator.drone.positionDataset;
 
-  constructor(private simulator : DroneSimulatorService) {
-
-  }
+  constructor() { }
 
   ngOnInit() {
   }
 
-  showDataset() {
-    console.log(this.simulator.drone.positionDataset);
-  }
 }
