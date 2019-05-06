@@ -83,7 +83,7 @@ class ASter {
         this.setDroneValue(radius);
         this.recalculateGraaf(mapid);
         let start = waypointsJSON[0];
-        if ((waypointsJSON[0].x === waypointsJSON[waypointsJSON.length - 1].x) && (waypointsJSON[0].y === waypointsJSON[waypointsJSON.length - 1].y)){
+        if ((start.x === waypointsJSON[waypointsJSON.length - 1].x) && (start.y === waypointsJSON[waypointsJSON.length - 1].y)){
             waypointsJSON.pop();
         }
         let pad = [];
@@ -92,15 +92,21 @@ class ASter {
 
         let aster = opties.aster;
         try {
+            if (aster !== "auto") {
+                pad = graaf.zoekPad(start, waypointsJSON[1]);
+                pad.shift();
+                waypointsJSON.shift();
+                console.log("yeet")
+            }
             if (aster === "no") {
-                pad = waypointsJSON;
+                pad = pad.concat(waypointsJSON);
             } else if (aster === "yes") {
-                pad = graaf.eigenPad(waypointsJSON);
+                pad = pad.concat(graaf.eigenPad(waypointsJSON));
             } else if (aster === "correct") {
-                pad = graaf.eigenPadMetASter(waypointsJSON);
+                pad = pad.concat(graaf.eigenPadMetASter(waypointsJSON));
             } else if (aster === "auto") {
                 start = waypointsJSON.shift();
-                pad = graaf.zoekMultiplePaden(start, waypointsJSON);
+                pad = pad.concat(graaf.zoekMultiplePaden(start, waypointsJSON));
             }
 
             console.log("pad overleefd", pad);

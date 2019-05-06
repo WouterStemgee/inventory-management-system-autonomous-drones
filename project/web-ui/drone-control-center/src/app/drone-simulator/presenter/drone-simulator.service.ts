@@ -33,7 +33,7 @@ export class DroneSimulatorService {
   maps;
   drones;
 
-  flightOptions: { aster: string; land: string; return: string };
+  flightOptions: { aster: string; return: string };
 
   @Output() onAlertEvent = new EventEmitter<any>();
   @Output() onSimulatorLoadedEvent = new EventEmitter<boolean>();
@@ -367,6 +367,60 @@ export class DroneSimulatorService {
     });
   }
 
+  returnDrone() {
+    this.stop();
+    const flightpath = {
+      mapId: this.map.flightpath.mapId,
+      waypoints: [{x: this.drone.position.x, y: this.drone.position.y}, {x: 1000, y: 1000}],
+      radius: this.drone.radius,
+      options: {
+        return: 'false',
+        aster: 'auto'
+      }
+    };
+    this.onAlertEvent.emit({
+      title: 'Drone Control Center',
+      message: 'Calculating return path...',
+      type: 'info'
+    });
+    this.http.validateFlightpath(flightpath)
+      .then((optimal) => {
+        console.log('Received return path from server: ', optimal);
+        this.onAlertEvent.emit({
+          title: 'Drone Control Center',
+          message: 'Received return path from server.',
+          type: 'success'
+        });
+        this.map.flightpath.waypoints = optimal;
+        this.onFlightpathValidatedEvent.emit(true);
+        this.http.sendFlightpathToDrone(this.map.flightpath).then((ress) => {
+          this.map.flightpath.sentToDrone = true;
+          this.onAlertEvent.emit({
+            title: 'Drone Control Center',
+            message: 'Flightpath sent to drone.',
+            type: 'success'
+          });
+          this.startDrone();
+        }).catch(error => {
+          this.onAlertEvent.emit({
+            title: 'Drone Control Center',
+            message: 'Sending valid flightpath to drone failed.',
+            type: 'success'
+          });
+        });
+      })
+      .catch((err) => {
+        this.onAlertEvent.emit({
+          title: 'Drone Control Center',
+          message: 'Error calculating return path.',
+          type: 'error'
+        });
+        this.onFlightpathValidatedEvent.emit(false);
+
+      });
+  }
+
+  /*
   pauseDrone() {
     this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Pausing flight...', type: 'info'});
     this.http.getDroneStatus().then(res => {
@@ -396,7 +450,7 @@ export class DroneSimulatorService {
       // statusinfo kon niet worden opgevraagd
       console.log(error);
     });
-  }
+  }*/
 
   updateMap(notification = true) {
     return new Promise(((resolve, reject) => {

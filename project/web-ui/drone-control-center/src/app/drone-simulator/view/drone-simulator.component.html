@@ -19,17 +19,16 @@
         Start
       </span>
     </button>
-    <button type="button" (click)="simulator.pauseDrone()"
-            [disabled]="simulator.map.flightpath.length === 0" mat-flat-button class="toolbar-button">
-      <mat-icon>pause</mat-icon>
-      <span *ngIf="!shared.isHandset$">
-        Pause
-      </span>
-    </button>
     <button type="button" (click)="simulator.stop()" mat-flat-button class="toolbar-button">
       <mat-icon>stop</mat-icon>
       <span *ngIf="!shared.isHandset$">
         Stop
+      </span>
+    </button>
+    <button type="button" (click)="simulator.returnDrone()" mat-flat-button class="toolbar-button">
+      <mat-icon>home</mat-icon>
+      <span *ngIf="!shared.isHandset$">
+        Return
       </span>
     </button>
   </mat-toolbar>

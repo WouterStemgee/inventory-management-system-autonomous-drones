@@ -1,15 +1,9 @@
 <div class="cb-group">
   <h3>Return Options</h3>
   <mat-radio-group [(ngModel)]="return" (change)="onChange()" aria-labelledby="return">
+    <mat-radio-button value="false">Don't return</mat-radio-button>
     <mat-radio-button value="true">Return to start</mat-radio-button>
     <!-- <mat-radio-button>Return to coordinate</mat-radio-button> -->
-    <mat-radio-button value="false">Don't return</mat-radio-button>
-  </mat-radio-group>
-
-  <h3>Land Options</h3>
-  <mat-radio-group [(ngModel)]="land" (change)="onChange()" aria-labelledby="land">
-    <mat-radio-button value="true">Land</mat-radio-button>
-    <mat-radio-button value="false">Don't land</mat-radio-button>
   </mat-radio-group>
 
   <h3>Validation, Correction and Automation Options</h3>

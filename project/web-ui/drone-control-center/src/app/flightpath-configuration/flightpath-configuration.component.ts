@@ -16,7 +16,6 @@ export class FlightpathConfigurationComponent implements OnInit {
 
   ngOnInit() {
       this.return = 'false';
-      this.land = 'false';
       this.aster = 'no';
       this.updateOptions();
   }
@@ -28,7 +27,6 @@ export class FlightpathConfigurationComponent implements OnInit {
   updateOptions() {
     this.droneSimulatorService.flightOptions = {
       return: this.return,
-      land: this.land,
       aster: this.aster
     };
   }

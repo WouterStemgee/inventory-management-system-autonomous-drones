@@ -362,7 +362,6 @@ export class LeafletComponent implements OnInit {
       this.flightpathLayerId = l._leaflet_id;
       this.editableLayers.addLayer(layer);
     });
-    console.log(this.simulator.map.flightpath);
   }
 
   setFlightPath(geoJSON) {
