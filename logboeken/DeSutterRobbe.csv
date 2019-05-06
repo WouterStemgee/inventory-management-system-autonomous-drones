@@ -58,3 +58,5 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 02/05/19,08:00,12:00,Extern,flightpad laten valideren en corrigeren en terug keren naar startpositie aan de hand van opties,34 en 32,
 02/05/19,13:30,17:45,Campus,flightpad laten valideren en corrigeren en terug keren naar startpositie aan de hand van opties,34 en 32,
 04/05/19,08:00,13:45,Extern,flightpad laten valideren en corrigeren en terug keren naar startpositie aan de hand van opties,34 en 32,
+05/05/19,14:00,18:00,Extern,Bugfix begin positie naar eerste waypoint + toevoeging Home button (voorlopig hardcoded) + bugfix a*,34 en 32,
+06/05/19,16:00,20:00,Extern,Bugfix begin positie naar eerste waypoint + toevoeging Home button (voorlopig hardcoded) + bugfix a*,34 en 32,
