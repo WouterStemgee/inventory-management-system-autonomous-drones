@@ -1,8 +1,8 @@
 import paho.mqtt.client as mqtt
 import time
+import json
 import math
-import time
-
+import threading # het kan zijn dat python hier nog problemen op geeft aangezien je deze ook importeert in de simulator
 
 class Drone:
     def __init__(self):
@@ -15,6 +15,88 @@ class Drone:
         self.jaw = None
         self.pitch = None
         self.roll = None
+
+        def on_message(client, userdata, msg):
+            topic = msg.topic
+            m_decode = str(msg.payload.decode("utf-8", "ignore"))
+            print("message received", m_decode)
+            if topic == "drone/moveto":
+                # json {x:...,y...}
+                d = json.loads(m_decode)
+                print(d)
+                xCoord = d["x"]
+                yCoord = d["y"]
+                zCoord = d["z"]  # er zit nog geen z-coord in
+                # self.drone.vliegNaar(xCoord, yCoord, zCoord)
+                scan = d["scan"]
+                self.vliegNaar(xCoord,yCoord,zCoord)
+                if scan != "False":
+                    self.scan()
+            if topic == "drone/stop" and m_decode == "stop":
+                self.stop()
+        self.client = mqtt.Client("python1")
+        self.broker = "localhost:1883"
+        self.client.on_message = on_message
+
+    #def loopStart(self):
+    #    self.client.loop_start()
+
+    #def loopStop(self):
+    #    self.client.loop_stop()
+
+    def ontvangStop(self):
+        self.client.loop_start()
+        self.client.subscribe("drone/stop")
+        self.client.loop_stop()
+
+    def stuurPosition(self):
+        x = {
+            "x": self.get_xCoord(),
+            "y" : self.get_yCoord(),
+            "z" : self.get_zCoord()
+        }
+        y = json.dumps(x)
+        self.client.publish("drone/position", y)
+
+    def stuurScan(self):
+        self.client.publish("drone/scan", self.drone.scan())
+
+    def stuurBattery(self):
+        self.client.loop_start()
+        self.client.publish("drone/battery",self.drone.get_battery())  # eerste argument is het topic, 2de is de message
+        self.client.loop_stop()
+
+    def ontvangWaypoint(self):
+        self.client.loop_start()
+        self.client.subscribe("drone/moveto")
+        self.client.loop_stop()
+
+    def stuurMultiple(self):
+        self.client.loop_start()
+        x = {
+            "xCoord": self.drone.get_xCoord(),
+            "yCoord": self.drone.get_yCoord(),
+            "zCoord": self.drone.get_zCoord(),
+            "xSpeed": self.drone.get_speedX(),
+            "ySpeed": self.drone.get_speedY(),
+            "zSpeed": self.drone.get_speedZ(),
+            "xAccel": self.drone.get_accelX(),
+            "yAccel": self.drone.get_accelY(),
+            "zAccel": self.drone.get_accelZ(),
+            "battery": self.drone.get_battery(),
+            "jaw": self.drone.get_jaw(),
+            "pitch": self.drone.get_pitch(),
+            "roll": self.drone.get_roll(),
+        }
+        y = json.dumps(x)
+        self.client.publish("drone/multiple", y)
+        self.client.loop_stop()
+
+    def connecteer(self):
+        self.client.connect("localhost", 1883)
+
+    def disconnecteer(self):
+        self.client.disconnect()
 
     # /////////Getters en setters ////////////////
 
@@ -72,69 +154,6 @@ class Drone:
     def get_speedZ(self):
         return self.speed[2]
 
-    def get_jaw(self):
-        return self.jaw
-
-    def set_jaw(self,j):
-        self.jaw = j
-
-    def  get_pitch(self):
-        return self.pitch
-
-    def set_pitch(self,p):
-        self.pitch = p
-
-    def get_roll(self):
-        return self.roll
-
-    def set_roll(self,r):
-        self.roll = r
-
-    def get_accelX(self):
-        return self.acceleration[0]
-
-    def set_accelX(self,a):
-        if a >= 0:
-            self.acceleration[0] = a
-        else:
-            self.acceleration[0] = 0
-
-    def get_accelY(self):
-        return self.acceleration[1]
-
-    def set_accelY(self,a):
-        if a >= 0:
-            self.acceleration[1] = a
-        else:
-            self.acceleration[1] = 0
-
-    def get_accelZ(self):
-        return self.acceleration[2]
-
-    def set_accelZ(self,a):
-        if a >= 0:
-            self.acceleration[2] = a
-        else:
-            self.acceleration[2] = 0
-
-    def get_length(self):
-        return self.length
-
-    def set_length(self,lengte):
-        if lengte >= 0:
-            self.length = lengte
-        else:
-            self.length = 0
-
-    def get_width(self):
-        return self.width
-
-    def set_width(self,width):
-        if width >= 0:
-            self.width = width
-        else:
-            self.width = 0
-
     def get_battery(self):
         return self.battery
 
@@ -144,50 +163,91 @@ class Drone:
         else:
             self.battery = 0
 
+    def get_jaw(self):
+        return self.jaw
+
+    def set_jaw(self, j):
+        self.jaw = j
+
+    def get_pitch(self):
+        return self.pitch
+
+    def set_pitch(self, p):
+        self.pitch = p
+
+    def get_roll(self):
+        return self.roll
+
+    def set_roll(self, r):
+        self.roll = r
+
+    def get_accelX(self):
+        return self.acceleration[0]
+
+    def set_accelX(self, a):
+        if a >= 0:
+            self.acceleration[0] = a
+        else:
+            self.acceleration[0] = 0
+
+    def get_accelY(self):
+        return self.acceleration[1]
+
+    def set_accelY(self, a):
+        if a >= 0:
+            self.acceleration[1] = a
+        else:
+            self.acceleration[1] = 0
+
+    def get_accelZ(self):
+        return self.acceleration[2]
+
+    def set_accelZ(self, a):
+        if a >= 0:
+            self.acceleration[2] = a
+        else:
+            self.acceleration[2] = 0
+
+    def get_length(self):
+        return self.length
+
+    def set_length(self, lengte):
+        if lengte >= 0:
+            self.length = lengte
+        else:
+            self.length = 0
+
+    def get_width(self):
+        return self.width
+
+    def set_width(self, width):
+        if width >= 0:
+            self.width = width
+        else:
+            self.width = 0
+
     # def set_client(self,c):
     #   self.client = c
 
     # ///////////////////////////////////////////////////
-    # methodes om afstanden te berekenen (kan later nog handig zijn)
 
-    def berekenAfstandHorizontaal(self,x,y):
-        huidigeX = self.position[0]
-        huidigeY = self.position[1]
-        if huidigeX == x:
-            # rechte lijn naar boven
-            afstand = math.fabs(y - huidigeY)
-        elif huidigeY == y:
-            afstand = math.fabs(x - huidigeX)
-        else:
-            factor = ((x - huidigeX) * (x - huidigeX)) + ((y - huidigeY) * (y - huidigeY))
-            afstand = math.sqrt(factor)
-        return afstand
-
-    def berekenAfstandVerticaal(self,z):
-        huidigeZ = self.position[2]
-        return z-huidigeZ
-
-    def berekenAfstand(self,x,y,z):
-        huidigeX = self.position[0]
-        huidigeY = self.position[1]
-        huidigeZ = self.position[2]
-        afstand = None
-        if (z == None or z == huidigeZ):
-            # dan blijf je dus in hetzelfde vlak
-            afstand = self.berekenAfstandHorizontaal(x,y)
-        else:
-            factor1 = self.berekenAfstandHorizontaal(x,y)
-            factor2 = self.berekendAfstanVerticaal(z)
-            afstand = math.sqrt((factor1 * factor1) + (factor2*factor2))
-        return afstand
-
-    # ///////////////////////////////////////////////////
+    def stop(self):
+        self.set_speedX(0)
+        self.drone.set_speedY(0)
+        self.drone.set_speedZ(0)
+        self.drone.set_accelX(0)
+        self.drone.set_accelY(0)
+        self.drone.set_accelZ(0)
+        self.drone.set_zCoord(0)
 
     def vliegHorizontaal(self, x, y):
         if self.speed[0] == 0:
             self.speed[0] = 100
         self.speed[2] = 0  # want je beweegt niet
-        self.speed[1] = (math.fabs(y - self.position[1]) / math.fabs(x - self.position[0])) * self.speed[0]
+        if x != self.position[0]:
+            self.speed[1] = (math.fabs(y - self.position[1]) / math.fabs(x - self.position[0])) * self.speed[0]
+        else:
+            self.speed[1] = 0
         # zie berekeningen op blad
         tijd = 0.0 + (math.fabs(x - self.position[0]) / self.speed[0])
         t = 0
@@ -219,14 +279,15 @@ class Drone:
                     self.position[0] = initieelX + (self.speed[0] * t)
             print("op tijdstip: ", t, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
             t = t + 0.05
-            round(t,
-                  2)  # dit geeft een hoop slecht afgeronde komma getallen door beperkingen in de binaite voorstelling
+            round(t,2)  # dit geeft een hoop slecht afgeronde komma getallen door beperkingen in de binaite voorstelling
+            self.stuurMultiple()
             time.sleep(0.05)
         self.position[0] = x
         self.position[1] = y
         print("op tijdstip: ", tijd, " x: ", self.position[0], " y:", self.position[1], " z:", self.position[2])
         self.speed[0] = 0
         self.speed[1] = 0
+        self.stuurMultiple()
         return tijd
 
     def vliegVerticaal(self, z, tijd):
@@ -242,14 +303,14 @@ class Drone:
                     self.position[2] = initieelZ + self.speed[2] * t
                 elif z < self.position[2]:
                     self.position[2] = initieelZ - self.speed[2] * t
-                print("op tijdstip: ", t + tijd, " x: ", self.position[0], " y:", self.position[1], " z:",
-                      self.position[2])
+                print("op tijdstip: ", t + tijd, " x: ", self.position[0], " y:", self.position[1], " z:",self.position[2])
                 t = t + 0.05
                 round(t, 2)
+                self.stuurMultiple()
                 time.sleep(0.05)
             self.position[2] = z
-            print("op tijdstip: ", tijd + tijd2, " x: ", self.position[0], " y:", self.position[1], " z:",
-                  self.position[2])
+            print("op tijdstip: ", tijd + tijd2, " x: ", self.position[0], " y:", self.position[1], " z:",self.position[2])
+            self.stuurMultiple()
             self.speed[2] = 0
 
     def stijgOp(self):
@@ -266,9 +327,11 @@ class Drone:
                 print("opstijgen " , "x: ", self.position[0], " y:", self.position[1], " z:",self.position[2])
                 t = t + 0.05
                 round(t, 2)
+                self.stuurMultiple()
                 time.sleep(0.05)
             self.position[2] = z
             print("op tijdstip: ", tijd2, " x: ", self.position[0], " y:", self.position[1], " z:",self.position[2])
+            self.stuurMultiple()
             self.speed[2] = 0
 
     def vliegNaar(self, x, y, z):
@@ -285,3 +348,13 @@ class Drone:
     def scan(self):
         print("item gescand met waarde 4000")
         return 4000
+
+    def simuleer(self):
+        self.client.connect("localhost", 1883)
+        self.ontvangWaypoint()
+        while True:
+            self.set_battery(self.drone.get_battery() - 1)
+            self.stuurMultiple()
+            time.sleep(0.05)
+        self.client.disconnect()  # hier ga je nooit geraken, het programma moet in een oneindige loop lopen
+

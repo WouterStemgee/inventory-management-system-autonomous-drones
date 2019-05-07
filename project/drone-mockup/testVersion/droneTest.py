@@ -15,15 +15,8 @@ class DroneTest:
         self.jaw = None
         self.pitch = None
         self.roll = None
-        self.Stop = False
 
     # /////////Getters en setters ////////////////
-
-    def get_stop(self):
-        return self.Stop
-
-    def set_stop(self,s):
-        self.Stop = s
 
     def get_xCoord(self):
         return self.position[0]
