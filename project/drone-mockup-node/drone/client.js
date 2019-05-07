@@ -102,8 +102,8 @@ class MQTTClient {
             this.drone.drainBattery();
         }
         else if(this.status === stop){
-            this.drone.flyZnew();
-            if(this.drone.position.z < 10)
+            this.drone.land();
+            if(this.drone.position.z <= 10)
                 this.drone.liftoff = true;
 
         }
@@ -127,7 +127,6 @@ class MQTTClient {
         }
         this.publishAllData();
     }
-
 }
 
 module.exports = MQTTClient;

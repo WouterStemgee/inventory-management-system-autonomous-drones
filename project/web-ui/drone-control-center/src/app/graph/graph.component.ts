@@ -16,12 +16,8 @@ export class GraphComponent implements OnInit {
   @Input() sort;
   @Input() dataset;
 
-  autoScale = true;
+  autoScale = false;
   timeline = false;
-
-  @Output() resultsChange = new EventEmitter();
-
-  dimensions = [undefined, undefined];
 
   // X-axis
   showXAxis = true;
