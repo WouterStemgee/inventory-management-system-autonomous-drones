@@ -50,7 +50,7 @@ class Drone {
     }
 
     inChargeRange() {
-        return (Math.abs(this.position.x - this.homebase.x) <= 50 && Math.abs(this.position.x - this.homebase.x) <= 50 && this.position.z);
+        return (Math.abs(this.position.x - this.homebase.x) <= 50 && Math.abs(this.position.x - this.homebase.x) <= 50 && !this.position.z);
     }
 
     flyXYnew(){

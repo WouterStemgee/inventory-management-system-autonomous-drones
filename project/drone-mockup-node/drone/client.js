@@ -1,10 +1,10 @@
 const mqtt = require('mqtt');
-const start = 1000, paused = 115456, stop = 45546465, scanning = 64556, landed = 1515, charging = 34542;
+const start = 1000, paused = 115456, stop = 45546465, scanning = 64556, charging = 34542;
 
 class MQTTClient {
     constructor(drone) {
         this.drone = drone;
-        this.status = landed;
+        this.status = stop;
     }
 
     connect() {
@@ -96,9 +96,7 @@ class MQTTClient {
         //console.log(this.status);
         if(this.status === start){
             if(this.drone.hasToLiftOff) {
-                console.log("yeet");
                 this.drone.flyZnew();
-                console.log(this.drone.hasToLiftOff);
             }
             else
                 this.drone.flyXYnew();

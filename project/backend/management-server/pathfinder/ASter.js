@@ -95,6 +95,7 @@ class ASter {
             if (aster !== "auto") {
                 pad = graaf.zoekPad(start, waypointsJSON[1]);
                 pad.shift();
+                pad.pop();
                 waypointsJSON.shift();
                 console.log("yeet")
             }

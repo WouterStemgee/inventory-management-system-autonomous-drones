@@ -329,6 +329,7 @@ class GraafImproved {
                     testpad.shift(); // eerste elemant bevat de afstand tot de waypoint wat hier onbelangrijk is
                     //testpad.shift(); // tweede element bevat het startelement dat overeenkomt met het vorige eindelement en moet hier dus verwijderd worden
                     gekozenpad = testpad;
+                    gekozenpad.pop();
                 }
             }
             if (!gekozenEindknoop) {
