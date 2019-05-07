@@ -7,19 +7,18 @@
       </span>
     </button>
     <button (click)="simulator.sendFlightpath()" mat-flat-button class="toolbar-button">
-      <mat-icon>present_to_all</mat-icon>
+      <mat-icon>play_arrow</mat-icon>
       <span *ngIf="!shared.isHandset$">
         Fly
       </span>
     </button>
-    <button type="button" (click)="simulator.startDrone()"
-            [disabled]="simulator.map.flightpath.length === 0" mat-flat-button class="toolbar-button">
-      <mat-icon>play_arrow</mat-icon>
+    <button type="button" (click)="simulator.stopDrone()" mat-flat-button class="toolbar-button">
+      <mat-icon>arrow_drop_down_circle</mat-icon>
       <span *ngIf="!shared.isHandset$">
-        Start
+        Land
       </span>
     </button>
-    <button type="button" (click)="simulator.stop()" mat-flat-button class="toolbar-button">
+    <button type="button" (click)="simulator.pauseDrone()" mat-flat-button class="toolbar-button">
       <mat-icon>stop</mat-icon>
       <span *ngIf="!shared.isHandset$">
         Stop

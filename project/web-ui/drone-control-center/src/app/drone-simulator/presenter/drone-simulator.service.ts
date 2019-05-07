@@ -50,7 +50,7 @@ export class DroneSimulatorService {
     }
   }
 
-  stop() {
+  stopDrone() {
     this.http.sendCommand('stop').then(res => {
       this.onStopEvent.emit(true);
       this.onAlertEvent.emit({
@@ -295,6 +295,7 @@ export class DroneSimulatorService {
             message: 'Flightpath sent to drone.',
             type: 'success'
           });
+          this.startDrone();
         }).catch(error => {
           this.onAlertEvent.emit({
             title: 'Drone Control Center',
@@ -368,7 +369,7 @@ export class DroneSimulatorService {
   }
 
   returnDrone() {
-    this.stop();
+    this.stopDrone();
     const flightpath = {
       mapId: this.map.flightpath.mapId,
       waypoints: [{x: this.drone.position.x, y: this.drone.position.y}, {x: 1000, y: 1000}],
@@ -420,7 +421,6 @@ export class DroneSimulatorService {
       });
   }
 
-  /*
   pauseDrone() {
     this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Pausing flight...', type: 'info'});
     this.http.getDroneStatus().then(res => {
@@ -450,7 +450,7 @@ export class DroneSimulatorService {
       // statusinfo kon niet worden opgevraagd
       console.log(error);
     });
-  }*/
+  }
 
   updateMap(notification = true) {
     return new Promise(((resolve, reject) => {
