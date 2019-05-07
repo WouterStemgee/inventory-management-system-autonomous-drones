@@ -25,7 +25,8 @@ class Drone {
         this.scanstatus = 0;
         this.scanzonedata = null;
         this.scanresults = null;
-        this.namen = ["badeentjes", "sleutelhangers", "potjes", "glaasjes", "drones", "zakdoeken", "drones", "wouters", "karels", "robbes", "jochens", "roels"];
+        this.namen = ["badeentjes", "sleutelhangers", "potjes", "glaasjes", "drones", "zakdoeken", "drones",
+            "muizen", "computers", "craplle", "crapple", "crapple", "robbe's", "sinaasappelen", "peren", "lichi's"];
     }
 
     getRandomInt(max) {
@@ -126,6 +127,7 @@ class Drone {
     }
 
     scan() {
+        console.log(this.scanzonedata);
         let post = false;
         let product;
         if(this.scanzonedata.products.length !== 0 && this.getRandomInt(3) === 0){
@@ -147,7 +149,7 @@ class Drone {
             product: product
         };
 
-        console.log(this.scanresults);
+        //console.log(this.scanresults);
         console.log("SCANNED");
         this.scanstatus = 2;
     }
