@@ -1,5 +1,5 @@
 class Drone {
-    constructor(posx = 1000, posy =1000, posz = 1000, radius = 12) {
+    constructor(posx = 1000, posy =1000, posz = 0, radius = 12) {
         this.standardZ = posz;
 
         this.position = {
@@ -15,11 +15,11 @@ class Drone {
         this.speed = {
             x: 0,
             y: 0,
-            z: 100
+            z: 0
         };
         this.battery = 100;
         this.radius = radius;
-        this.liftoff = true;
+        this.hasToLiftOff = true;
         this.rotation = 0;
 
         this.scanstatus = 0;
@@ -59,21 +59,21 @@ class Drone {
             this.position.y += this.speed.y * 0.05;
         }
 
-        return (absDiffX < 10 && absDiffY < 10)
+        return (absDiffX < 0 && absDiffY < 0)
     }
 
     flyZnew(){
         this.speed.z = 100;
         let diffZ = this.destination.z - this.position.z;
         let absDiffZ = Math.abs(diffZ);
-        if(diffZ < 0 && absDiffZ > this.radius){
+        if(diffZ < 0 && absDiffZ > 0){
             this.position.z -= this.speed.z * 0.05;
         }
-        else if(diffZ > 0 && absDiffZ > this.radius) {
+        else if(diffZ > 0 && absDiffZ > 0) {
             this.position.z += this.speed.z * 0.05;
         }
-        this.liftoff = absDiffZ > 10;
-        return absDiffZ < 50;
+        this.hasToLiftOff = absDiffZ > 0;
+        return absDiffZ < 0;
     }
 
     setXYSpeed(){
@@ -92,6 +92,7 @@ class Drone {
     land(){
         this.destination = {x: this.position.x, y: this.position.y, z: 0};
         this.speed.z = 100;
+        this.flyZnew();
     }
 
     logPosition(){

@@ -95,16 +95,19 @@ class MQTTClient {
         //console.log(this.drone.destination);
         //console.log(this.status);
         if(this.status === start){
-            if(this.drone.liftoff)
+            if(this.drone.hasToLiftOff) {
+                console.log("yeet");
                 this.drone.flyZnew();
+                console.log(this.drone.hasToLiftOff);
+            }
             else
                 this.drone.flyXYnew();
             this.drone.drainBattery();
         }
         else if(this.status === stop){
             this.drone.land();
-            if(this.drone.position.z <= 10)
-                this.drone.liftoff = true;
+            if(this.drone.position.z <= 0)
+                this.drone.hasToLiftOff = true;
 
         }
         else if(this.status === paused){
