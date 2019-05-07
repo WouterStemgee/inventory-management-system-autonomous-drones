@@ -9,13 +9,11 @@ import 'node_modules/leaflet.heat/dist/leaflet-heat.js';
 
 import './plugins/L.SimpleGraticule';
 import './plugins/L.RotateImageLayer';
+import './plugins/leaflet.draw-src';
 import {circleToPolygon} from '../../../node_modules/circle-to-polygon';
 
 import {DroneSimulatorService} from '../drone-simulator/presenter/drone-simulator.service';
 import {AuthenticationService} from '../authentication.service';
-
-import {environment} from '../../environments/environment';
-import {WebsocketService} from '../websocket.service';
 
 @Component({
   selector: 'app-leaflet',

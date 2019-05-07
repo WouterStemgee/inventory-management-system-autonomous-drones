@@ -15,13 +15,17 @@ class Drone {
         this.speed = {
             x: 0,
             y: 0,
-            z: 100
+            z: 0
         };
         this.battery = 100;
         this.radius = radius;
-        this.liftoff = true;
+        this.hasToLiftOff = true;
         this.rotation = 0;
-
+        this.homebase = {
+            x: 1000,
+            y: 1000,
+            z: 0
+        };
         this.scanstatus = 0;
         this.scanzonedata = null;
         this.scanresults = null;
@@ -34,11 +38,19 @@ class Drone {
     }
 
     drainBattery() {
-        if (this.battery <= 0) {
-            this.battery = 100;
+        if(this.battery > 0) {
+            if (this.getRandomInt(2) === 1)
+                this.battery -= 0.01;
         }
-        if(this.getRandomInt(2) === 1)
-            this.battery -= 0.01;
+    }
+
+    chargeBattery() {
+        if(this.battery < 100)
+            this.battery += 0.01;
+    }
+
+    inChargeRange() {
+        return (Math.abs(this.position.x - this.homebase.x) <= 50 && Math.abs(this.position.x - this.homebase.x) <= 50 && this.position.z);
     }
 
     flyXYnew(){
@@ -60,21 +72,21 @@ class Drone {
             this.position.y += this.speed.y * 0.05;
         }
 
-        return (absDiffX < 10 && absDiffY < 10)
+        return (absDiffX < 0 && absDiffY < 0)
     }
 
     flyZnew(){
         this.speed.z = 100;
         let diffZ = this.destination.z - this.position.z;
         let absDiffZ = Math.abs(diffZ);
-        if(diffZ < 0 && absDiffZ > this.radius){
+        if(diffZ < 0 && absDiffZ > 0){
             this.position.z -= this.speed.z * 0.05;
         }
-        else if(diffZ > 0 && absDiffZ > this.radius) {
+        else if(diffZ > 0 && absDiffZ > 0) {
             this.position.z += this.speed.z * 0.05;
         }
-        this.liftoff = absDiffZ > 10;
-        return absDiffZ < 50;
+        this.hasToLiftOff = absDiffZ > 0;
+        return absDiffZ < 0;
     }
 
     setXYSpeed(){
@@ -93,6 +105,7 @@ class Drone {
     land(){
         this.destination = {x: this.position.x, y: this.position.y, z: 0};
         this.speed.z = 100;
+        this.flyZnew();
     }
 
     logPosition(){
@@ -101,21 +114,6 @@ class Drone {
     }
 
     rotate() {
-        /*let diffRot = this.scanrotation - 180 - this.rotation;
-        if(this.scanrotation-this.rotation > 1) {
-            if (diffRot > 0) {
-                if (this.rotation === 360)
-                    this.rotation = 0;
-                this.rotation += 1;
-            } else {
-                if (this.rotation === 0)
-                    this.rotation = 360;
-                this.rotation -= 1
-            }
-        }
-        else {
-            this.scanstatus = 1;
-        }*/
         if(this.rotation < this.scanzonedata.orientation)
             this.rotation++;
         else if(this.rotation > this.scanzonedata.orientation)
