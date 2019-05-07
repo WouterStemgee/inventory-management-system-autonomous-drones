@@ -93,7 +93,7 @@ let updateMap = (mapId, map) => {
     };
     for (let scanzone of map.scanzones) {
         const sc = {
-            "_id": new mongoose.Types.ObjectId(),
+            "_id": scanzone._id,
             "orientation": scanzone.orientation,
             "range": scanzone.range,
             "position": scanzone.position,
@@ -103,7 +103,7 @@ let updateMap = (mapId, map) => {
         if(scanzone.products !== undefined)
             for (let pr of scanzone.products) {
                 const p = {
-                    "_id": new mongoose.Types.ObjectId(),
+                    "_id": pr._id,
                     "quantity": pr.quantity,
                     "name": pr.name
                 };
@@ -199,7 +199,7 @@ let updateScanzone = (mapId, zoneId, scanzone) => {
     if(scanzone.products !== undefined)
         for (let pr of scanzone.products) {
             const p = {
-                "_id": new mongoose.Types.ObjectId(),
+                "_id": scanzone._id,
                 "quantity": pr.quantity,
                 "name": pr.name
             };
