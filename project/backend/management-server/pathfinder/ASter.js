@@ -4,7 +4,7 @@ const mapsDAO = require('../database/dao/maps');
 class ASter {
     constructor() {
         this.grafen = [];
-        this.droneValue = 500;
+        this.droneValue;
     }
 
     initializeMaps() {
@@ -79,7 +79,7 @@ class ASter {
         return graaf;
     };
 
-    kiesViaOpties(mapid, opties, waypointsJSON, radius){
+    kiesViaOpties(mapid, opties, waypointsJSON, radius, size){
         this.setDroneValue(radius);
         this.recalculateGraaf(mapid);
         let start = waypointsJSON[0];
@@ -89,7 +89,7 @@ class ASter {
         let pad = [];
         console.log('calculating path for id: ' + mapid);
         let graaf = this.grafen.find(g => g.mapId == mapid);
-
+        graaf.setSize(size.width, size.height);
         let aster = opties.aster;
         try {
             if (aster !== "auto") {

@@ -322,14 +322,12 @@ class GraafImproved {
             let gekozenpad;
             for (let eind of waypoints) {
                 let testpad = graaf.zoekPad(start, eind);
-                let afstand = testpad[0];
+                let afstand = testpad.shift(); // eerste elemant bevat de afstand tot de waypoint wat hier onbelangrijk is
                 if (afstand < afstandVanafVorigeKnoop) { // een kleinere afstand gevonden tot 1 van de waypoints dus deze eerst bezoeken
                     gekozenEindknoop = eind;
                     afstandVanafVorigeKnoop = afstand;
-                    testpad.shift(); // eerste elemant bevat de afstand tot de waypoint wat hier onbelangrijk is
                     //testpad.shift(); // tweede element bevat het startelement dat overeenkomt met het vorige eindelement en moet hier dus verwijderd worden
                     gekozenpad = testpad;
-                    gekozenpad.pop();
                 }
             }
             if (!gekozenEindknoop) {
