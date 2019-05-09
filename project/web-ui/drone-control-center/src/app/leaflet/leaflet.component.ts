@@ -278,6 +278,7 @@ export class LeafletComponent implements OnInit {
 
     this.simulator.onDataUpdateEvent.subscribe((e) => {
       const data = JSON.parse(e.data);
+      // tslint:disable-next-line:prefer-for-of
       for (let i = 0; i < data.features.length; i++) {
         this.realtime.update(data.features[i]);
         this.updateDroneData(data.features[i]);
@@ -300,6 +301,7 @@ export class LeafletComponent implements OnInit {
     }
   }
 
+  /*
   checkScanZoneOverlap(waypoints) {
     const scanzones = this.simulator.map.scanzones;
     scanzones.forEach(sz => {
@@ -323,11 +325,12 @@ export class LeafletComponent implements OnInit {
     });
     return waypoints;
   }
+   */
 
   drawValidFlightpath() {
     this.scanlocationLayer.clearLayers();
-    let wp = this.simulator.map.flightpath.waypoints;
-    wp = this.checkScanZoneOverlap(wp);
+    const wp = this.simulator.map.flightpath.waypoints;
+    // wp = this.checkScanZoneOverlap(wp);
     wp.forEach(w => {
       if (!w.scan) {
         w.z = this.simulator.drone.defaultFlyAltitude;
@@ -457,6 +460,7 @@ export class LeafletComponent implements OnInit {
         circle.on('click', () => {
           console.log(JSON.stringify(layer.toGeoJSON()));
         });
+        // tslint:disable-next-line:max-line-length
         circle.addTo(this.editableLayers).bindPopup('orientation: ' + sz.orientation + ', height: ' + sz.position.z + ', range: ' + sz.range);
       });
     });
@@ -561,7 +565,7 @@ export class LeafletComponent implements OnInit {
 
         this.simulator.map.addObstacle(newPositions);
 
-        //this.simulator.validateFlightPath();
+        // this.simulator.validateFlightPath();
       } else if (oldLayer.position) { // scanzone
         const p = oldLayer.position;
         const x1 = p.lng;

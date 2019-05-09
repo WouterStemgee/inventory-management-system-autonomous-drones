@@ -50,17 +50,6 @@ export class DroneSimulatorService {
     }
   }
 
-  stopDrone() {
-    this.http.sendCommand('stop').then(res => {
-      this.onStopEvent.emit(true);
-      this.onAlertEvent.emit({
-        title: 'Drone Control Center',
-        message: 'Drone stopped flying.',
-        type: 'warning'
-      });
-    });
-  }
-
   init() {
     if (this.map === undefined) {
       this.map = new Map();
@@ -240,11 +229,37 @@ export class DroneSimulatorService {
     this.reset(false);
   }
 
+  checkScanZoneOverlap(waypoints) {
+    const scanzones = this.map.scanzones;
+    scanzones.forEach(sz => {
+      const x1 = sz.position.x;
+      const y1 = sz.position.y;
+      waypoints.forEach((coord, index) => {
+        const x2 = coord.x;
+        const y2 = coord.y;
+        const a = x1 - x2;
+        const b = y1 - y2;
+        const dist = Math.sqrt(a * a + b * b);
+        if (dist <= sz.range && sz.range >= this.drone.radius) {
+          waypoints[index].z = Math.round(sz.position.z);
+          waypoints[index].scan = true;
+          waypoints[index].orientation = sz.orientation;
+          waypoints[index].x = Math.round(x1);
+          waypoints[index].y = Math.round(y1);
+          waypoints[index].scanzone = sz;
+        }
+      });
+    });
+    return waypoints;
+  }
+
   validateFlightPath() {
     if (this.map.flightpath.waypoints.length > 0) {
       const flightpath = this.map.flightpath.toJSON();
+      flightpath.waypoints = this.checkScanZoneOverlap(flightpath.waypoints);
       flightpath.options = this.flightOptions;
       flightpath.radius = this.drone.radius;
+      flightpath.size = this.map.size;
       this.onAlertEvent.emit({
         title: 'Drone Control Center',
         message: 'Validating flight path...',
@@ -368,12 +383,24 @@ export class DroneSimulatorService {
     });
   }
 
+  stopDrone() {
+    this.http.sendCommand('stop').then(res => {
+      this.onStopEvent.emit(true);
+      this.onAlertEvent.emit({
+        title: 'Drone Control Center',
+        message: 'Drone stopped flying.',
+        type: 'warning'
+      });
+    });
+  }
+
   returnDrone() {
     this.stopDrone();
     const flightpath = {
       mapId: this.map.flightpath.mapId,
       waypoints: [{x: this.drone.position.x, y: this.drone.position.y}, {x: 1000, y: 1000}],
       radius: this.drone.radius,
+      size: this.map.size,
       options: {
         return: 'false',
         aster: 'auto'
@@ -398,7 +425,7 @@ export class DroneSimulatorService {
           this.map.flightpath.sentToDrone = true;
           this.onAlertEvent.emit({
             title: 'Drone Control Center',
-            message: 'Flightpath sent to drone.',
+            message: 'Return path sent to drone.',
             type: 'success'
           });
           this.startDrone();
@@ -422,20 +449,21 @@ export class DroneSimulatorService {
   }
 
   pauseDrone() {
-    this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Pausing flight...', type: 'info'});
+    this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Stopping flight...', type: 'info'});
     this.http.getDroneStatus().then(res => {
       const info = res as Statusinfo;
       if (info.flying) {
         this.http.sendCommand('pause').then(ress => {
+          this.onStopEvent.emit(true);
           this.onAlertEvent.emit({
             title: 'Drone Control Center',
-            message: 'Drone paused flying.',
+            message: 'Drone Stopped flying.',
             type: 'success'
           });
         }).catch(error => {
           this.onAlertEvent.emit({
             title: 'Drone Control Center',
-            message: 'Drone did not pause flying.',
+            message: 'Drone did not stop flying.',
             type: 'error'
           });
         });
