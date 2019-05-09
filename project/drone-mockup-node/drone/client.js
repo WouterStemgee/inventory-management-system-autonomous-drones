@@ -114,7 +114,7 @@ class MQTTClient {
         }
         else if(this.status === scanning) {
             let bool = this.drone.flyZnew();
-            if (bool) {
+            if (!bool) {
                 if(this.drone.scanstatus === 0)
                     this.drone.rotate();
                 else if(this.drone.scanstatus === 1) {
@@ -122,6 +122,7 @@ class MQTTClient {
                 }
                 else if(this.drone.scanstatus === 2){
                     this.status = start;
+                    this.drone.hasToLiftOff = true;
                     this.client.publish("drone/scanned", JSON.stringify(this.drone.scanresults));
                     console.log(this.status);
                 }

@@ -86,7 +86,7 @@ class Drone {
             this.position.z += this.speed.z * 0.05;
         }
         this.hasToLiftOff = absDiffZ > 0;
-        return absDiffZ < 0;
+        return absDiffZ > 0;
     }
 
     setXYSpeed(){
