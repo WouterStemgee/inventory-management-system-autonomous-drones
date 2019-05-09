@@ -71,8 +71,6 @@ class Drone {
         else if(diffY > 0 && absDiffY > this.radius){
             this.position.y += this.speed.y * 0.05;
         }
-
-        return (absDiffX < 0 && absDiffY < 0)
     }
 
     flyZnew(){
@@ -86,7 +84,6 @@ class Drone {
             this.position.z += this.speed.z * 0.05;
         }
         this.hasToLiftOff = absDiffZ > 0;
-        return absDiffZ > 0;
     }
 
     setXYSpeed(){
@@ -100,6 +97,10 @@ class Drone {
         this.speed.x = this.speed.x / sum * 200;
         this.speed.y = this.speed.y / sum * 200;
         this.speed.z = 0;
+    }
+
+    checkHomeLand() {
+        return (Math.abs(this.position.x - this.homebase.x) <= 50 && Math.abs(this.position.x - this.homebase.x) <= 50);
     }
 
     land(){
