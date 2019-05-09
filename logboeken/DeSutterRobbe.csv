@@ -60,3 +60,7 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 04/05/19,08:00,13:45,Extern,flightpad laten valideren en corrigeren en terug keren naar startpositie aan de hand van opties,34 en 32,
 05/05/19,14:00,18:00,Extern,Bugfix begin positie naar eerste waypoint + toevoeging Home button (voorlopig hardcoded) + bugfix a*,34 en 32,
 06/05/19,16:00,20:00,Extern,Bugfix begin positie naar eerste waypoint + toevoeging Home button (voorlopig hardcoded) + bugfix a*,34 en 32,
+07/05/19,08:15,12:30,Campus,Dashboard knoppen + fix hoogte drone + fix dubbele waypoints,34,
+08/05/19,16:00,20:00,Extern,Toevoeging size of map + bugfix algoritme,,
+09/05/19,08:00,12:00,Extern,Bugfix scannen en opstijgen drone + Bugfix waarbij waypoint naar het midden van de scanzone wordt getrokken terwijl dit niet de bedoeling is,,
+09/05/19,13:30,17:45,Campus,Collision voorzien voor niet gevalideerde paden,32,
