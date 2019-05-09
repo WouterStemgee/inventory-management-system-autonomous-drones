@@ -398,7 +398,7 @@ export class DroneSimulatorService {
     this.stopDrone();
     const flightpath = {
       mapId: this.map.flightpath.mapId,
-      waypoints: [{x: this.drone.position.x, y: this.drone.position.y}, {x: 1000, y: 1000}],
+      waypoints: [{x: this.drone.position.x, y: this.drone.position.y, z: this.drone.position.z}, {x: 1000, y: 1000, z: 1000}],
       radius: this.drone.radius,
       size: this.map.size,
       options: {
@@ -406,19 +406,8 @@ export class DroneSimulatorService {
         aster: 'auto'
       }
     };
-    this.onAlertEvent.emit({
-      title: 'Drone Control Center',
-      message: 'Calculating return path...',
-      type: 'info'
-    });
     this.http.validateFlightpath(flightpath)
       .then((optimal) => {
-        console.log('Received return path from server: ', optimal);
-        this.onAlertEvent.emit({
-          title: 'Drone Control Center',
-          message: 'Received return path from server.',
-          type: 'success'
-        });
         this.map.flightpath.waypoints = optimal;
         this.onFlightpathValidatedEvent.emit(true);
         this.http.sendFlightpathToDrone(this.map.flightpath).then((ress) => {
@@ -432,7 +421,7 @@ export class DroneSimulatorService {
         }).catch(error => {
           this.onAlertEvent.emit({
             title: 'Drone Control Center',
-            message: 'Sending valid flightpath to drone failed.',
+            message: 'Sending valid return path to drone failed.',
             type: 'success'
           });
         });

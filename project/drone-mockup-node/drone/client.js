@@ -46,11 +46,15 @@ class MQTTClient {
                 }
                 break;
             case 'drone/stop':
-                this.drone.land();
                 this.status = stop;
                 break;
             case 'drone/pause':
-                this.status = paused;
+                if (this.drone.checkHomeLand()){
+                    this.status = stop;
+                } else {
+                    this.status = paused;
+                }
+                //publisch drone einde pad
                 break;
             case 'drone/scanner':
                 let messageObj = JSON.parse(message);
@@ -95,7 +99,7 @@ class MQTTClient {
         //console.log(this.drone.destination);
         //console.log(this.status);
         if(this.status === start){
-            if(this.drone.hasToLiftOff) {
+            if(this.drone.hasToLiftOff || !this.drone.position.z) {
                 this.drone.flyZnew();
             }
             else
@@ -104,17 +108,16 @@ class MQTTClient {
         }
         else if(this.status === stop){
             this.drone.land();
-            if(this.drone.position.z <= 0)
-                this.drone.hasToLiftOff = true;
             if(this.drone.inChargeRange())
                 this.status = charging;
+            this.drone.hasToLiftOff = true;
         }
         else if(this.status === charging){
             this.drone.chargeBattery();
         }
         else if(this.status === scanning) {
-            let bool = this.drone.flyZnew();
-            if (!bool) {
+            this.drone.flyZnew();
+            if (!this.drone.hasToLiftOff) {
                 if(this.drone.scanstatus === 0)
                     this.drone.rotate();
                 else if(this.drone.scanstatus === 1) {
