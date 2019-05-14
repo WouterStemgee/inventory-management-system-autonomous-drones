@@ -3184,7 +3184,7 @@ L.LatLngUtil = {
 				}
 			}
 
-			return areaStr;
+			return '';
 		},
 
 		// @method readableDistance(distance, units): string
