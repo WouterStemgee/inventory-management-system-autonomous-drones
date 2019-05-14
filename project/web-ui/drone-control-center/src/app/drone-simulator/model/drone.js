@@ -5,6 +5,10 @@ export class Drone {
       y: 0,
       z: 0
     };
+    this.homebase = {
+      x: 0,
+      y: 0
+    };
     this.id = 0;
     this.radius = 0;
     this.name = '';
@@ -41,6 +45,7 @@ export class Drone {
     this.id = drone._id;
     this.name = drone.name;
     this.radius = drone.properties.radius;
+    this.homebase = drone.properties.homebase;
   }
 
   toJSON() {
@@ -48,7 +53,8 @@ export class Drone {
       _id: this.id,
       name: this.name,
       properties: {
-        radius: this.radius
+        radius: this.radius,
+        homebase: {x: this.homebase.x, y: this.homebase.y}
       }
     };
   }

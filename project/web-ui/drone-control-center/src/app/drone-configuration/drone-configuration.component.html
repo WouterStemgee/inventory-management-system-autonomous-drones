@@ -18,6 +18,18 @@
            id="radius"
            ngModel>
   </mat-form-field>
+  <mat-form-field>
+    <label for="x">Homebase X Coordinate</label>
+    <input matInput [disabled]="!auth.isAdmin()" type="number" [(ngModel)]="simulator.drones[simulator.selectedDrone].properties.homebase.x" name="x"
+           id="x"
+           ngModel>
+  </mat-form-field>
+  <mat-form-field>
+    <label for="y">Homebase Y Coordinate</label>
+    <input matInput [disabled]="!auth.isAdmin()" type="number" [(ngModel)]="simulator.drones[simulator.selectedDrone].properties.homebase.y" name="y"
+           id="y"
+           ngModel>
+  </mat-form-field>
   <button mat-flat-button color="primary" type="submit" [disabled]="!auth.isAdmin()">
     Update Drone Configuration
   </button>

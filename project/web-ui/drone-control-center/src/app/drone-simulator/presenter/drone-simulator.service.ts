@@ -398,7 +398,8 @@ export class DroneSimulatorService {
     this.stopDrone();
     const flightpath = {
       mapId: this.map.flightpath.mapId,
-      waypoints: [{x: this.drone.position.x, y: this.drone.position.y, z: this.drone.position.z}, {x: 1000, y: 1000, z: 1000}],
+      // tslint:disable-next-line:max-line-length
+      waypoints: [{x: this.drone.position.x, y: this.drone.position.y, z: this.drone.position.z}, {x: this.drone.homebase.x, y: this.drone.homebase.y, z: 0}],
       radius: this.drone.radius,
       size: this.map.size,
       options: {
@@ -499,32 +500,50 @@ export class DroneSimulatorService {
   updateDrone(notification = true) {
     return new Promise(((resolve, reject) => {
       this.http.updateDrone(this.drone.toJSON()).then(() => {
-        this.http.getAllDrones()
-          .then(result => {
-            this.drones = result;
-            if (notification) {
+        this.http.updateHomebase(this.drone.homebase.x, this.drone.homebase.y).then(() => {
+          this.http.getAllDrones()
+            .then(result => {
+              this.drones = result;
+              if (notification) {
+                this.onAlertEvent.emit({
+                  title: 'Drone Control Center',
+                  message: 'Saved drone.',
+                  type: 'success'
+                });
+              }
+              resolve();
+            })
+            .catch(err => {
               this.onAlertEvent.emit({
                 title: 'Drone Control Center',
-                message: 'Saved drone.',
-                type: 'success'
+                message: err.toString(),
+                type: 'error'
               });
-            }
-            resolve();
-          })
-          .catch(err => {
-            this.onAlertEvent.emit({
-              title: 'Drone Control Center',
-              message: err.toString(),
-              type: 'error'
+              reject();
             });
-            reject();
-          });
+        });
       });
     }));
   }
 
   exportMap() {
     // TODO: Generate JSON file on backend and download file
+  }
+
+  checkCollision() {
+    const obstacles = this.map.obstacles;
+
+    obstacles.forEach(o => {
+      const p1 = o.positions[0];
+      const p2 = o.positions[1];
+
+      const p1x = Math.round(p1.x);
+      const p1y = Math.round(p1.y);
+      const p2x = Math.round(p2.x);
+      const p2y = Math.round(p2.y);
+      // px en py van drone, PuntTotLijn(px, py, p1x, p1y, p2x, p2y) oproepen op backend
+
+    });
   }
 }
 

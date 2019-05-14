@@ -26,6 +26,7 @@ export class DroneConfigurationComponent implements OnInit {
     const config = form.value;
     this.simulator.drone.name = config.name;
     this.simulator.drone.radius = config.radius;
+    this.simulator.drone.homebase = {x: config.x, y: config.y};
     this.simulator.updateDrone()
       .catch((err) => {
         console.log(err);

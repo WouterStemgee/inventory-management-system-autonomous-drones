@@ -116,6 +116,18 @@ export class HttpService {
     });
   }
 
+  updateHomebase(xCoord, yCoord) {
+    return new Promise( (resolve, reject) => {
+      this.http.post(environment.baseAPIUrl + 'red/drone/homebase', {x: xCoord, y: yCoord}).subscribe(
+        result => {
+          resolve(result);
+        },
+        (error: HttpErrorResponse) => {
+          reject(error);
+        });
+    });
+  }
+
 
   sendCommand(command) {
     return new Promise( (resolve, reject) => {
