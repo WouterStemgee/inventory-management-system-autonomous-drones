@@ -116,7 +116,7 @@ class Drone {
         console.log(this.scanzonedata);
         let post = false;
         let product;
-        if(this.scanzonedata.products.length !== 0 && this.getRandomInt(3) === 0){
+        if(this.scanzonedata.products.length !== 0 && (this.scanzonedata.products.length  > 5 || this.getRandomInt(3) === 0 ) ){
             product = this.scanzonedata.products[this.getRandomInt(this.scanzonedata.products.length)];
             product.quantity = this.getRandomInt(500);
         }
