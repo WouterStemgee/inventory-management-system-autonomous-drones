@@ -1,6 +1,12 @@
 {
   "name": "Mockup Drone",
   "properties": {
-    "radius": 500
+    "radius": 500,
+    "homebase": {
+      "x": 1000,
+      "y": 1000
+    },
+    "maxbattery": 5000,
+    "batteryusage": 10
   }
 }

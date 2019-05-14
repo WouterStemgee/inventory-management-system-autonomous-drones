@@ -2,7 +2,7 @@
   <mat-form-field>
     <label for="droneId">Id</label>
     <mat-select id="droneId" name="droneId" #droneField="ngModel" [(value)]="simulator.selectedDrone" [(ngModel)]="simulator.drones[simulator.selectedDrone]._id" ngModel>
-      <mat-option *ngFor="let drone of simulator.drones; index as i" (click)="simulator.selectMap(i)" [value]="drone._id" >
+      <mat-option *ngFor="let drone of simulator.drones; index as i" (click)="simulator.selectDrone(i)" [value]="drone._id" >
         {{drone.name}} - {{drone._id}}
       </mat-option>
     </mat-select>
