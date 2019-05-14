@@ -5,6 +5,11 @@ class MQTTClient {
     constructor(drone) {
         this.drone = drone;
         this.status = stop;
+        //home locatie van de drone
+        this.homebase = {
+            x: 0,
+            y: 0
+        };
     }
 
     connect() {
@@ -31,6 +36,7 @@ class MQTTClient {
         this.client.subscribe('drone/start');
         this.client.subscribe('drone/pause');
         this.client.subscribe('drone/stop');
+        this.client.subscribe('drone/homebase');
     }
 
     handleMessage(topic, message) {
@@ -49,7 +55,8 @@ class MQTTClient {
                 this.status = stop;
                 break;
             case 'drone/pause':
-                if (this.drone.checkHomeLand()){
+                //wordt opgeroepen aan het einde van zijn flightpath en zal stoppen indien dit boven de homebase is (dus ook landen) en zal blijven hoveren indien dit niet het geval is.
+                if (this.checkHomeLand()){
                     this.status = stop;
                 } else {
                     this.status = paused;
@@ -63,9 +70,10 @@ class MQTTClient {
 
                 console.log("Zou de rotation moeten zijn: " + messageObj.orientation);
                 this.drone.scanzonedata = messageObj;
-
                 break;
-
+            case 'drone/homebase':
+                this.homebase =  JSON.parse(message);
+                break;
         }
     }
 
@@ -108,7 +116,7 @@ class MQTTClient {
         }
         else if(this.status === stop){
             this.drone.land();
-            if(this.drone.inChargeRange())
+            if(this.inChargeRange())
                 this.status = charging;
             this.drone.hasToLiftOff = true;
         }
@@ -132,6 +140,17 @@ class MQTTClient {
             }
         }
         this.publishAllData();
+    }
+
+    inChargeRange() {
+        return (Math.abs(this.drone.position.x - this.homebase.x) <= 50 && Math.abs(this.drone.position.x - this.homebase.x) <= 50 && !this.drone.position.z);
+    }
+
+    //checked of de drone zich boven zijn homebase bevindt
+    //wordt opgeroepen wanneer de drone het pause commando krijgt
+    //indien true => zal de drone overgaan op het stop commando en dus ook landen
+    checkHomeLand() {
+        return (Math.abs(this.drone.position.x - this.homebase.x) <= 50 && Math.abs(this.drone.position.x - this.homebase.x) <= 50);
     }
 }
 

@@ -21,11 +21,6 @@ class Drone {
         this.radius = radius;
         this.hasToLiftOff = true;
         this.rotation = 0;
-        this.homebase = {
-            x: 1000,
-            y: 1000,
-            z: 0
-        };
         this.scanstatus = 0;
         this.scanzonedata = null;
         this.scanresults = null;
@@ -47,10 +42,6 @@ class Drone {
     chargeBattery() {
         if(this.battery < 100)
             this.battery += 0.01;
-    }
-
-    inChargeRange() {
-        return (Math.abs(this.position.x - this.homebase.x) <= 50 && Math.abs(this.position.x - this.homebase.x) <= 50 && !this.position.z);
     }
 
     flyXYnew(){
@@ -97,10 +88,6 @@ class Drone {
         this.speed.x = this.speed.x / sum * 200;
         this.speed.y = this.speed.y / sum * 200;
         this.speed.z = 0;
-    }
-
-    checkHomeLand() {
-        return (Math.abs(this.position.x - this.homebase.x) <= 50 && Math.abs(this.position.x - this.homebase.x) <= 50);
     }
 
     land(){
