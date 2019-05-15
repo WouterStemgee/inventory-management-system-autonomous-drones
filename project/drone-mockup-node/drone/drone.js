@@ -25,7 +25,7 @@ class Drone {
         this.scanzonedata = null;
         this.scanresults = null;
         this.namen = ["badeentjes", "sleutelhangers", "potjes", "glaasjes", "drones", "zakdoeken", "drones",
-            "muizen", "computers", "craplle", "crapple", "crapple", "robbe's", "sinaasappelen", "peren", "lichi's"];
+            "muizen", "computers", "crapple", "crapple", "crapple", "robbe's", "sinaasappelen", "peren", "lichi's"];
     }
 
     getRandomInt(max) {
