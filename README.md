@@ -10,7 +10,11 @@
 
 - Logboeken
 
+- Presentaties: Hierin komen de gebruikte ppt's
+
 - Project: Hier staat de volledige applicatie, deze bestaat uit een front-end webapplicatie, en een back-end server die communiceert met de (toekomstige) drone en data op haalt en weg schrijft naar de database. De webapp is geschreven in het Angular framework, en de server in Express. Beiden maken gebruik van de Node Package Manager.
+
+- Verslag: Bevat het eindverslag
 
 ## De applicatie laten uitvoeren
 Om de applicatie te gebruiken zijn er 2 mogelijkheden. 
@@ -18,24 +22,25 @@ Om de applicatie te gebruiken zijn er 2 mogelijkheden.
 - Door de onderdelen zelf locaal te draaien. 
 
 ### Zelf lokaal laten uitvoeren:
-#### Benodigdheden:
+Om de webapplicatie lokaal te testen zijn er een aantal vereisten.
+Namelijk:
+- De broncode moet gedownload worden zodat deze lokaal beschikbaar is.
+- MongoDB moet geïnstalleerd worden en de database locatie moet worden aangemaakt.
+- Node.js en een Node Package Manager die automatisch met Node.js geïnstalleerd wordt.
+- Angular, Express en andere modules moeten correct geïnstalleerd worden.
+- Node-RED.
+- De Mosquitto broker.
+- Om de broncode lokaal beschikbaar te maken, moet de GitHub repository gecloned worden. Hiervoor navigeert de gebruiker via een browser naar de hoofdpagina van de repository. In dit geval is dat dus https://github.ugent.be/bp-vop-2019/drone1. Op deze pagina klikt men op de ‘Clone or download’ knop waarna men 2 opties heeft. Men kan op download ZIP klikken om vervolgens het ZIP-bestand uit te pakken in een locatie naar keuze of men maakt gebruik van de clone URL en Git Bash. Bij Git Bash verandert men de huidige working directory naar een locatie naar keuze en kan men de GitHub repository downloaden via het git clone commando. Hier is dit dus git clone https://github.ugent.be/bp-vop2019/drone1.git. Nu is de broncode lokaal beschikbaar.
+- MongoDB is beschikbaar via https://www.mongodb.com/download-center/community. Op deze pagina selecteert men de versie en het besturingssysteem naar keuze. Men kiest best voor de recentste versie en download het MongoDB Server bestand. Tijdens deze installatie wordt aangeraden om de standaard instellingen te behouden. Naast MongoDB Server zal dit ook MongoDB Compass installeren, dit is een handige tool om connectie te maken met de database en deze ook te visualiseren. Collecties kunnen met MongoDB Compass ook aangesproken worden via CRUD operaties. Vervolgens moet de map ‘Directory waar MongoDB is geïnstalleerd’/data/db (of /data/db op linux) worden aangemaakt. Voor de meeste Windows gebruikers zal dit dus C:/data/db zijn. Hierin zal MongoDB zijn collecties bewaren. Indien de gebruiker een andere map locatie wenst te gebruiken, moet de gebruiker bij het runnen steeds de optie --bpath met als argument het gewenste pad mee geven.
+- Node.js is een run-time environment dat alles bevat om de Javascript code van dit project uit te voeren. Node.js wordt ook gebruikt voor het installeren van Angular en Express. Node.js kan geïnstalleerd worden door naar https://nodejs.org/en/download/ te surfen en vervolgens de correcte installer te downloaden. Voor de meeste gebruikers zal dit de Windows Installer zijn onder het LTS tabblad. Tijdens deze installatie wordt aangeraden om de standaard instellingen te behouden.
+- Vervolgens kunnen alle bijhorende modules waaronder ook Angular en Express geïnstalleerd worden. Hiervoor moet de gebruiker een CMD-venster openen en naar de correcte folder locatie navigeren. Eenmaal de gebruiker naar ~/project/backend/management-server genavigeerd is, moet hij het commando npm install uitvoeren. Zo worden de nodige afhankelijkheden voor de back-end automatisch geïnstalleerd. Na afloop doet de gebruiker hetzelfde maar nu navigeert hij eerst naar de folder ~/project/web-ui/drone-control-center. Nu worden de afhankelijkheden van de front-end automatisch geïnstalleerd.
+- Om de mosquitto broker, die voor de communicatie tussen de drone en de webapplicatie staat, te installeren surft de gebruiker naar https://mosquitto.org/download/ en selecteert deze de correcte installer. Voor de meeste gebruikers zal dit de windows-x64.exe zijn onder Binary Installation. Tijdens deze installatie wordt aangeraden om de standaard instellingen te behouden.
 
-- [Node.js](https://nodejs.org/en/)
-- Node Package Manager (wordt automatisch met Node.js geïnstalleerd)
-- [Mongodb Server](https://www.mongodb.com/download-center/community), voor instalatie wordt verwezen naar de [wiki](https://github.ugent.be/bp-vop-2019/drone1/wiki/MongoDB-installeren)
-
-#### Uitvoeren:
-
-Voor de volledige functionaliteit te bekomen moeten er drie dingen gebeuren:
-1. De database opzetten. (zie opnieuw de [wiki](https://github.ugent.be/bp-vop-2019/drone1/wiki/MongoDB-installeren))
-
-2. De backend server laten draaien. Dit gebeurt door via de node.js shell te navigeren naar ~/project/backend/management-server en daar npm start uit te voeren. Wanneer je wil dat aanpassingen uitgevoerd worden zonder dat de applicatie moet gestopt en heropgestart worden, kan je gebruik maken van het commando: "npm run start-watch" waarbij gebruik gemaakt wordt van nodemon.
-
-3. De frontend (Angular) opzetten, analoog wordt genavigeerd naar ~/project/web-ui/drone-control-center in een tweede shell en wordt het commando "ng serve" uitgevoerd.
-
-**Belangrijk**, bij de eerste keer moeten bij stappen 2 en 3 eerst het commando "npm install" worden uitgevoerd wanneer de shell in de juiste folders zit (~/project/backend/management-server en ~/project/web-ui/drone-control-center), zo worden de nodige afhankelijkheden (o.a Angular) voor het project automatisch geïnstalleerd.
-
-Vervolgens zal de site te vinden zijn op (http://localhost:4200), voor de REST api te testen kan men de verschillende end points raadplegen via de [wiki](https://github.ugent.be/bp-vop-2019/drone1/wiki/API:-Endpoints).
+Nu alle onderdelen correct geïnstalleerd zijn, kan de gebruiker de webapplicatie opstarten door de verschillende services op te starten. Hiervoor moet de gebruiker:
+- De front-end te starten door naar de folder ~/project/web-ui/drone-control-center te navigeren in een CMD-venster. Vervolgens voert men het ng serve commando uit.
+- De back-end te starten door naar de folder ~/project/web-ui/drone-control-center te navigeren in een CMD-venster en vervolgens het nodemon api/bin/www commando uit te voeren.
+- De database kan gestart worden door in een CMD-venster te navigeren naar de installatie folder van MongoDB en vervolgens naar de folder ~/Server/4.0/bin. In deze map voert men het mongod commando uit.
+- Als laatste start men de mosquitto broker door opnieuw in een CMD-venster te navigeren naar de mosquitto folder en hier het commando mosquitto -v uit te voeren. Door via een browser naar keuze te navigeren naar http://localhost:4200/dashboard kan de gebruiker de webapplicatie uittesten. Men kan de Node-RED flows bekijken en eventueel aanpassen door naar http://localhost:3000/editor te surfen. 
 
 ## Unit Testen
 
