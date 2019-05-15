@@ -73,3 +73,6 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 05/05/19,13:30,15:15,Extern, extreme bug fixen op aanvraag van wouter,,
 05/05/19,16:30,19:45,Extern, uitbreiden node red en uitvoerig testen waarom het nog niet werkt voor dinsdag te fixen,,
 07/05/19,08:15,12:30,Campus, afwerken van frontend en node red - products werken nu compleet normaal,,
+09/05/19,13:30,17:45,Campus, ppt maken eindpresentatie,,
+12/05/19,15:00,17:00,Campus, eindpresentatie inoefenen,,
+14/05/19,08:15,12:30,Extern, nog bugfixing doen en dataflow tests waarom soms de app niet werkt,,
