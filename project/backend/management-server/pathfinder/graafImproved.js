@@ -7,27 +7,30 @@ class GraafImproved {
         this.verbindingen = [];
         this.afstand = {};
         this.obstakels = []; //obstakel voor; [LB, RB, RO, LO]
-        this.droneValue = 0; //rqnge rond drone die te vermijden is
+        this.droneValue = 0; //range rond drone die te vermijden is
         this.sizeX = 30190;
         this.sizeY = 10901.944444;
         this.mapId;
     }
 
     setMapId(mapId) {
+        // map id koppelen aan de graaf
         this.mapId = mapId;
     }
 
     setSize(sizeX, sizeY) {
+        // grootte van de map bijhouden
         this.sizeX = sizeX;
         this.sizeY = sizeY;
     }
 
     setDroneValue(droneValue) {
+        // drone radius bijhouden (minumum afstand dat de drone wilt houden tov de obstakels)
         this.droneValue = droneValue;
     }
 
     ObstakelWaypoints(knoopLB, knoopRO) {
-        //verwijder knopen en verbindingen binnen obstakel
+        //verwijder knopen en verbindingen binnen en te dicht bij een obstakel
         this.resetVerbindingen();
 
         //add to obstakels
@@ -55,17 +58,21 @@ class GraafImproved {
     }
 
     resetVerbindingen() {
+        // clear de verbindingen
         this.verbindingen = [];
     };
 
-    //toevoegen van knopen op de graaf adhv een json.
     voegKnoopToe(knoop) {
+        // toevoegen van knopen op de graaf indien deze binnen de map valt en niet te dicht bij de muren is
         if (knoop.x >= this.droneValue && knoop.y >= this.droneValue && knoop.x <= this.sizeX - this.droneValue && knoop.y <= this.sizeY - this.droneValue && this.myIndexOf(knoop) < 0) {
             this.knopen.push(knoop);
         }
     }
 
     maakVerbindingen(knoop1) {
+        // maakt alle verbindingen van de opgegeven knoop met de andere knopen
+        // hierbij wordt rekening gehouden met de obstakels
+        // 2 knopen worden pas verbonden indien deze verbinding niet door of te dicht bij een obstakel gaaat
         if (this.knopen.length > 0) {
             for (let point of this.knopen) {
                 let clean = true;
@@ -96,8 +103,8 @@ class GraafImproved {
         }
     }
 
-    //index van de knoop met dezelfde waardes achterhalen, equals is niet te overschrijven in javascript...
     myIndexOf(knoop) {
+        // index van de knoop met dezelfde waardes achterhalen, equals is niet te overschrijven in javascript...
         for (let i = 0; i < this.knopen.length; i++) {
             if (this.knopen[i].x == knoop.x && this.knopen[i].y == knoop.y) {
                 return i;
@@ -107,6 +114,8 @@ class GraafImproved {
     };
 
     voegVerbindingenToe(verbinding) {
+        // voeg de verbinding toe aan de array van verbindingen
+        // zal enkel opgeroepen worden indien de verbinding veilig is voor de drone om te vliegen
         let graaf = this;
         if (verbinding.constructor === Array && verbinding.length === 3 && (typeof verbinding[2] === "number" && verbinding[2] >= 0) && graaf.myIndexOf(verbinding[0]) >= 0 && graaf.myIndexOf(verbinding[1]) >= 0) {
             graaf.verbindingen.push(verbinding);
@@ -115,6 +124,7 @@ class GraafImproved {
         }
     };
 
+    // oude methode om grid te maken, legacy
     /*
     maakGrid(sizeX, sizeY, jump = 1){
         for (let i = 0; i < sizeX; i += jump){
@@ -155,6 +165,8 @@ class GraafImproved {
     */
 
     collision(lijnstuk1, lijnstuk2) {
+        // berekend de kortste afstand tussen de 2 opgegevn lijnstukken in 2D
+        // er wordt geen rekening gehouden met de Z-as
         let p1x = lijnstuk1[0].x;
         let p2x = lijnstuk1[1].x;
         let p3x = lijnstuk2[0].x;
@@ -180,8 +192,8 @@ class GraafImproved {
         let p21y = p2y - p1y;
 
         if (Math.abs(p21x) < Number.EPSILON && Math.abs(p21y) < Number.EPSILON) {
-            //punt1 en 2 same
-            return false;
+            // punt1 en 2 zijn dezelfde
+            return true;
         }
 
 
@@ -194,7 +206,7 @@ class GraafImproved {
         let denom = (d2121 * d4343) - (d4321 * d4321);
         let numer = (d1343 * d4321) - (d1321 * d4343);
         if (Math.abs(denom) < Number.EPSILON) {
-            //evenwijdig dus ok indien de afstand tussen de rechten >= droneValue;
+            // evenwijdig dus ok indien de afstand tussen de rechten >= droneValue;
             if (p1x === p2x && p3x === p4x) {
                 return Math.abs(p1x - p3x) >= this.droneValue
             } else if (p1y === p2y && p3y === p4y) {
@@ -209,7 +221,9 @@ class GraafImproved {
         let pa = new Knoop(p1x + (mua * p21x), p1y + (mua * p21y));
         let pb = new Knoop(p3x + (mub * p43x), p3y + (mub * p43y));
 
-        //check correctie punt nie op lijntuk
+        // check correctie punt nie op lijntuk
+        // de afstand wordt namelijk berekend op de rechte en niet het lijnstuk,
+        // indien het snijpunt dus buiten het lijnstuk valt moet dit gecorrigeerd worden
         if ((this.heuristics(lijnstuk1[0], pa) + this.heuristics(lijnstuk1[1], pa)).toFixed(5) != this.heuristics(lijnstuk1[0], lijnstuk1[1]).toFixed(5)) {
             if (this.heuristics(lijnstuk1[0], pa) < this.heuristics(lijnstuk1[1], pa)) {
                 pa = lijnstuk1[0];
@@ -228,6 +242,7 @@ class GraafImproved {
     }
 
     geefBuren(knoop) {
+        // geeft alle knopen waarmee de opgegevn knoop is verbonden
         let buren = [];
         let knoop1, knoop2;
         this.verbindingen.filter(function (verbinding) {
@@ -247,11 +262,15 @@ class GraafImproved {
     };
 
     heuristics(begin, eind) {
+        // berekent de afstand van het beginpunt tot het eindpunt
+        // wordt gebruikt om de prioriteitsqueue correct op te stellen
         let h = Math.sqrt(Math.pow(begin.x - eind.x, 2) + Math.pow(begin.y - eind.y, 2));
         return h;
     };
 
     zoekPad(start, eind) {
+        // zoekt het pad tussen de begin en eindknoop, zal ook de totale afstand terugsturen
+        // begin en eindpunt toevoegen aan graaf en verbindingen maken
         let startk = new Knoop(start.x, start.y);
         this.voegKnoopToe(startk);
         let eindk = new Knoop(eind.x, eind.y);
@@ -261,43 +280,52 @@ class GraafImproved {
         let dees = this;
         let pQueue = new PriorityQueue();
 
+        // markeer alle nodes als onbezocht en creeer een lijst van de onbezochte knopen.
         this.knopen.forEach(function (knoop) {
             if (knoop.x === start.x && knoop.y === start.y) {
                 pQueue.voegKnoopToeMetPrioriteit(knoop, 0);
                 knoop.afstand = 0;
             } else {
-                knoop.afstand = Infinity; //zet de afstand van de de beginknoop op 0 en van alle andere knopen op oneindig. (2)
+                knoop.afstand = Infinity; // zet de afstand van de de beginknoop op 0 en van alle andere knopen op oneindig.
             }
             knoop.vorige = null;
             knoop.bezocht = false;
         });
 
+        // selecteer de knoop met de kleinste afstand als de huidige knoop, bekijk alle knopen met wie deze verbonden is en kijk wat het kortste pad is naar deze knoop
         while (!pQueue.isLeeg()) {
-            let huidige = pQueue.geefEersteKnoop();
+            let huidige = pQueue.geefEersteKnoop(); // de knoop met de kleinste afstand wordt als eerste geselecteerd, meest prioriteit
             huidige.bezocht = true;
 
-            if (huidige.x === eind.x && huidige.y === eind.y) {
+            // stop indien we het einde hebben bereikt
+            if (huidige.x === eindk.x && huidige.y === eindk.y) {
                 return dees.geefPad(huidige, start);
             }
 
+            // bekijk alle knopen die een verbinding bevatten met de geselecteerde knoop
             for (let volgende of this.geefBuren(huidige)) {
                 if (!volgende[0].bezocht) {
                     volgende[0].bezocht = true;
                     pQueue.voegKnoopToeMetPrioriteit(volgende[0], volgende[1]);
                 }
                 let totaleAfstand = huidige.afstand + volgende[1];
+                // indien we een korter pad hebben gevonden naar deze knoop update de afstand
                 if (totaleAfstand < volgende[0].afstand) {
                     volgende[0].afstand = totaleAfstand;
                     pQueue.verminderPrioriteit(volgende[0], totaleAfstand + dees.heuristics(eind, volgende[0]));
                     volgende[0].vorige = huidige;
                 }
             }
+            // verwijder bezochte knoop
             pQueue.verwijderPKnoop();
         }
         throw 'kan eindknoop niet vinden';
     };
 
     zoekMultiplePaden(start, waypoints) {
+        // maakt het pad van start tot het dichtste waypoint
+        // vervolgens wordt vanaf deze gekozen knoop opnieuw de dichtste knoop gezicht van de andere waypoints
+        // dit gaat door tot alle waypoints bezocht zijn
         let graaf = this;
         let startk = new Knoop(start.x, start.y);
         this.voegKnoopToe(startk);
@@ -339,7 +367,7 @@ class GraafImproved {
             waypoints.splice(waypoints.indexOf(gekozenEindknoop), 1);
         }
         //pad.unshift(totaleAfstand);
-        //reset
+        //reset de graaf
         this.verbindingen.forEach(function (verbinding) {
             verbinding[0].bezocht = false;
             verbinding[0].afstand = Infinity;
@@ -352,6 +380,7 @@ class GraafImproved {
     }
 
     geefPad(knoop, start) {
+        // opmaak van het return pad
         let pad = [];
         let afstand = knoop.afstand;
         if (afstand != Infinity) {
@@ -369,6 +398,7 @@ class GraafImproved {
     };
 
     eigenPad(knopen) {
+        // controle of opgegeven pad door of te dicht bij obstakels gaat
         let graaf = this;
         knopen.forEach(function (knoop) {
             let temp = new Knoop(knoop.x, knoop.y);
@@ -407,6 +437,7 @@ class GraafImproved {
     }
 
     /*
+    // eigen correctie zonder A* dit werkt slechter
     eigenPadMetCorrectie(knopen){
         let graaf = this;
         knopen.forEach(function (knoop) {
@@ -524,6 +555,8 @@ class GraafImproved {
     */
 
     eigenPadMetASter(knopen) {
+        // indien het pad door of te dicht bij een obstakel komt
+        // wordt het kortste pad tussen de 2 punten gezocht zonder door of te dicht bij een obstakel te komen
         let graaf = this;
         let toevoeging = [];
         knopen.forEach(function (knoop) {
