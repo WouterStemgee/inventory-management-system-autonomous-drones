@@ -1,10 +1,12 @@
 const PriorityKnoop = require('./priorityKnoop');
 
 class PriorityQueue {
+    //de priorityqueue
     constructor() {
         this.knopen = [];
     }
 
+    // is true als de queue leeg is
     isLeeg() {
         return this.knopen.length === 0;
     }
@@ -27,6 +29,7 @@ class PriorityQueue {
         }
     }
 
+    // verwijderd de eerste knoop uit de lijst
     verwijderPKnoop() {
         if (this.knopen.length === 0) {
             throw 'Queue is leeg'
@@ -34,6 +37,7 @@ class PriorityQueue {
         return this.knopen.shift();
     }
 
+    // geeft de eerste knoop terug uit de lijst
     geefEersteKnoop() {
         if (this.knopen.length === 0) {
             throw 'Queue is leeg'
@@ -41,6 +45,7 @@ class PriorityQueue {
         return this.knopen[0].knoop;
     }
 
+    // geeft de slechtste knoop terug, wordt niet gebruikt
     geefLaatsteKnoop() {
         if (this.knopen.length === 0) {
             throw 'Queue is leeg'
@@ -48,6 +53,8 @@ class PriorityQueue {
         return this.knopen[this.knopen.length - 1].knoop;
     }
 
+    // vervangt de prioriteit van de opgegeven knoop door de nieuwe prioriteit
+    // hierbij wordt de knoop verwijderd en opnieuw toegevoegd met de nieuwe prioriteit
     verminderPrioriteit(knoop, prioriteit) {
         let gevonden = false;
         let i = 0;

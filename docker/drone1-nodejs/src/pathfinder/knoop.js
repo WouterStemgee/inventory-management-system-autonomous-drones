@@ -1,4 +1,5 @@
 class Knoop {
+    // klasse die de knopen en nodige informatie voor het algoritme bijhoudt
     constructor(x, y) {
         this.x = x;
         this.y = y;

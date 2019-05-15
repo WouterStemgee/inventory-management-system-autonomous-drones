@@ -7,6 +7,7 @@ function AreValuesEqual(val1, val2, tolerance) {
 
 
 function PuntTotLijn(px, py, p1x, p1y, p2x, p2y) {
+    //berekend de afstand van de drone tot de opgegeven rand van het obstakel
     let dx = p2x - p1x;
     let dy = p2y - p1y;
     let dp1x = px - p1x;
@@ -60,3 +61,5 @@ function PuntTotLijn(px, py, p1x, p1y, p2x, p2y) {
         return Math.sqrt((dpqx * dpqx) + (dpqy * dpqy));
     }
 }
+
+module.exports = PuntTotLijn;

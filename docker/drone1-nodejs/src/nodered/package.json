@@ -4,6 +4,5 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
-        "node-red-mongodb": "0.0.18"
     }
 }
