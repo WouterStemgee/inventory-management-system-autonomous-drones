@@ -261,4 +261,17 @@ export class HttpService {
         });
     });
   }
+
+  deleteAllDrones() {
+      return new Promise((resolve, reject) => {
+        this.http.delete(environment.baseAPIUrl + 'api/drones').subscribe(
+          result => {
+            resolve(result);
+          },
+          (error: HttpErrorResponse) => {
+            reject(error);
+          }
+        );
+      });
+    }
 }

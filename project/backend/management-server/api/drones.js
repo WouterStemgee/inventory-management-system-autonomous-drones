@@ -23,6 +23,15 @@ router.route('/')
                 console.log(error);
 
             });
+    })
+    .delete((req, res) => {
+        droneDAO.deleteAllDrones()
+            .then((result) => {
+                res.send(result);
+            })
+            .catch((error) => {
+                res.send(error);
+            });
     });
 
 router.route('/:droneId')

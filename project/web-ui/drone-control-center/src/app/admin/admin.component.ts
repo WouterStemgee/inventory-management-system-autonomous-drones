@@ -22,4 +22,14 @@ export class AdminComponent implements OnInit {
         console.log(err);
       });
   }
+
+  deleteAllDrones() {
+    this.http.deleteAllDrones()
+      .then(result => {
+        console.log(result);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 }

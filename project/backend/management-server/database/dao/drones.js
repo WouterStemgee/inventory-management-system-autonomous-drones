@@ -11,6 +11,16 @@ let getAllDrones = () => {
         });
 };
 
+let deleteAllDrones = () => {
+    mongoose.connection.dropCollection('drones')
+        .then(() => {
+            return Promise.resolve();
+        })
+        .catch((err) => {
+            return Promise.reject({error: err});
+        });
+};
+
 let getDrone = (id) => {
     return Drone.findById(id).exec()
         .then(doc => {
@@ -70,3 +80,4 @@ module.exports.getDrone = getDrone;
 module.exports.addDrone = addDrone;
 module.exports.updateDrone = updateDrone;
 module.exports.deleteDrone = deleteDrone;
+module.exports.deleteAllDrones = deleteAllDrones;
