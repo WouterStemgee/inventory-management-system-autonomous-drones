@@ -77,4 +77,6 @@ Datum,Start,Einde,Plaats,Omschrijving,Issue #,Opmerkingen
 04/05/19,15:30,17:00,Extern,Afmetingen van kaart toegevoegd aan model en database - bugfixing,25,
 05/05/19,10:30,13:30,Extern,Grafieken voor live data visualisatie gefixt - UI raceproblemen en bugs gefixt,28,
 05/05/19,14:00,16:00,Extern,Performantie front end verbeterd,28,
-06/05/19,08:15,12:30,Campus,Dimensies aanpassen in Leaflet Draw,27,
+07/05/19,08:15,12:30,Campus,Dimensies aanpassen in Leaflet Draw,27,
+09/05/19,13:30,17:45,Campus,Kleine aanpassingen UI,27,
+14/05/19,08:15,12:30,Campus,Powerpoint maken voor eindpresentatie,,
