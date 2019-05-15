@@ -42,6 +42,8 @@ export class LeafletComponent implements OnInit {
     });
   }
 
+  collisionCounter = 0;
+  
   show = false;
 
   map;
@@ -611,6 +613,7 @@ export class LeafletComponent implements OnInit {
   }
 
   updateDroneData(feature) {
+    this.collisionCounter++;
     const drone = this.simulator.drone;
     drone.position.x = feature.properties.position ? feature.properties.position.x : 0;
     drone.position.y = feature.properties.position ? feature.properties.position.y : 0;
@@ -627,6 +630,14 @@ export class LeafletComponent implements OnInit {
     }
     this.heatPoints.push(this.xy(drone.position.x, drone.position.y));
     drone.pushAllDatasets();
+    if (this.collisionCounter === 50) {
+      // deze functie zou de korste afstand van de drone tot het dichtste obstakel moeten teruggeven,
+      // maar dit geveurd via API calls ipv een websocket
+      // waardoor dit ervoor zorgt dat de volledige applicatie begint te vertragen en wordt dus niet geimplementeerd.
+
+      // this.simulator.checkCollision();
+      this.collisionCounter = 0;
+    }
   }
 
   onDrawDeleted(e) {

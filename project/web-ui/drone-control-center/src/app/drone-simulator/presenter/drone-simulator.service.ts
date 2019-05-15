@@ -6,6 +6,7 @@ import {DataService} from '../../data.service';
 import {ImageLoader} from '../utils/imageloader';
 import {SharedService} from '../../shared.service';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -531,7 +532,11 @@ export class DroneSimulatorService {
   }
 
   checkCollision() {
+    // haalt de obstakels uit de map en stuurt nadien de positie van de drone
+    // samen met de 4 randen van elk obstakel door naar de backend
+    // zodat kan berekend worden hou ver de drone zich van elke muur bevindt
     const obstacles = this.map.obstacles;
+    const lijnen = [];
 
     obstacles.forEach(o => {
       const p1 = o.positions[0];
@@ -542,7 +547,11 @@ export class DroneSimulatorService {
       const p2x = Math.round(p2.x);
       const p2y = Math.round(p2.y);
       // px en py van drone, PuntTotLijn(px, py, p1x, p1y, p2x, p2y) oproepen op backend
-
+      lijnen.push([p1x, p1y, p2x, p2y]);
+    });
+    this.http.checkCollision([this.drone.position.x, this.drone.position.y], lijnen)
+      .then((afstand) => {
+          console.log(afstand);
     });
   }
 }

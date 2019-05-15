@@ -1,5 +1,6 @@
 const express = require('express');
 const droneDAO = require('../database/dao/drones');
+const Collision = require('../pathfinder/collision');
 const router = express.Router();
 
 router.route('/')
@@ -52,6 +53,24 @@ router.route('/:droneId')
             .catch((error) => {
                 res.send(error);
             });
+    });
+
+router.route('/collision')
+    .post((req, res, next) => {
+        //stuurt de korste afstand van de drone tot de rand van het dichtste object terug
+        let afstand = Infinity;
+        let dronePos = req.body.dronePos;
+        let lijnen = req.body.lijnen;
+        console.log(dronePos, lijnen, "yeet");
+        for (let lijn of lijnen){
+            let temp = Collision(dronePos[0], dronePos[[1]], lijn[0], lijn[1], lijn[2], lijn[3]);
+            if (afstand > temp){
+                afstand = temp;
+            }
+        }
+        console.log(afstand,"afstand");
+        res.send(afstand)
+        // client.send(result);
     });
 
 module.exports = router;

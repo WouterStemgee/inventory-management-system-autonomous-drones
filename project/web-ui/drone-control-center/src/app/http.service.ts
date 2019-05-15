@@ -248,4 +248,17 @@ export class HttpService {
       );
     });
   }
+
+  checkCollision(pos, obstakels) {
+    // api call voor afstand drone tot dichtste obstakel te vinden
+    return new Promise((resolve, reject) => {
+      this.http.post(environment.baseAPIUrl + 'api/drones/collision', {dronePos: pos, lijnen: obstakels}).subscribe(
+        result => {
+          resolve(result);
+        },
+        (error: HttpErrorResponse) => {
+          reject(error);
+        });
+    });
+  }
 }
