@@ -43,7 +43,8 @@ export class LeafletComponent implements OnInit {
   }
 
   collisionCounter = 0;
-  
+  frameCounter = 0;
+
   show = false;
 
   map;
@@ -292,7 +293,12 @@ export class LeafletComponent implements OnInit {
 
     this.realtime.on('update', () => {
       if (this.followDrone) {
-        map.fitBounds(this.realtime.getBounds(), {maxZoom: this.zoom});
+        if (this.frameCounter >= 100) {
+          map.fitBounds(this.realtime.getBounds(), {maxZoom: this.zoom});
+          this.frameCounter = 0;
+        } else {
+          this.frameCounter++;
+        }
       }
     });
 
