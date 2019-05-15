@@ -41,7 +41,7 @@ services:
      - drone1-mosquitto
   # Mockup container
   drone1-mockup:
-    container_name: node
+    container_name: mockup
     restart: always
     build: 
       context: drone1-mockup/

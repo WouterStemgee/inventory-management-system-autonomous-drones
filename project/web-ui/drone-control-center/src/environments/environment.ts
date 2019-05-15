@@ -15,6 +15,7 @@ export const environment = {
   baseAPIUrl: 'http://10.0.2.2:3000/',
   baseWSUrl: 'ws://10.0.2.2:3000/'
 };
+
 */
 
 /*
