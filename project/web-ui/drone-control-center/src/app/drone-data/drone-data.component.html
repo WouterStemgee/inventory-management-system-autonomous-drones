@@ -18,7 +18,7 @@
 
     <ng-container matColumnDef="position">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Position</th>
-      <td mat-cell *matCellDef="let row">X: {{row.position.x }} <br>Y: {{row.position.y}} <br>Z: {{row.position.z}}</td>
+      <td mat-cell *matCellDef="let row">X: {{row.position.x.toFixed(2) }} <br>Y: {{row.position.y.toFixed(2)}} <br>Z: {{row.position.z.toFixed(2)}}</td>
     </ng-container>
 
     <ng-container matColumnDef="speed">
