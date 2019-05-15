@@ -62,6 +62,9 @@ export class LeafletComponent implements OnInit {
 
   flightpathLayerId;
 
+  batteryWarning = false;
+  batteryAbort = false;
+
   MySimple = L.Util.extend({}, L.CRS.Simple, {
     projection: L.Util.extend(L.Projection.LonLat, {
       bounds: L.bounds([0, 0], [this.img.width, this.img.height])
@@ -630,6 +633,20 @@ export class LeafletComponent implements OnInit {
     }
     this.heatPoints.push(this.xy(drone.position.x, drone.position.y));
     drone.pushAllDatasets();
+
+    if (this.batteryWarning !== true && drone.battery > 15 && drone.battery < 30) {
+      this.batteryWarning = true;
+      this.batteryAbort = false;
+      console.log(this.batteryWarning);
+      this.simulator.batteryWarning();
+    } else if (this.batteryAbort !== true && drone.battery < 15) {
+      this.batteryAbort = true;
+      this.simulator.batteryAbort();
+    } else if (drone.battery > 30){
+      this.batteryWarning = false;
+      this.batteryAbort = false;
+    }
+
     if (this.collisionCounter === 50) {
       // deze functie zou de korste afstand van de drone tot het dichtste obstakel moeten teruggeven,
       // maar dit geveurd via API calls ipv een websocket

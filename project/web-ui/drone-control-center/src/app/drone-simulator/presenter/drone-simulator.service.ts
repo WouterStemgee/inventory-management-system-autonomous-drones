@@ -231,6 +231,9 @@ export class DroneSimulatorService {
   }
 
   checkScanZoneOverlap(waypoints) {
+    // indien het waypoint binnen de radius van een scanlocatie valt,
+    // zal het middelpunt van die scanlocatie doorgestuurd worden als vliegroute
+    // dit geberud niet indien de drone te groot is voor de scanlocatie
     const scanzones = this.map.scanzones;
     scanzones.forEach(sz => {
       const x1 = sz.position.x;
@@ -255,6 +258,8 @@ export class DroneSimulatorService {
   }
 
   validateFlightPath() {
+    // stuurt de vliegroute naar de backend waar deze via het algoritme eventueel gecorrigeerd wordt, of gemaakt wordt etc.
+    // zie Aster klasse in de back-end
     if (this.map.flightpath.waypoints.length > 0) {
       const flightpath = this.map.flightpath.toJSON();
       flightpath.waypoints = this.checkScanZoneOverlap(flightpath.waypoints);
@@ -297,6 +302,7 @@ export class DroneSimulatorService {
   }
 
   sendFlightpath() {
+    // zend de vliegroute naar de drone zodat deze later kan starten met het afvliegen van de coordinaten
     this.http.getDroneStatus().then(res => {
       // voor ts errors te onderdrukken, want ts zal anders zeggen dat res de properties validated etc niet heeft
       const info = res as Statusinfo;
@@ -342,6 +348,7 @@ export class DroneSimulatorService {
   }
 
   startDrone() {
+    // start de drone zodat deze het gekozen pad zal afvliegen
     this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Starting flight...', type: 'info'});
     this.http.getDroneStatus().then(res => {
       // voor ts errors te onderdrukken, want ts zal anders zeggen dat res de properties validated etc niet heeft
@@ -385,6 +392,7 @@ export class DroneSimulatorService {
   }
 
   stopDrone() {
+    // stopt de drone, hierbij zal de drone ook terplekke landen
     this.http.sendCommand('stop').then(res => {
       this.onStopEvent.emit(true);
       this.onAlertEvent.emit({
@@ -396,17 +404,19 @@ export class DroneSimulatorService {
   }
 
   returnDrone() {
+    // stopt de drone,
+    // zoekt het kortste pad naar de homebase
+    // vliegt terug nar de homebase
     this.stopDrone();
     const flightpath = {
       mapId: this.map.flightpath.mapId,
-      // tslint:disable-next-line:max-line-length
-      waypoints: [{x: this.drone.position.x, y: this.drone.position.y, z: this.drone.position.z}, {x: this.drone.homebase.x, y: this.drone.homebase.y, z: 0}],
-      radius: this.drone.radius,
-      size: this.map.size,
       options: {
         return: 'false',
-        aster: 'auto'
-      }
+        aster: 'correct'
+      },
+      waypoints: [{x: Number(this.drone.position.x), y: this.drone.position.y}, {x: this.drone.homebase.x, y: this.drone.homebase.y}],
+      radius: this.drone.radius,
+      size: this.map.size
     };
     this.http.validateFlightpath(flightpath)
       .then((optimal) => {
@@ -440,6 +450,8 @@ export class DroneSimulatorService {
   }
 
   pauseDrone() {
+    // zal de drone terplaatse doen blijven zweven,
+    // indien dit boven de homebase van de drone is zal deze echter landen en dus het stop commando uitvoeren
     this.onAlertEvent.emit({title: 'Drone Control Center', message: 'Stopping flight...', type: 'info'});
     this.http.getDroneStatus().then(res => {
       const info = res as Statusinfo;
@@ -551,8 +563,28 @@ export class DroneSimulatorService {
     });
     this.http.checkCollision([this.drone.position.x, this.drone.position.y], lijnen)
       .then((afstand) => {
-          console.log(afstand);
+          if (afstand < this.drone.radius && afstand > (3 * this.drone.radius / 4)) {
+            // drone komt te dicht bij de muur
+          } else if ( (3 * this.drone.radius / 4) >= afstand) {
+            // drone komt veel te dicht stop de drone
+          }
     });
+  }
+
+  batteryWarning() {
+    this.onAlertEvent.emit({
+      title: 'Battery Level',
+      message: 'Battery level getting low',
+      type: 'warning'});
+  }
+
+  batteryAbort() {
+    this.onAlertEvent.emit({
+      title: 'Battery Level',
+      message: 'Battery Level critical, returning to homebase',
+      type: 'error'
+    });
+    this.returnDrone();
   }
 }
 
