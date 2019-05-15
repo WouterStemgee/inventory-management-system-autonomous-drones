@@ -34,6 +34,10 @@ describe("Map", function() {
                 .set('Content-Type', 'application/json')
                 .send({
                     "name":"IIoT Lab",
+                    "size":{
+                        "width": 30190,
+                        "height": 10901.9444
+                    },
                     "obstacles":[
                         {
                             "_id":"5cb1e810d659913c8867b0cd",
@@ -140,7 +144,7 @@ describe("Map", function() {
                     mapId = response.body._id;
                     done();
                 });
-        });
+        }).timeout(5000);
     });
     describe("GET ALL/", function() {
         //test om de map op te halen
@@ -154,7 +158,7 @@ describe("Map", function() {
                     chai.expect(aantal + 1).to.be.equal(res.body.length);
                     done();
                 });
-        }).timeout(3000);
+        }).timeout(5000);
     });
     describe("GET 1 Map/", function() {
         it("Zou de Test map moeten ophalen", function(done) {
@@ -166,7 +170,7 @@ describe("Map", function() {
                     res.body.should.be.an('object');
                     done();
                 });
-        });
+        }).timeout(5000);
     });
     describe("PUT /", function () {
         it("Zou de Test map moeten updaten", function (done) {
@@ -273,171 +277,7 @@ describe("Map", function() {
                     response.body.should.deep.equal({"n":1,"nModified":1,"ok":1});
                     done();
                 });
-
-        });
-    });
-    describe("A* vliegroute test op de gecreeerde map /", function () {
-        describe("POST /", function () {
-            //test om het snelste pad te vinden
-            it("Zou het pad moeten zoeken", function (done) {
-                chai.request(app)
-                    .post('/api/flightpath')
-                    .set('Content-Type', 'application/json')
-                    .send({
-                        "mapId": `${mapId}`,
-                        "radius": 500,
-                        "waypoints": [
-                            {
-                                "x": 1024,
-                                "y": 992
-                            },
-                            {
-                                "x": 8352,
-                                "y": 3456
-                            },
-                            {
-                                "x": 8800,
-                                "y": 6368
-                            },
-                            {
-                                "x": 640,
-                                "y": 10176
-                            },
-                            {
-                                "x": 26880,
-                                "y": 8608
-                            },
-                            {
-                                "x": 21504,
-                                "y": 8928
-                            }
-                        ]
-                    })
-                    .end(function (error, response) {
-                        response.should.have.status(200);
-                        response.should.be.json;
-                        response.body.should.deep.equal([
-                            {
-                                "x": 1024,
-                                "y": 992
-                            },
-                            {
-                                "x": 1644,
-                                "y": 2964
-                            },
-                            {
-                                "x": 8352,
-                                "y": 3456
-                            },
-                            {
-                                "x": 1644,
-                                "y": 4044
-                            },
-                            {
-                                "x": 1644,
-                                "y": 5828
-                            },
-                            {
-                                "x": 8800,
-                                "y": 6368
-                            },
-                            {
-                                "x": 1644,
-                                "y": 6796
-                            },
-                            {
-                                "x": 640,
-                                "y": 10176
-                            },
-                            {
-                                "x": 26880,
-                                "y": 8608
-                            },
-                            {
-                                "x": 21504,
-                                "y": 8928
-                            }
-                        ]);
-                        done();
-                    });
-            });
-        });
-    });
-    describe("Producten", function() {
-        describe("GET ALL/", function(){
-            it("Zou alle producten van de map moeten ophalen", function (done){
-                chai.request(app)
-                    .get(`/api/maps/${mapId}/products`)
-                    .end((err, res) => {
-                        res.should.have.status(200);
-                        res.body.should.be.an('array');
-                        aantalProducten = res.body.length;
-                        chai.expect(aantalProducten).to.be.equal(0);
-                        done();
-                    });
-            });
-        });
-        describe("POST Product", function () {
-            it("Zou een nieuwe product moeten pushen", function (done) {
-                chai.request(app)
-                    .post(`/api/maps/${mapId}/products`)
-                    .set('Content-Type', 'application/json')
-                    .send({
-                        "name": "Mi mix 3",
-                        "quantity": 10
-                    })
-                    .end(function (error, response) {
-                        response.should.have.status(200);
-                        done();
-                    });
-            });
-        });
-        describe("GET ALL/", function(){
-            it("Zou alle producten van de map moeten ophalen", function (done){
-                chai.request(app)
-                    .get(`/api/maps/${mapId}/products`)
-                    .end((err, res) => {
-                        res.should.have.status(200);
-                        res.body.should.be.an('array');
-                        productId = res.body[0]._id;
-                        chai.expect(aantalProducten).to.be.equal(res.body.length - 1);
-                        done();
-                    });
-            });
-        });
-        describe("GET 1/", function(){
-            it("Zou het product van de map moeten ophalen", function (done){
-                chai.request(app)
-                    .get(`/api/maps/${mapId}/products/${productId}`)
-                    .end((err, res) => {
-                        res.should.have.status(200);
-                        res.body.should.be.an('object');
-                        done();
-                    });
-            });
-        });
-        describe("DELETE/", function(){
-            it("Zou het product van de map moeten ophalen, dus 1 meer dan ervoor", function (done){
-                chai.request(app)
-                    .delete(`/api/maps/${mapId}/products/${productId}`)
-                    .end((err, res) => {
-                        res.should.have.status(200);
-                        done();
-                    });
-            });
-        });
-        describe("GET ALL/", function(){
-            it("Zou alle producten van de map moeten ophalen, dus 1 meer dan ervoor", function (done){
-                chai.request(app)
-                    .get(`/api/maps/${mapId}/products`)
-                    .end((err, res) => {
-                        res.should.have.status(200);
-                        res.body.should.be.an('array');
-                        chai.expect(aantalProducten).to.be.equal( res.body.length);
-                        done();
-                    });
-            });
-        });
+        }).timeout(5000);
     });
     describe("Drone", function() {
         describe("GET ALL/", function(){
@@ -450,7 +290,7 @@ describe("Map", function() {
                         aantalDrones = res.body.length;
                         done();
                     });
-            });
+            }).timeout(5000);
         });
         describe("POST Drone", function () {
             it("Zou een nieuwe drone moeten pushen", function (done) {
@@ -469,7 +309,7 @@ describe("Map", function() {
                         response.should.have.status(200);
                         done();
                     });
-            });
+            }).timeout(5000);
         });
         describe("GET ALL/", function(){
             it("Zou alle drones van de map moeten ophalen", function (done){
@@ -482,7 +322,7 @@ describe("Map", function() {
                         chai.expect(aantalDrones).to.be.equal(res.body.length - 1);
                         done();
                     });
-            });
+            }).timeout(5000);
         });
         describe("GET 1/", function(){
             it("Zou het product van de map moeten ophalen", function (done){
@@ -493,7 +333,7 @@ describe("Map", function() {
                         res.body.should.be.an('object');
                         done();
                     });
-            });
+            }).timeout(5000);
         });
         describe("DELETE/", function(){
             it("Zou de drone van de map moeten ophalen, dus 1 meer dan ervoor", function (done){
@@ -503,7 +343,7 @@ describe("Map", function() {
                         res.should.have.status(200);
                         done();
                     });
-            });
+            }).timeout(5000);
         });
         describe("GET ALL/", function(){
             it("Zou alle drones moeten ophalen, dus evenveel als in het begin", function (done){
@@ -515,7 +355,7 @@ describe("Map", function() {
                         chai.expect(aantalDrones).to.be.equal( res.body.length);
                         done();
                     });
-            });
+            }).timeout(5000);
         });
     });
     describe("DELETE de Test map/", function() {
@@ -532,7 +372,7 @@ describe("Map", function() {
                     });
                     done();
                 });
-        });
+        }).timeout(5000);
     });
     describe("GET 1 Map/", function() {
         it("Zou de Test map niet mogen vinden", function(done) {
@@ -544,7 +384,7 @@ describe("Map", function() {
                     res.body.should.deep.equal({});
                     done();
                 });
-        });
+        }).timeout(5000);
     });
     describe("GET ALL/", function() {
         //test om de map op te halen
@@ -557,7 +397,7 @@ describe("Map", function() {
                     chai.expect(aantal).to.be.equal(res.body.length);
                     done();
                 });
-        }).timeout(3000);
+        }).timeout(5000);
     });
 });
 
