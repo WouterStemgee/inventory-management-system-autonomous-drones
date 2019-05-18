@@ -124,7 +124,8 @@ de drone ook meldt dat hij klaar is met scannen.
  * **Feedback drone ivm positie en scanstatus opvangen:** controleflows zorgen ervoor dat de drone correct wordt aangestuurd
   eens het vliegpad berekend is en de drone aan het vliegen is:
     * Met de positie gaat men na of men al dan niet het volgende knooppunt mag opsturen of niet, afhankelijk of de drone op het knooppunt ervoor staat.
-    * Met scanned zal (analoog) het volgende knooppunt pas worden opgestuurd wanneer de drone ook meldt dat hij klaar is met scannen
+    * Met scanned zal (analoog) het volgende knooppunt pas worden opgestuurd wanneer de drone ook meldt dat hij klaar is 
+    met scannen. Er wordt ook een productobject van de drone meegegeven, dat wordt weggeschreven naar de database. (PUT of POST)
     
   * **Datasubscriptions instellen**:  Of bepaalde data van de drone via de websocket mag binnen komen of niet, 
   wordt met http requests opgevangen in Node-RED, die subscriptions aan of uit zet. Dit wordt bij de server zelf opgevangen om netwerkverkeer te verminderen
@@ -134,6 +135,11 @@ de drone ook meldt dat hij klaar is met scannen.
  
  * In Node-RED kan er meer statusinfo worden bijgehouden vb. of de drone aan het landen is vs of de drone gestopt is, zodat de front-end 
  ook meer (gepaste) alerts kan geven.
+ * Het scanned feedback mechanisme laat enkel toe dat er exact 1 product wordt aangepast/opgeslagen, 
+ omdat de drone dit productobject hier moet meegeven. Dit kan makkelijk opgelost worden door de flow te ontbinden in:
+    * een flow waarop de drone de products stuurt (eventueel 1 voor 1 om zo 
+    weinig mogelijk aanpassingen aan het hudige systeem te moeten doen) en zo de database aan past
+    * een flow waarbij de drone zegt dat hij klaar is met scannen en dat Node-RED het volgende knooppunt op stuurt
  * Er wordt niet nagegaan of de drone het huidige pad wel daadwerkelijk volgt, enkel of hij op een knoopunt is toegekomen, 
  hiervoor is een extra flow nodig (MQTT input node), er staat al een code snippet in api/drones.js die zou kunnen worden gebruikt. 
  Deze flow moet wel die data nog in de front-end kunnen krijgen.
