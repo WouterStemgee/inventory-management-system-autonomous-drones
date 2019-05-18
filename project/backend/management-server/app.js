@@ -18,6 +18,8 @@ const userRouter = require('./api/users');
 
 const app = express();
 
+//middleware
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
@@ -26,14 +28,20 @@ app.use(cors());
 app.use(passport.initialize());
 app.use("/", express.static(path.join(__dirname, 'public')));
 
+
+// api routes instellen
+
 app.use('/api/maps', mapRouter);
 app.use('/api/drones', droneRouter);
 app.use('/api/flightpath', waypointRouter);
 app.use('/api/users', userRouter);
 
+// mongoose connecteren met de database
+
 mongoose.connect('mongodb://localhost/drone1', {useNewUrlParser: true});
 // Production environment
 // mongoose.connect('mongodb://mongo/drone1', {useNewUrlParser: true});
+
 
 let ASter = new aster();
 ASter.initializeMaps();

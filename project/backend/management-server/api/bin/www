@@ -11,7 +11,8 @@ const createError = require('http-errors');
 
 var RED = require('node-red');
 
-//settings voor node-red (normaal settings.js file)
+//settings voor node-red, omdat deze in de express-app is ingebed,
+// node-red is te bereiken op dezelfde poort als de express server, via lcoalhost:PORT/editor voor de editor en /red voor API calls
 var settings = {
     httpAdminRoot: "/editor",
     httpNodeRoot: "/red",
