@@ -7,8 +7,8 @@ class MQTTClient {
         this.status = stop;
         //home locatie van de drone
         this.homebase = {
-            x: 0,
-            y: 0
+            x: 1000,
+            y: 1000
         };
     }
 
