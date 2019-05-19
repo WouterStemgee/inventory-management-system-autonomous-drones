@@ -123,6 +123,9 @@ class MQTTClient {
         else if(this.status === charging){
             this.drone.chargeBattery();
         }
+        else if(this.status === paused) {
+            this.drone.drainBattery();
+        }
         else if(this.status === scanning) {
             this.drone.flyZnew();
             if (!this.drone.hasToLiftOff) {
