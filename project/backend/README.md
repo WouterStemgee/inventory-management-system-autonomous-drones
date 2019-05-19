@@ -64,7 +64,8 @@ alle calls zijn tegenover http://localhost:PORT/
 Alhoewel voor alles CRUD operaties zijn voorzien, werkt de front-end vooral met [PUT] api/maps/{mapId} voor de map 
 aan te passen in zijn geheel, de andere belangrijkste operatie is [GET] api/maps/{mapId}/products die onmiddellijk 
 alle producten van elke scanzone op vraagt, waarbij elke scanzone nog te herkenne valt doordat aan de producten een scanzoneId wordt meegegeven. 
----
+
+
 * drones.js:
     * api/drones [GET|POST]
     * api/drones/{droneId} [GET|PUT|DELETE]
@@ -72,14 +73,12 @@ alle producten van elke scanzone op vraagt, waarbij elke scanzone nog te herkenn
 
 api/drones/collision wordt niet gebruikt, het was de bedoeling om zo de drone tijdens het pad te monitoren
  of hij al dan niet af wijkt van het vliegpad. Dit wordt veel beter door een andere technologie opgelost
- ---
  
- Wordt gebruikt om het beste vliegpad te genereren en op te sturen 
  
  * flightpath.js:
     * api/flightpath [POST]
     
-
+ Wordt gebruikt om het beste vliegpad te genereren en op te sturen
 
 ---
 
